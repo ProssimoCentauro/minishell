@@ -15,7 +15,7 @@ typedef enum	e_type
 	NONE = 0,
 	CMD = 1 << 1,
 	LIMITER = 1 << 2,
-	DELIMETER, = 1 << 3,
+	DELIMETER = 1 << 3,
 	REDIRECT = 1 << 4,
 	FILENAME = 1 << 5,
 	AND = 1 << 6,
@@ -39,7 +39,14 @@ typedef struct	s_token
 	struct s_token *right;
 }	t_token;
 
-t_token	create_token(void *content, t_type type, t_type sub_type);
+
+//tokens_utils.c && tokens_utils2.c
+t_token *create_token(void *content, t_type type, t_type sub_type);
+t_token **add_token(t_token **arr, t_token *token);
+void    copy_arr(t_token **new_arr, t_token **arr, size_t size);
+void    free_tokens(t_token **tokens);
+size_t  count_tokens(t_token **tokens);
+void    print_tokens(t_token **tokens);
 
 
 
