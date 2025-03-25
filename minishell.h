@@ -1,16 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
+/*   Updated: 2025/03/25 16:30:58 by rtodaro          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+# include "ft_printf.h"
+# include "get_next_line.h"
+# include "libft.h"
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <stdio.h>
 
-#include "libft.h"
-#include "ft_printf.h"
-#include "get_next_line.h"
-
-
-typedef enum	e_type
+typedef enum e_type
 {
 	NONE = 0,
 	CMD = 1 << 1,
@@ -27,31 +37,28 @@ typedef enum	e_type
 	PIPE = 1 << 12,
 	OPEN = 1 << 13,
 	CLOSE = 1 << 14,
-}	t_type;
+}					t_type;
 
-
-typedef struct	s_token
+typedef struct s_token
 {
-	void	*content;
-	t_type	type;
-	t_type	sub_type;
-	struct s_token *left;
-	struct s_token *right;
-}	t_token;
+	void			*content;
+	t_type			type;
+	t_type			sub_type;
+	struct s_token	*left;
+	struct s_token	*right;
+}					t_token;
 
-
-//tokens_utils.c && tokens_utils2.c
-t_token *create_token(void *content, t_type type, t_type sub_type);
-t_token **add_token(t_token **arr, t_token *token);
-void    copy_arr(t_token **new_arr, t_token **arr, size_t size);
-void    free_tokens(t_token **tokens);
-size_t  count_tokens(t_token **tokens);
-void    print_tokens(t_token **tokens);
-
-
+// tokens_utils.c && tokens_utils2.c
+t_token				*create_token(void *content, t_type type, t_type sub_type);
+t_token				**add_token(t_token **arr, t_token *token);
+void				copy_arr(t_token **new_arr, t_token **arr, size_t size);
+void				free_tokens(t_token **tokens);
+size_t				count_tokens(t_token **tokens);
+void				print_tokens(t_token **tokens);
 
 #endif
-//pwd && echo loi && (echo sium || pwd)
+
+// pwd && echo loi && (echo sium || pwd)
 //
 //
 //
