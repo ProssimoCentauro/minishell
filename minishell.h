@@ -13,20 +13,20 @@
 typedef enum	e_type
 {
 	NONE = 0,
-	CMD,
-	LIMITER,
-	DELIMETER,
-	REDIRECT,
-	FILENAME,
-	AND,
-	OR,
-	IN,
-	OUT,
-	HERE_DOC,
-	APPEND,
-	PIPE,
-	OPEN,
-	CLOSE,
+	CMD = 1 << 1,
+	LIMITER = 1 << 2,
+	DELIMETER, = 1 << 3,
+	REDIRECT = 1 << 4,
+	FILENAME = 1 << 5,
+	AND = 1 << 6,
+	OR = 1 << 7,
+	IN = 1 << 8,
+	OUT = 1 << 9,
+	HERE_DOC = 1 << 10,
+	APPEND = 1 << 11,
+	PIPE = 1 << 12,
+	OPEN = 1 << 13,
+	CLOSE = 1 << 14,
 }	t_type;
 
 
@@ -39,8 +39,11 @@ typedef struct	s_token
 	struct s_token *right;
 }	t_token;
 
-#endif
+t_token	create_token(void *content, t_type type, t_type sub_type);
 
+
+
+#endif
 //pwd && echo loi && (echo sium || pwd)
 //
 //
