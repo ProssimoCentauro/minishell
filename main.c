@@ -22,7 +22,8 @@ t_token	make_tree(char *str)
 }
 */
 
-int	main()
+
+static	void	test_tokens(void)
 {
         t_token **tokens;
 
@@ -32,5 +33,17 @@ int	main()
         tokens = add_token(tokens, create_token(ft_strdup("Token1"), CMD, CMD));
         print_tokens(tokens);
         free_tokens(tokens);
-        return (0);
+}
+
+int	main(void)
+{
+	t_token	**tokens;
+	char	*line;
+
+	while (42)
+	{
+		printf("\033[1;33m~~~\033[1;35m>\033[0m");
+		line = readline(NULL);
+		//tokens = tokenizer(line);
+	}
 }
