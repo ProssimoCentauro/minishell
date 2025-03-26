@@ -13,13 +13,15 @@
 #include "minishell.h"
 
 // Create a new token
-t_token	*create_token(void *content, t_type type, t_type sub_type)
+t_token	*create_token(void *content, t_type type,
+        t_type sub_type, int index)
 {
 	t_token	*token;
 
 	token = ft_calloc(sizeof(t_token), 1);
 	if (!token)
 		return (NULL);
+    token->index = index;
 	token->content = content;
 	token->type = type;
 	token->sub_type = sub_type;

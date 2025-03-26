@@ -32,7 +32,7 @@ typedef enum e_type
 	OR = 1 << 7,
 	IN = 1 << 8,
 	OUT = 1 << 9,
-	HERE_DOC = 1 << 10,
+	HEREDOC = 1 << 10,
 	APPEND = 1 << 11,
 	PIPE = 1 << 12,
 	OPEN = 1 << 13,
@@ -41,21 +41,25 @@ typedef enum e_type
 
 typedef struct s_token
 {
+	int             index;
 	void			*content;
-	t_type			type;
+    t_type			type;
 	t_type			sub_type;
 	struct s_token	*left;
 	struct s_token	*right;
 }					t_token;
 
 // tokens_utils.c && tokens_utils2.c
-t_token				*create_token(void *content, t_type type, t_type sub_type);
+t_token				*create_token(void *content, t_type type,
+        t_type sub_type, int index);
 t_token				**add_token(t_token **arr, t_token *token);
 void				copy_arr(t_token **new_arr, t_token **arr, size_t size);
 void				free_tokens(t_token **tokens);
 size_t				count_tokens(t_token **tokens);
 void				print_tokens(t_token **tokens);
 
+void    **create_mat();
+int tokenizer(char *line, t_token ***tokens);
 #endif
 
 // pwd && echo loi && (echo sium || pwd)

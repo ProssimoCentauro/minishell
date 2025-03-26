@@ -1,6 +1,6 @@
 while su tutte le lettere str[i]
 
-ad ogni lettera entra in una funzione dove vede se è una lettera normale o un carattere | < << > >> ( )
+ad ogni lettera entra in una funzione dove vede se è una lettera normale o un carattere | < << > >> ( ) && ||
 
 se è una lettera controlla se quello dopo è un carattere speciale. Se si, crea il token perchè il comando è finito, altrimenti
 continua a scorrere i caratteri.
