@@ -12,5 +12,7 @@
 void	ft_echo(char** str);
 void	cd(char **str, char *curr_dir);
 void	check_error(int n);
+void	free_array(char **str);
+void	pwd();
 
 #endif

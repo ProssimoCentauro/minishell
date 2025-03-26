@@ -19,17 +19,21 @@ char	*get_previous_directory(char *curr_dir)
 
 void	cd(char **str, char *curr_dir)
 {
-	int	n;
+	int		n;
+	char	*new_dir;
 
 	n = 0;
 	if (!str || !str[n])
 		return ;
 	if (ft_strncmp(str[n], "..", ft_strlen("..")) == 0)
 	{
-		check_error(chdir(get_previous_directory(curr_dir)));
+		new_dir = get_previous_directory(curr_dir);
+		check_error(chdir(new_dir));
+		free(new_dir);
 	}
 	else
 	{
 		check_error(chdir(str[n]));
 	}
+	free_array(str);
 }

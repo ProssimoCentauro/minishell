@@ -23,4 +23,5 @@ void	ft_echo(char **str)
 	}
 	if (newline == 1)
 		ft_printf("%s", "\n");
+	free_array(str);
 }

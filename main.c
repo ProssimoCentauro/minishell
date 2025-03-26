@@ -16,12 +16,15 @@ int main()
 		if (ft_strncmp(input, "echo", ft_strlen("echo")) == 0)
 		{
 			ft_echo(ft_split(input + ft_strlen("echo"), ' '));
-			free(input);
+
 		}
 		if (ft_strncmp(input, "cd", ft_strlen("cd")) == 0)
 		{
 			cd(ft_split(input + ft_strlen("cd"), ' '), buf);
 		}
+		if (ft_strncmp(input, "pwd", ft_strlen("pwd")) == 0)
+			pwd();
+		free(input);
 		free(buf);
 	}
 }
