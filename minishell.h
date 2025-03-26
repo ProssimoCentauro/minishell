@@ -10,5 +10,7 @@
 # include "libft/libft.h"
 
 void	ft_echo(char** str);
+void	cd(char **str, char *curr_dir);
+void	check_error(int n);
 
 #endif
