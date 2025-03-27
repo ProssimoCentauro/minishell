@@ -1,6 +1,6 @@
 NAME = mini
 
-SRC = main.c echo.c cd.c error.c free.c pwd.c
+SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c
 
 OBJ = $(SRC:.c=.o)
 

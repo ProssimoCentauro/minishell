@@ -14,5 +14,8 @@ void	cd(char **str, char *curr_dir);
 void	check_error(int n);
 void	free_array(char **str);
 void	pwd();
+void	ft_env(char **env);
+void	ft_export(char **env, char **var);
+void	ft_exit();
 
 #endif
