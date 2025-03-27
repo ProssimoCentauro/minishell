@@ -50,16 +50,19 @@ typedef struct s_token
 }					t_token;
 
 // tokens_utils.c && tokens_utils2.c
-t_token				*create_token(void *content, t_type type,
-        t_type sub_type, int index);
+t_token				*create_token(void *content, t_type type, t_type sub_type);
 t_token				**add_token(t_token **arr, t_token *token);
 void				copy_arr(t_token **new_arr, t_token **arr, size_t size);
 void				free_tokens(t_token **tokens);
 size_t				count_tokens(t_token **tokens);
 void				print_tokens(t_token **tokens);
 
-void    **create_mat();
+//tokenizer.c
 int tokenizer(char *line, t_token ***tokens);
+
+//tokens_reoder.c
+void    reorder_tokens(t_token **tokens);
+void    assign_index(t_token **tokens);
 #endif
 
 // pwd && echo loi && (echo sium || pwd)

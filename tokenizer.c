@@ -1,44 +1,6 @@
 #include "minishell.h"
 
-void **create_mat() {
-    static void *mat[9][3]; // Matrice statica 9x3 di void *
-
-    // Assegna stringhe alla prima colonna
-    mat[0][0] = "<";
-    mat[1][0] = ">";
-    mat[2][0] = "<<";
-    mat[3][0] = ">>";
-    mat[4][0] = "|";
-    mat[5][0] = "(";
-    mat[6][0] = ")";
-    mat[7][0] = "&&";
-    mat[8][0] = "||";
-
-    // Assegna valori dell'enum alla seconda colonna
-    mat[0][1] = (void *)(long)REDIRECT;
-    mat[1][1] = (void *)(long)REDIRECT;
-    mat[2][1] = (void *)(long)REDIRECT;
-    mat[3][1] = (void *)(long)REDIRECT;
-    mat[4][1] = (void *)(long)REDIRECT;
-    mat[5][1] = (void *)(long)OPEN;
-    mat[6][1] = (void *)(long)CLOSE;
-    mat[7][1] = (void *)(long)DELIMETER;
-    mat[8][1] = (void *)(long)DELIMETER;
-
-    // Assegna valori dell'enum alla terza colonna
-    mat[0][2] = (void *)(long)IN;
-    mat[1][2] = (void *)(long)OUT;
-    mat[2][2] = (void *)(long)HEREDOC;
-    mat[3][2] = (void *)(long)APPEND;
-    mat[4][2] = (void *)(long)PIPE;
-    mat[5][2] = (void *)(long)OPEN;
-    mat[6][2] = (void *)(long)CLOSE;
-    mat[7][2] = (void *)(long)AND;
-    mat[8][2] = (void *)(long)OR;
-
-    return (void **)mat;
-}
-
+// Jump space chars
 void    jump_spaces(char *line, size_t *i, size_t *j)
 {
     while (line[*j] == ' ')
@@ -46,6 +8,7 @@ void    jump_spaces(char *line, size_t *i, size_t *j)
     *i = *j;
 }
 
+// Detect special chars
 int special_char(char c)
 {
     if (c == '|' || c == '&')
@@ -54,11 +17,10 @@ int special_char(char c)
         return (2);
     if ( c == '(' || c == ')')
         return (3);
-    /*if (c == '\0')
-        return (4);*/
     return (0);
 }
 
+// Create the string for the token
 char    *create_str(char *line, size_t i, size_t j)
 {
     char *res;
@@ -77,8 +39,21 @@ char    *create_str(char *line, size_t i, size_t j)
     return (res);
 }
 
-t_token    *create_cmd(char *line, size_t *i,
-        size_t *j, int index)
+// Create a cmd type token
+t_token    *create_cmd(char *line, size_t *i, size_t *j)
+{
+    t_token *cmd;
+
+    while (line[*j] != ' ' && line[*j] && !special_char(line[*j]))
+    {
+        (*j)++;
+    }
+    cmd = create_token(create_str(line, *i, *j - 1), CMD, CMD);
+    return(cmd);
+}
+
+// Create a filename type token
+t_token    *create_filename(char *line, size_t *i, size_t *j)
 {
     t_token *cmd;
 
@@ -87,12 +62,12 @@ t_token    *create_cmd(char *line, size_t *i,
         (*j)++;
     }
     cmd = create_token(create_str(line, *i, *j - 1),
-            CMD, CMD, index);
+            FILENAME, FILENAME);
     return(cmd);
 }
 
-t_token    *create_filename(char *line, size_t *i,
-        size_t *j, int index)
+// Create a limiter type token
+t_token    *create_limiter(char *line, size_t *i, size_t *j)
 {
     t_token *cmd;
 
@@ -101,12 +76,13 @@ t_token    *create_filename(char *line, size_t *i,
         (*j)++;
     }
     cmd = create_token(create_str(line, *i, *j - 1),
-            FILENAME, FILENAME, index);
+            LIMITER, LIMITER);
     return(cmd);
 }
 
+// Create a special type token
 t_token    *create_special(char *line,
-        size_t *i, size_t *j, int index)
+        size_t *i, size_t *j)
 {
     t_token *special;
     
@@ -115,14 +91,14 @@ t_token    *create_special(char *line,
         if (line[*j + 1] == '&')
         {
             special = create_token(ft_strdup("&&"),
-                    DELIMETER, AND, index);
+                    DELIMETER, AND);
             *j = *j + 2;
             *i = *j;
         }
         else
         {
             special = create_token(ft_strdup("&"),
-                    DELIMETER, AND, index);
+                    DELIMETER, AND);
             (*j)++;
             *i = *j;
         }
@@ -132,14 +108,14 @@ t_token    *create_special(char *line,
         if (line[*j + 1] == '|')
         {
             special = create_token(ft_strdup("||"),
-                    DELIMETER, OR, index);
+                    DELIMETER, OR);
             *j = *j + 2;
             *i = *j;
         }
         else
         {
             special = create_token(ft_strdup("|"),
-                    REDIRECT, PIPE, index);
+                    REDIRECT, PIPE);
             (*j)++;
             *i = *j;
         }
@@ -149,14 +125,14 @@ t_token    *create_special(char *line,
         if (line[*j + 1] == '<')
         {
             special = create_token(ft_strdup("<<"),
-                    DELIMETER, HEREDOC, index);
+                    REDIRECT, HEREDOC);
             *j = *j + 2;
             *i = *j;
         }
         else
         {
             special = create_token(ft_strdup("<"),
-                    REDIRECT, IN, index);
+                    REDIRECT, IN);
             (*j)++;
             *i = *j;
         }
@@ -166,14 +142,14 @@ t_token    *create_special(char *line,
         if (line[*j + 1] == '>')
         {
             special = create_token(ft_strdup(">>"),
-                    DELIMETER, APPEND, index);
+                    REDIRECT, APPEND);
             *j = *j + 2;
             *i = *j;
         }
         else
         {
             special = create_token(ft_strdup(">"),
-                    REDIRECT, OUT, index);
+                    REDIRECT, OUT);
             (*j)++;
             *i = *j;
         }
@@ -181,56 +157,74 @@ t_token    *create_special(char *line,
     else if (line[*j] == '(')
     {
         special = create_token(ft_strdup("("),
-                OPEN, OPEN, index);
+                OPEN, OPEN);
         (*j)++;
         *i = *j;
     }
     else if (line[*j] == ')')
     {
         special = create_token(ft_strdup(")"),
-                CLOSE, CLOSE, index);
+                CLOSE, CLOSE);
         (*j)++;
         *i = *j;
     }
     return (special);
 }
 
+// Detect if last token is a redirection (pipe excluded)
+static int is_arrow(t_token **mat)
+{
+    size_t  count;
+
+    if (mat == NULL)
+        return (0);
+    count = count_tokens(mat) - 1;
+    if (mat[count]->sub_type & (IN | OUT | APPEND))
+        return (1);
+    else if (mat[count]->sub_type & HEREDOC)
+        return (2);
+    return (0);
+}
+
+// Select the type of token to create
+static t_token *select_creation(char *line, size_t *i,
+        size_t *j, t_token **tokens)
+{
+    t_token *token;
+
+    if (!is_arrow(tokens))
+        token = create_cmd(line, i, j);
+    else if (is_arrow(tokens) == 1)
+        token = create_filename(line, i, j);
+    else if (is_arrow(tokens) == 2)
+        token = create_limiter(line, i, j);
+    return (token);
+} 
+
+// Transform the received line 
 int    tokenizer(char *line, t_token ***tokens)
 {
     size_t  i;
     size_t  j;
-    int index;
-    t_token **mat = *tokens;
 
     i = 0;
     j = 0;
-    index = 0;
+    if (!line[0])
+        return (1);
     while(line[j])
     {
         jump_spaces(line, &i, &j);
         while (line[j] && !special_char(line[j]))
         {
-            if (mat != NULL && 
-                    mat[count_tokens(*tokens) - 1]->sub_type & 
-                    (IN | OUT | HEREDOC | APPEND))
-            {
                 *tokens = add_token(*tokens,
-                        create_filename(line, &i, &j, index));
-            }
-            else
-            {
-                *tokens = add_token(*tokens,
-                        create_cmd(line, &i, &j, index));
-            }
+                        select_creation(line, &i, &j, *tokens));
             jump_spaces(line, &i, &j);
         }
-        index++;
         while (line[j] && special_char(line[j]))
         {
             *tokens = add_token(*tokens,
-                    create_special(line, &i, &j, index));
+                    create_special(line, &i, &j));
             jump_spaces(line, &i, &j);
-            index++;
         }
     }
     return (0);
