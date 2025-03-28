@@ -63,6 +63,10 @@ int tokenizer(char *line, t_token ***tokens);
 //tokens_reoder.c
 void    reorder_tokens(t_token **tokens);
 void    assign_index(t_token **tokens);
+
+
+t_token* build_command_tree(t_token** tokens, int token_count);
+void print_command_tree(t_token* node, int depth);
 #endif
 
 // pwd && echo loi && (echo sium || pwd)

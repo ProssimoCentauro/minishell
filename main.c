@@ -36,7 +36,8 @@ static char    *type_to_str(t_type type)
 int	main(void)
 {
 	t_token	**tokens = NULL;
-	char	*line;
+	t_token *tree;
+    char	*line;
     size_t  i;
     i = -1;
 	while (42)
@@ -50,11 +51,27 @@ int	main(void)
         }
         reorder_tokens(tokens);
         assign_index(tokens);
+        
         while (tokens[++i])
             printf("index %d: %s: %s: %s\n", tokens[i]->index,
                     type_to_str(tokens[i]->type),
                     type_to_str(tokens[i]->sub_type),
                     (char *)tokens[i]->content);
+
+        printf("\n\n");
+        
+        tree = build_command_tree(tokens, count_tokens(tokens));
+        if (tree)
+        {
+            print_command_tree(tree, 0);
+        } else
+        {
+            printf("ERROR!\n");
+        }
+        
+        //tree = build_command_tree(tokens, count_tokens(tokens));
+        //print_command_tree(tree, 0);
+        
         return (0);
 	}
 }
