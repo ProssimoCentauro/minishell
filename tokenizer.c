@@ -84,7 +84,7 @@ t_token    *create_limiter(char *line, size_t *i, size_t *j)
 t_token    *create_special(char *line,
         size_t *i, size_t *j)
 {
-    t_token *special;
+    t_token *special = NULL;
     
     if (line[*j] == '&')
     {
@@ -190,7 +190,7 @@ static int is_arrow(t_token **mat)
 static t_token *select_creation(char *line, size_t *i,
         size_t *j, t_token **tokens)
 {
-    t_token *token;
+    t_token *token = NULL;
 
     if (!is_arrow(tokens))
         token = create_cmd(line, i, j);

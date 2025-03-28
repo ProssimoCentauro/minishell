@@ -1,3 +1,4 @@
+/*
 #include "minishell.h"
 
 // Funzione ausiliaria per costruire un sotto-albero di comandi
@@ -156,7 +157,7 @@ void print_command_tree(t_token* node, int depth) {
 }
 
 
-/*
+
 // Funzione ricorsiva per stampare l'albero
 void print_command_tree(t_token* node, int depth) {
     // Controllo nodo nullo

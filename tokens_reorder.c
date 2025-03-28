@@ -51,11 +51,25 @@ void    assign_index(t_token **tokens)
     i++;
     while (tokens[i])
     {
-        if (tokens[i]->sub_type != temp_sub)
-            tokens[i]->index = ++index;
-        else
-            tokens[i]->index = index;
-        temp_sub = tokens[i]->sub_type;
+	    if (temp_sub & (CMD) && tokens[i]->sub_type & (CMD))
+            	tokens[i]->index = index;
+	    else
+	    {
+            	tokens[i]->index = i;
+		index = i;
+            }	
+	temp_sub = tokens[i]->sub_type;
         i++;
     }
 }
+/*
+void	get_vars(t_token **tokens)
+{
+	size_t	i;
+
+	i = 0;
+	while (tokens[i])
+	{
+		if ()
+	}
+}*/

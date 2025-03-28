@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/03/25 16:30:58 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/03/28 17:59:17 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void    assign_index(t_token **tokens);
 
 t_token* build_command_tree(t_token** tokens, int token_count);
 void print_command_tree(t_token* node, int depth);
+
 #endif
 
 // pwd && echo loi && (echo sium || pwd)
