@@ -31,6 +31,9 @@ int main(int ac, char **av, char **env)
 		else if (ft_strncmp(input, "exit", ft_strlen("exit") + 1) == 0 || \
 		ft_strncmp(input, "exit ", ft_strlen("exit ")) == 0)
 			ft_exit(ft_split(input + ft_strlen("exit"), ' '));
+		else if (ft_strncmp(input, "unset", ft_strlen("unset") + 1) == 0 || \
+		ft_strncmp(input, "unset ", ft_strlen("unset ")) == 0)
+			ft_unset(ft_split(input + ft_strlen("unset"), ' '), &env);
 		else if (*input != '\0')
 			printf("%s: command not found\n", input);
 		free(input);

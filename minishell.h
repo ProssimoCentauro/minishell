@@ -27,5 +27,7 @@ void	ft_exit(char **exit_status);
 t_data	*analize_env(char **env);
 char	**copy_array(char **array);
 char	*ft_getenv(char *variable, char **env);
+void	ft_unset(char **var, char ***env);
+void	change_env(char **env, char *var);
 
 #endif
