@@ -28,8 +28,9 @@ int main(int ac, char **av, char **env)
 		else if (ft_strncmp(input, "export ", ft_strlen("export ")) == 0 || \
 		ft_strncmp(input, "export", ft_strlen("export") + 1) == 0)
 			ft_export(env, ft_split(input + ft_strlen("export"), ' '));
-		else if (ft_strncmp(input, "exit", ft_strlen("exit") + 1) == 0)
-			ft_exit();
+		else if (ft_strncmp(input, "exit", ft_strlen("exit") + 1) == 0 || \
+		ft_strncmp(input, "exit ", ft_strlen("exit ")) == 0)
+			ft_exit(ft_split(input + ft_strlen("exit"), ' '));
 		else if (*input != '\0')
 			printf("%s: command not found\n", input);
 		free(input);

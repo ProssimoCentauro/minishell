@@ -1,20 +1,21 @@
 #include "minishell.h"
 
-void	add_env(char **env, char **var)
+void	add_env(char **env, char *var)
 {
 	int		n;
 
 	n = 0;
+	if (ft_isalpha(var[0]) == 0)
+	{
+		ft_putstr_fd("export: '",  2);
+		ft_putstr_fd(var, 2);
+		ft_putstr_fd("': not a valid identifier\n", 2);
+		return ;
+	}
 	while (env[n])
 		n++;
-	while (*var)
-	{
-
-		env[n] = *var;
-		var++;
-		n++;
-	}
-	env[n] = NULL;
+	env[n] = var;
+	env[n + 1] = NULL;
 }
 
 void	print_line(char *str)
@@ -56,6 +57,7 @@ void sort_array(char **env)
 		n++;
 	}
 }
+
 void	change_env(char **env, char *var)
 {
 	int		n;
@@ -70,7 +72,7 @@ void	change_env(char **env, char *var)
 			return ;
 		n++;
 	}
-	while (ft_strncmp(env[i], var, n + 1) != 0)
+	while (ft_strncmp(env[i], var, n) != 0 && (env[i][n + 1] != '=' || env[i][n + 1] != '\0'))
 		i++;
 	temp = env[i];
 	env[i] = var;
@@ -83,10 +85,14 @@ void	ft_export(char **env, char **var)
 
 	if (*var)
 	{
-		if (ft_getenv(*var, env) == NULL)
-			add_env(env, var);
-		else if (ft_getenv(*var, env))
-			change_env(env, *var);
+		while (*var)
+		{
+			if (ft_getenv(*var, env) == NULL)
+				add_env(env, *var);
+			else if (ft_getenv(*var, env))
+				change_env(env, *var);
+			var++;
+		}
 		return ;
 	}
 	copy = copy_array(env);

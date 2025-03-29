@@ -23,7 +23,7 @@ void	free_array(char **str);
 void	pwd();
 void	ft_env(char **env);
 void	ft_export(char **env, char **var);
-void	ft_exit();
+void	ft_exit(char **exit_status);
 t_data	*analize_env(char **env);
 char	**copy_array(char **array);
 char	*ft_getenv(char *variable, char **env);
