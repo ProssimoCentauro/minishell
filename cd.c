@@ -42,10 +42,10 @@ void	cd(char **str, char *curr_dir)
 	if (ft_strncmp(str[n], "..", ft_strlen("..")) == 0)
 	{
 		new_dir = get_previous_directory(curr_dir);
-		check_error(chdir(new_dir));
+		check_error(chdir(new_dir), "cd: ", new_dir);
 		return (free_array(str), free(new_dir));
 	}
 	else
-		check_error(chdir(str[n]));
+		check_error(chdir(str[n]), "cd: ", str[n]);
 	free_array(str);
 }

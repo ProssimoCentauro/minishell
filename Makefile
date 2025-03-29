@@ -1,6 +1,7 @@
 NAME = mini
 
-SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c
+SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
+		ft_getenv.c
 
 OBJ = $(SRC:.c=.o)
 

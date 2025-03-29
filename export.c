@@ -1,12 +1,34 @@
 #include "minishell.h"
 
-void ft_env(char **env)
+void	add_env(char **env, char **var)
 {
-	while (*env)
+	int		n;
+
+	n = 0;
+	while (env[n])
+		n++;
+	while (*var)
 	{
-		printf("%s\n", *env);
-		env++;
+
+		env[n] = *var;
+		var++;
+		n++;
 	}
+	env[n] = NULL;
+}
+
+void	print_line(char *str)
+{
+	printf("declare -x ");
+	while (*str != '=' && *str != '\0')
+	{
+		printf("%c", *str);
+		str++;
+	}
+	if (*str == '=')
+		printf("=\"%s\"\n", str + 1);
+	else
+		printf("\n");
 }
 
 void sort_array(char **env)
@@ -14,13 +36,11 @@ void sort_array(char **env)
 	char	*temp;
 	int		n;
 	int		b;
-	int		i;
 
 	n = 0;
 	while (env[n])
 	{
 		b = n + 1;
-		i = 0;
 		while (env[b])
 		{
 			if (ft_strncmp(env[n], env[b], ft_strlen(env[b])) > 0)
@@ -32,34 +52,44 @@ void sort_array(char **env)
 			}
 			b++;
 		}
-		printf("declare -x ");
-		while (env[n][i] != '=' && env[n][i] != '\0')
-		{
-			 printf("%c", env[n][i]);
-			 i++;
-		}
-		if (env[n][i] == '=')
-		{
-			printf("=\"%s\"\n", env[n] + i + 1);
-		}
+		print_line(env[n]);
 		n++;
 	}
+}
+void	change_env(char **env, char *var)
+{
+	int		n;
+	int		i;
+	char	*temp;
+
+	n = 0;
+	i = 0;
+	while (var[n] != '=')
+	{
+		if (var[n] == '\0')
+			return ;
+		n++;
+	}
+	while (ft_strncmp(env[i], var, n + 1) != 0)
+		i++;
+	temp = env[i];
+	env[i] = var;
+	free(temp);
 }
 
 void	ft_export(char **env, char **var)
 {
-	int		n;
 	char	**copy;
 
-	(void) var;
-	copy = calloc(1024, sizeof(char *));
-	n = 0;
-	while (env[n])
+	if (*var)
 	{
-		copy[n] = ft_strdup(env[n]);
-		n++;
+		if (ft_getenv(*var, env) == NULL)
+			add_env(env, var);
+		else if (ft_getenv(*var, env))
+			change_env(env, *var);
+		return ;
 	}
-	copy[n] = NULL;
+	copy = copy_array(env);
 	sort_array(copy);
 	free_array(copy);
 }
