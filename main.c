@@ -8,6 +8,7 @@ int main(int ac, char **av, char **env)
 	input = ft_calloc(1, sizeof(char));
 	(void) ac;
 	(void) av;
+	find_wildcards("*.c");
 	while (1)
 	{
 		buf = ft_calloc(1024, sizeof(char));

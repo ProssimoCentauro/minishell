@@ -4,7 +4,8 @@ void ft_env(char **env)
 {
 	while (*env)
 	{
-		printf("%s\n", *env);
+		if (*(ft_getenv(*env, env)) != '\0')
+			printf("%s\n", *env);
 		env++;
 	}
 }

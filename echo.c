@@ -1,5 +1,20 @@
 #include "minishell.h"
 
+int	check_echo_flag(char *str)
+{
+	if (*str == '-')
+		str++;
+	else
+		return (1);
+	while (*str)
+	{
+		if (*str != 'n')
+			return (1);
+		str++;
+	}
+	return (0);
+}
+
 void	ft_echo(char **str)
 {
 	int	n;
@@ -9,7 +24,7 @@ void	ft_echo(char **str)
 	newline = 1;
 	if (!str || !str[n])
 		return ;
-	while (ft_strncmp(str[n], "-n", ft_strlen("-n")) == 0)
+	while (check_echo_flag(str[n]) == 0)
 	{
 		n++;
 		newline = 0;

@@ -8,7 +8,7 @@ char	*get_value(char *str)
 	while (str[n] != '=')
 	{
 		if (str[n] == '\0')
-			return ("\n");
+			return ("\0");
 		n++;
 	}
 	return (ft_substr(str, n + 1, ft_strlen(str) - n));

@@ -8,6 +8,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
+# include <dirent.h>
+# include <sys/types.h>
 
 typedef struct	s_data
 {
@@ -29,5 +31,6 @@ char	**copy_array(char **array);
 char	*ft_getenv(char *variable, char **env);
 void	ft_unset(char **var, char ***env);
 void	change_env(char **env, char *var);
+char	**find_wildcards(char *str);
 
 #endif
