@@ -38,10 +38,16 @@ static void handle_pipe(t_token **tokens, t_token **root, t_token **last, size_t
 
 static void handle_arrows(t_token **tokens, t_token **root, t_token **last, size_t *i)
 {
+	t_token	*temp;
+
 	if (*root == NULL)
 		*root = tokens[*i];
 	else
+	{
+		temp = (*last)->right;
 		(*last)->right = tokens[*i];
+		(tokens[*i])->right = temp;
+	}
 	*last = tokens[*i];
 	*i = *i + 1;
 	(*last)->left = tokens[*i];	
@@ -65,7 +71,10 @@ t_token *build_tree(t_token **tokens, size_t *i)
         else if (tokens[*i]->sub_type & (OPEN))
 	{
 		(*i)++;
-		last->right = build_tree(tokens, i);
+		if (!root)
+			root = build_tree(tokens, i);
+		else
+			last->right = build_tree(tokens, i);
 	}
 	else if (tokens[*i]->sub_type & (CLOSE))
 		return (root); 

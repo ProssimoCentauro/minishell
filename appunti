@@ -1,6 +1,11 @@
 
 commands for testing:
 cmd1 && cmd2 || (cmd3 arg1 >file arg2 >file2 >>file3 | cmd4) && (cmd5 <file4 && cmd6 || cmd7 |cmd8)
+
+cmd1 && cmd2 arg1 arg2 && (cmd3| cmd4 arg1 >file1 <file2 arg3 arg4 && cmd5 || cmd6 *.c) | (cmd7 |cmd8 || cm9 arg1 >file3) >>file4
+
+
+
 --------------------------------------------------
 
 
