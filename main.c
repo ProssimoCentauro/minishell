@@ -54,6 +54,20 @@ static char	*type_to_str(t_type type)
 	return ("TYPE ERROR!");
 }
 
+int	ft_strcmp(char *s1, char *s2)
+{
+	size_t	i;
+
+	i = 0;
+	while (s1[i] && s2[i])
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (s1[i] - s2[i]);
+}
+
 int	main(void)
 {
 	t_token	**tokens;
@@ -61,16 +75,16 @@ int	main(void)
 	char	*line;
 	size_t	i;
 
-	tokens = NULL;
 	i = -1;
 	while (42)
 	{
+		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
+		if (!ft_strcmp(line, "exit"))
+			exit(EXIT_SUCCESS);
 		if (tokenizer(line, &tokens))
-		{
 			continue ;
-		}
 		reorder_tokens(tokens);
 		assign_index(tokens);
 		while (tokens[++i])
@@ -84,6 +98,6 @@ int	main(void)
 		print_tree(tree, 0);
 		printf("\n\n");
 		i = -1;
-		tokens = NULL;
+		free_tokens(tokens);
 	}
 }
