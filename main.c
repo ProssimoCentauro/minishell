@@ -1,5 +1,26 @@
 #include "minishell.h"
 
+static char	*type_to_str(t_type type);
+
+void	print_tree(t_token *root, int depth)
+{
+	int	i;
+
+	if (root == NULL)
+		return ;
+	depth += 5;
+	print_tree(root->right, depth);
+	ft_printf("\n");
+	i = 5;
+	while (i < depth)
+	{
+		ft_printf(" ");
+		i++;
+	}
+	ft_printf("%s\n", (char *)root->content);
+	print_tree(root->left, depth);
+}
+
 static char	*type_to_str(t_type type)
 {
 	if (type == CMD)
@@ -36,7 +57,7 @@ static char	*type_to_str(t_type type)
 int	main(void)
 {
 	t_token	**tokens;
-//	t_token	*tree;
+	t_token	*tree;
 	char	*line;
 	size_t	i;
 
@@ -44,7 +65,7 @@ int	main(void)
 	i = -1;
 	while (42)
 	{
-		//		line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
+		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
 		if (tokenizer(line, &tokens))
 		{
@@ -57,22 +78,11 @@ int	main(void)
 				type_to_str(tokens[i]->type), type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
 		
-//		tree = build_tree(tokens, 0);
-
-
-		/*
-			printf("\n\n");
-			tree = build_command_tree(tokens, count_tokens(tokens));
-			if (tree)
-			{
-				print_command_tree(tree, 0);
-			} else
-			{
-				printf("ERROR!\n");
-			}
-		*/
-		// tree = build_command_tree(tokens, count_tokens(tokens));
-		// print_command_tree(tree, 0);
+		printf("\n\n\n");
+		i = 0; 
+		tree = build_tree(tokens, &i);
+		print_tree(tree, 0);
+		printf("\n\n");
 		i = -1;
 		tokens = NULL;
 	}

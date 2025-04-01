@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/03/28 17:59:17 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/01 19:42:16 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,9 @@ void    assign_index(t_token **tokens);
 
 t_token* build_command_tree(t_token** tokens, int token_count);
 void print_command_tree(t_token* node, int depth);
+
+//tree_builder.c
+t_token *build_tree(t_token **tokens, size_t *i);
 
 #endif
 

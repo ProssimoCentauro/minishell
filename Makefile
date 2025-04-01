@@ -9,5 +9,5 @@ IFLAGS = -I ./libft/header_files
 all: $(NAME)
 
 minishell:
-	$(CC) -Wall -Wextra -Werror $(IFLAGS) *.c -gdwarf-4 -lreadline ./libft/libft.a -o mini
+	$(CC) -Wall -Wextra -Werror $(IFLAGS) *.c -gdwarf-4 -lreadline ./libft/libft.a
 

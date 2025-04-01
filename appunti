@@ -1,3 +1,9 @@
+
+commands for testing:
+cmd1 && cmd2 || (cmd3 arg1 >file arg2 >file2 >>file3 | cmd4) && (cmd5 <file4 && cmd6 || cmd7 |cmd8)
+--------------------------------------------------
+
+
 se trovo cmd e root è NULL, diventa root
 se trovo cmd e root esiste si mette a sinistra, se è già presente qualcosa a sinistra si mette a destra
 se trovo delimiter diventa root e la vecchia root va sinistra
