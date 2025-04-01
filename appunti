@@ -1,3 +1,65 @@
+se trovo cmd e root è NULL, diventa root
+se trovo cmd e root esiste si mette a sinistra, se è già presente qualcosa a sinistra si mette a destra
+se trovo delimiter diventa root e la vecchia root va sinistra
+se trovo < > << >> il file va a sinistra, se dopo trovo una '|' devo scorrere indietro fino all'ultimo delimeter e mettere la pipe a destra e quello che c' era a destra va a sinistra della pipe
+se trovo parentesi richiamo la funzione (ricorsività), se la root è NULL diventa root altrimenti lo metto a destra
+
+cmd1 && ((cmd2 | cmd3) || (cmd4 && cmd5))
+0: CMD: CMD: cmd1
+1: DELIMITTER: AND: &&
+2: OPEN: OPEN: (
+3: OPEN: OPEN: (
+4: CMD: CMD: cmd2
+5: REDIRECT: PIPE: |
+6: CMD: CMD: cmd3
+7: CLOSE: CLOSE: )
+8: DELIMITTER: OR: ||
+9: OPEN: OPEN: (
+10: CMD: CMD: cmd4
+11: DELIMITTER: AND: &&
+12: CMD: CMD: cmd5
+13: CLOSE: CLOSE: )
+14: CLOSE: CLOSE: )
+
+
+root NULL
+cmd1 root
+'&&' root e 'cmd1' va a sinistra
+'(' chiamata sotto albero
+---sotto albero---
+
+root NULL
+'(' chiamata sotto albero
+---sotto albero---
+
+root NULL
+cmd2 root
+'|' root e cmd2 va a sinistra
+cmd3 non va a sinistra perchè c'e 'cmd2', ma va a destra
+')' chiusura sotto albero
+ROOT SOTTO ALBERO = '|'
+------------------
+'|' root perchè root è NULL
+'||' root e vecchia root :'|' va a sinistra
+---sotto albero---
+
+root NULL
+cmd4 root
+'&&' root e cmd4 va a sinistra
+cmd5 non va a sinista perchè c'è 'cmd4', ma va a destra
+')' chiusura sotto albero
+ROOT SOTTO ALBERO = '&&'
+------------------
+'&&' va a destra
+ROOT SOTTO ALBERO = '||'
+------------------
+'||' va a destra perchè la root esiste
+
+FINAL ROOT = '&&'
+
+
+---------------------------------------------
+
 if < > << >> l'ordine è
 
 if cmd < file
