@@ -101,7 +101,7 @@ void	ft_unset(char **var, char ***env);
 void	change_env(char **env, char *var);
 char	**find_wildcards(char *str);
 
-int     assign_args(t_token **tokens);
 
+int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
 #endif

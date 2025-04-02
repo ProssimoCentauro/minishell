@@ -118,7 +118,7 @@ int	main(void)
 
 	i = -1;
 	while (42)
-	{
+  {
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
@@ -144,5 +144,5 @@ int	main(void)
         print_args(tokens);
         i = -1;
 		free_tokens(tokens);
-    }
+  }
 }
