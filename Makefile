@@ -1,13 +1,38 @@
 NAME = minishell
 
-#compiler
-AARCH64 = aarch64-linux-gnu-gcc -o mio_programma
+SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
+		ft_getenv.c unset.c wildcards.c tokens_utils.c tokens_utils2.c tokens_reorder.c \
+    tree_builder.c tokenizer.c
+
+OBJ = $(SRC:.c=.o)
+
 CC = cc
-CLFAGS = -Wall -Wextra -Werror
-IFLAGS = -I ./libft/header_files
+
+CFLAGS = -Wall -Werror -Wextra
+
+#INCLUDE = -Ilibft -I/usr/include
+
+INCLUDE = -I ./libft/header_files
+LIBFLAGS = -Llibft -lft -L/usr/lib
 
 all: $(NAME)
 
-minishell:
-	$(CC) -Wall -Wextra -Werror $(IFLAGS) *.c -gdwarf-4 -lreadline ./libft/libft.a
+$(NAME): $(OBJ)
+	make -C libft
+	make bonus -C libft
+	$(CC) -lreadline $(OBJ) $(LIBFLAGS) -o $(NAME)
 
+%.o:%.C
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+
+clean:
+	rm -f $(OBJ)
+	make clean -C libft
+
+fclean:
+	rm -f $(OBJ) $(NAME)
+	make fclean -C libft
+
+re: fclean $(NAME)
+
+.PHONY: all clean fclean re

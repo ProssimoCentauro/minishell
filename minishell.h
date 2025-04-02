@@ -13,13 +13,26 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+  
+ 
+# include <unistd.h>
+# include <stdlib.h>
+# include <stdio.h>
+# include <stddef.h>
+# include <dirent.h>
+# include <sys/types.h>
+  
 # include "ft_printf.h"
 # include "get_next_line.h"
 # include "libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
-# include <stdio.h>
 
+typedef struct	s_data
+{
+	char	**variables;
+}	t_data;
+  
 typedef enum e_type
 {
 	NONE = 0,
@@ -71,17 +84,20 @@ void print_command_tree(t_token* node, int depth);
 //tree_builder.c
 t_token *build_tree(t_token **tokens, size_t *i);
 
-#endif
 
-// pwd && echo loi && (echo sium || pwd)
-//
-//
-//
-//
-//		pwd
-//	||
-//		echo
-//&&
-//		echo
-//	&&
-//		pwd
+void	ft_echo(char** str);
+void	cd(char **str, char *curr_dir);
+void	check_error(int n, char *comm, char *arg);
+void	free_array(char **str);
+void	pwd();
+void	ft_env(char **env);
+void	ft_export(char **env, char **var);
+void	ft_exit(char **exit_status);
+t_data	*analize_env(char **env);
+char	**copy_array(char **array);
+char	*ft_getenv(char *variable, char **env);
+void	ft_unset(char **var, char ***env);
+void	change_env(char **env, char *var);
+char	**find_wildcards(char *str);
+
+#endif
