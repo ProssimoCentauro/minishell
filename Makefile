@@ -10,19 +10,18 @@ CC = cc
 
 CFLAGS = -Wall -Werror -Wextra
 
-#INCLUDE = -Ilibft -I/usr/include
+INCLUDE = -Ilibft/header_files -I/usr/include
 
-INCLUDE = -I ./libft/header_files
 LIBFLAGS = -Llibft -lft -L/usr/lib
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	make -C libft
-	make bonus -C libft
+#	make bonus -C libft
 	$(CC) -lreadline $(OBJ) $(LIBFLAGS) -o $(NAME)
 
-%.o:%.C
+%.o:%.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 clean:
