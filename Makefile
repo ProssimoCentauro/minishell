@@ -1,8 +1,8 @@
 NAME = minishell
 
 SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
-		ft_getenv.c unset.c wildcards.c tokens_utils.c tokens_utils2.c tokens_reorder.c \
-    tree_builder.c tokenizer.c
+	  ft_getenv.c unset.c wildcards.c tokens_utils.c tokens_utils2.c tokens_reorder.c \
+	  tree_builder.c tokenizer.c token_args_utils.c \
 
 OBJ = $(SRC:.c=.o)
 
@@ -19,10 +19,10 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C libft
 #	make bonus -C libft
-	$(CC) -lreadline $(OBJ) $(LIBFLAGS) -o $(NAME)
+	$(CC) $(OBJ) $(LIBFLAGS) -o $(NAME) -lreadline -lncurses -g
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE) -lreadline -lncurses -g
 
 clean:
 	rm -f $(OBJ)

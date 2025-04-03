@@ -20,6 +20,7 @@ t_token	*create_token(void *content, t_type type, t_type sub_type)
 	token = ft_calloc(sizeof(t_token), 1);
 	if (!token)
 		return (NULL);
+    token->args = NULL;
     token->index = 0;
 	token->content = content;
 	token->type = type;
