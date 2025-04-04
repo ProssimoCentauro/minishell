@@ -5,50 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/04 13:05:47 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/04 13:06:07 by ldei-sva         ###   ########.fr       */
+/*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
+/*   Updated: 2025/04/04 13:25:36 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_echo_flag(char *str)
+void	executor(t_token *tree, char **env)
 {
-	if (*str == '-')
-		str++;
-	else
-		return (1);
-	while (*str)
-	{
-		if (*str != 'n')
-			return (1);
-		str++;
-	}
-	return (0);
-}
+	char	*path;
 
-void	ft_echo(char **str)
-{
-	int	n;
-	int	newline;
-
-	n = 0;
-	newline = 1;
-	if (!str || !str[n])
+	if (!tree)
 		return ;
-	while (check_echo_flag(str[n]) == 0)
+	executor(tree->left, env);
+	if (tree->type == CMD)
 	{
-		n++;
-		newline = 0;
+		printf("%s\n", (char *)tree->content);
+		path = findpath(env, (char *)tree->content);
+		ft_printf("%s\n", path);
 	}
-	while (str[n])
-	{
-		ft_printf("%s", str[n]);
-		if (str[n + 1] != NULL)
-			ft_printf("%s", " ");
-		n++;
-	}
-	if (newline == 1)
-		ft_printf("%s", "\n");
-	free_array(str);
+	executor(tree->right, env);
 }

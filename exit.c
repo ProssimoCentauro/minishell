@@ -24,6 +24,11 @@ int	check(char *str)
 
 void	ft_exit(char	**exit_status)
 {
+	if (!exit_status)
+	{
+		printf("exit\n");
+		exit(0);
+	}
 	if (*(exit_status + 1) != NULL)
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
