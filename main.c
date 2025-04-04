@@ -137,9 +137,9 @@ int	main(int ac, char **av, char **env)
 			printf("index %d: %s: %s: %s\n", tokens[i]->index,
 				type_to_str(tokens[i]->type), type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
-		
+
 		printf("\n\n\n");
-		i = 0; 
+		i = 0;
 		tree = build_tree(tokens, &i);
 		print_tree(tree, 0);
 		printf("\n\n");

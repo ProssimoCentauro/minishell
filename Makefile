@@ -22,7 +22,7 @@ $(NAME): $(OBJ)
 	$(CC) $(OBJ) $(LIBFLAGS) -o $(NAME) -lreadline -lncurses -g
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE) -lreadline -lncurses -g
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE) -g
 
 clean:
 	rm -f $(OBJ)
