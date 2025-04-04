@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <stddef.h>
 # include <dirent.h>
+# include <fcntl.h>
 # include <sys/types.h>
   
 # include "ft_printf.h"
@@ -104,4 +105,7 @@ char	**find_wildcards(char *str);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
+
+void    write_on_file(int fd, char *delimeter);
+int     check_heredoc(t_token **tokens);
 #endif

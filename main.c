@@ -128,12 +128,17 @@ int	main(void)
 			continue ;
 		reorder_tokens(tokens);
 		assign_index(tokens);
+        check_heredoc(tokens);
+
         ft_printf("assigning args!\n\n");
 		assign_args(tokens);
         printf("assign finished!\n\n");
+        
         while (tokens[++i])
-			printf("index %d: %s: %s: %s\n", tokens[i]->index,
-				type_to_str(tokens[i]->type), type_to_str(tokens[i]->sub_type),
+			printf("index %d: %s: %s: %s\n",
+                    tokens[i]->index,
+				type_to_str(tokens[i]->type),
+                type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
 		
 		printf("\n\n\n");
