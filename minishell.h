@@ -13,26 +13,27 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-  
- 
+
+
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <stddef.h>
 # include <dirent.h>
 # include <sys/types.h>
-  
+
 # include "ft_printf.h"
 # include "get_next_line.h"
 # include "libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <fcntl.h>
 
 typedef struct	s_data
 {
 	char	**variables;
 }	t_data;
-  
+
 typedef enum e_type
 {
 	NONE = 0,
@@ -63,6 +64,17 @@ typedef struct s_token
 	struct s_token	*right;
 }					t_token;
 
+typedef struct	s_execute
+{
+	char	*com;
+	int		pipe;
+	int		file_in;
+	int		file_out;
+	char	*filename;
+	int		append;
+	char	**args;
+}				t_execute;
+
 // tokens_utils.c && tokens_utils2.c
 t_token				*create_token(void *content, t_type type, t_type sub_type);
 t_token				**add_token(t_token **arr, t_token *token);
@@ -85,23 +97,27 @@ void print_command_tree(t_token* node, int depth);
 //tree_builder.c
 t_token *build_tree(t_token **tokens, size_t *i);
 
-
+//built in
 void	ft_echo(char** str);
 void	cd(char **str, char *curr_dir);
-void	check_error(int n, char *comm, char *arg);
-void	free_array(char **str);
 void	pwd();
 void	ft_env(char **env);
 void	ft_export(char **env, char **var);
 void	ft_exit(char **exit_status);
-t_data	*analize_env(char **env);
+void	ft_unset(char **var, char ***env);
+
+void	change_env(char **env, char *var);
+void	check_error(int n, char *comm, char *arg);
+void	free_array(char **str);
 char	**copy_array(char **array);
 char	*ft_getenv(char *variable, char **env);
-void	ft_unset(char **var, char ***env);
-void	change_env(char **env, char *var);
 char	**find_wildcards(char *str);
-void	executor(t_token *tree, char **env);
-char    *findpath(char **env, char *com);
+void	executor(t_token *tree, char **env, t_execute *info);
+char	*findpath(char **env, char *com);
+void	print_info(t_execute *info);
+void	set_info(t_execute *info);
+t_data	*analize_env(char **env);
+void	execve_cmd(t_execute *info);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);

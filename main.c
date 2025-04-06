@@ -111,16 +111,19 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	main(int ac, char **av, char **env)
 {
-	t_token	**tokens;
-	t_token	*tree;
-	char	*line;
-	size_t	i;
+	t_token		**tokens;
+	t_token		*tree;
+	char		*line;
+	size_t		i;
+	t_execute	*info;
 
 	(void) ac;
 	(void) av;
 	i = -1;
+	info = malloc(sizeof(t_execute));
 	while (42)
   {
+		set_info(info);
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
@@ -143,8 +146,10 @@ int	main(int ac, char **av, char **env)
 		tree = build_tree(tokens, &i);
 		print_tree(tree, 0);
 		printf("\n\n");
-        print_args(tokens);
-        executor(tree, env);
+		print_args(tokens);
+		executor(tree, env, info);
+		print_info(info);
+		execve_cmd(info);
 		i = -1;
 		free_tokens(tokens);
   }
