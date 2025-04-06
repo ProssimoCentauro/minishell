@@ -83,7 +83,7 @@ void	ft_export(char **env, char **var)
 {
 	char	**copy;
 
-	if (*var)
+	if (var && *var)
 	{
 		while (*var)
 		{

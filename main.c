@@ -109,21 +109,26 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-int	main(void)
+int	main(int ac, char **av, char **env)
 {
-	t_token	**tokens;
-	t_token	*tree;
-	char	*line;
-	size_t	i;
+	t_token		**tokens;
+	t_token		*tree;
+	char		*line;
+	size_t		i;
+	t_execute	*info;
 
+	(void) ac;
+	(void) av;
 	i = -1;
+	info = malloc(sizeof(t_execute));
 	while (42)
   {
+		set_info(info);
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
 		if (!ft_strcmp(line, "exit"))
-			exit(EXIT_SUCCESS);
+			ft_exit(EXIT_SUCCESS);
 		if (tokenizer(line, &tokens))
 			continue ;
 		reorder_tokens(tokens);
@@ -135,14 +140,17 @@ int	main(void)
 			printf("index %d: %s: %s: %s\n", tokens[i]->index,
 				type_to_str(tokens[i]->type), type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
-		
+
 		printf("\n\n\n");
-		i = 0; 
+		i = 0;
 		tree = build_tree(tokens, &i);
 		print_tree(tree, 0);
 		printf("\n\n");
-        print_args(tokens);
-        i = -1;
+		print_args(tokens);
+		executor(tree, env, info);
+		print_info(info);
+		execve_cmd(info, env);
+		i = -1;
 		free_tokens(tokens);
   }
 }
