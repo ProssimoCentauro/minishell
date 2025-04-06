@@ -20,10 +20,10 @@ all: $(NAME)
 $(NAME): $(OBJ)
 	make -C libft
 #	make bonus -C libft
-	$(CC) $(OBJ) $(CFLAGS) $(LIBFLAGS) -o $(NAME) -lreadline -lncurses
+	$(CC) $(OBJ) $(LIBFLAGS) -o $(NAME) -lreadline -lncurses -g
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE) -lreadline -lncurses -g
 
 clean:
 	rm -f $(OBJ)
