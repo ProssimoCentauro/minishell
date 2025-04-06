@@ -74,6 +74,7 @@ typedef struct	s_execute
 	int		file_out;
 	char	*filename;
 	char	**args;
+	int		pipe_fd;
 }				t_execute;
 
 // tokens_utils.c && tokens_utils2.c

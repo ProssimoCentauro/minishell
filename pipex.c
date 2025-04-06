@@ -12,33 +12,33 @@
 
 #include "minishell.h"
 
-// int	execute_pipe(char *av, char **env, int fd)
-// {
-// 	char	*path;
-// 	char	**com_flags;
-// 	int		pid;
-// 	int		pipefd[2];
+int	execute_pipe(t_execute *info, char **env)
+{
+	char	*path;
+	char	**com_flags;
+	int		pid;
+	int		pipefd[2];
 
-// 	check_errors(pipe(pipefd));
-// 	check_errors(pid = fork());
-// 	if (pid == 0)
-// 	{
-// 		com_flags = ft_split(av, ' ');
-// 		path = findpath(env, com_flags[0]);
-// 		check_errors(dup2(fd, STDIN_FILENO));
-// 		close(fd);
-// 		close(pipefd[0]);
-// 		check_errors(dup2(pipefd[1], STDOUT_FILENO));
-// 		check_errors(execve(path, com_flags, NULL));
-// 	}
-// 	else
-// 	{
-// 		wait(NULL);
-// 		close(pipefd[1]);
-// 		close(fd);
-// 	}
-// 	return (pipefd[0]);
-// }
+	pipe(pipefd);
+	pid = fork();
+	if (pid == 0)
+	{
+		com_flags = info->args;
+		path = findpath(env, com_flags[0]);
+		dup2(info->pipe_fd, STDIN_FILENO);
+		if (info->pipe_fd != 0)
+			close(info->pipe_fd);
+		close(pipefd[0]);
+		dup2(pipefd[1], STDOUT_FILENO);
+		check_error(execve(path, com_flags, NULL), info->com, NULL);
+	}
+	else
+	{
+		wait(NULL);
+		close(pipefd[1]);
+	}
+	return (pipefd[0]);
+}
 
 void	final_process(t_execute *info, char **env)
 {
@@ -56,7 +56,7 @@ void	final_process(t_execute *info, char **env)
 			dup2(info->file_in, STDIN_FILENO);
 			close(info->file_in);
 		}
-		if (info->file_out != 0)
+		if (info->file_out != 1)
 		{
 			dup2(info->file_out, STDOUT_FILENO);
 			close(info->file_out);
@@ -73,10 +73,16 @@ void	execve_cmd(t_execute *info, char **env)
 	if (info->file_in == -1)
 		return ;
 	if (info->pipe == 0)
+	{
+		if (info->pipe_fd != 0)
+			info->file_in = info->pipe_fd;
 		final_process(info, env);
+	}
+	else
+		info->pipe_fd = execute_pipe(info, env);
 	if (info->file_in != 0)
 		close(info->file_in);
-	if (info->file_out != 0)
+	if (info->file_out != 1)
 		close(info->file_out);
 	return ;
 	// while ((ac - n) != 2)

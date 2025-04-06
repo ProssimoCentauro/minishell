@@ -4,7 +4,7 @@ void	set_info(t_execute *info)
 {
 	info->com = NULL;
 	info->file_in = 0;
-	info->file_out = 0;
+	info->file_out = 1;
 	info->pipe = 0;
 	info->args = calloc(1, sizeof(char *));
 	info->filename = NULL;

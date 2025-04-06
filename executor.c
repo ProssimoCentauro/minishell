@@ -20,7 +20,7 @@ void	set_command(t_execute *info, t_token *tree)
 	info->com = (char *)tree->content;
 	while (tree->args && tree->args[i])
 		i++;
-	info->args = malloc((i + 1) *(sizeof(char *)));
+	info->args = malloc((i + 2) * (sizeof(char *)));
 	i = 0;
 	info->args[0] = (char *)tree->content;
 	while (tree->args && tree->args[i])

@@ -121,6 +121,7 @@ int	main(int ac, char **av, char **env)
 	(void) av;
 	i = -1;
 	info = malloc(sizeof(t_execute));
+	info->pipe_fd = 0;
 	while (42)
   {
 		set_info(info);
