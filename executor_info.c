@@ -6,7 +6,6 @@ void	set_info(t_execute *info)
 	info->file_in = 0;
 	info->file_out = 0;
 	info->pipe = 0;
-	info->append = 0;
 	info->args = calloc(1, sizeof(char *));
 	info->filename = NULL;
 }
@@ -23,7 +22,6 @@ void	print_info(t_execute *info)
 		i++;
 	}
 	printf("pipe: %d\n", info->pipe);
-	printf("append: %d\n", info->append);
 	printf("file in: %d\n", info->file_in);
 	printf("file out: %d\n\n", info->file_out);
 }

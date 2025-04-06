@@ -40,37 +40,45 @@
 // 	return (pipefd[0]);
 // }
 
-// void	final_process(int fd2, int pipe, char *av, char **env)
-// {
-// 	char	*path;
-// 	char	**com_flags;
-// 	int		pid;
+void	final_process(t_execute *info, char **env)
+{
+	char	*path;
+	char	**com_flags;
+	int		pid;
 
-// 	check_errors(pid = fork());
-// 	if (pid == 0)
-// 	{
-// 		com_flags = ft_split(av, ' ');
-// 		path = findpath(env, com_flags[0]);
-// 		check_errors(dup2(pipe, STDIN_FILENO) == 0);
-// 		check_errors(dup2(fd2, STDOUT_FILENO));
-// 		close(pipe);
-// 		close(fd2);
-// 		check_errors(execve(path, com_flags, NULL));
-// 	}
-// 	else
-// 	{
-// 		close(fd2);
-// 		close(pipe);
-// 	}
-// }
+	pid = fork();
+	if (pid == 0)
+	{
+		com_flags = info->args;
+		path = findpath(env, com_flags[0]);
+		if (info->file_in != 0)
+		{
+			dup2(info->file_in, STDIN_FILENO);
+			close(info->file_in);
+		}
+		if (info->file_out != 0)
+		{
+			dup2(info->file_out, STDOUT_FILENO);
+			close(info->file_out);
+		}
+		check_error(execve(path, com_flags, NULL), info->com, NULL);
+	}
+	else
+		wait(NULL);
+}
 
-void	execve_cmd(t_execute *info)
+void	execve_cmd(t_execute *info, char **env)
 {
 	check_error(info->file_in, info->com, info->filename);
 	if (info->file_in == -1)
 		return ;
-	// if (check_errors(fd1) == 1)
-	// 	pipe = execute_com(av[2], env, fd1);
+	if (info->pipe == 0)
+		final_process(info, env);
+	if (info->file_in != 0)
+		close(info->file_in);
+	if (info->file_out != 0)
+		close(info->file_out);
+	return ;
 	// while ((ac - n) != 2)
 	// {
 	// 	pipe = execute_com(av[n], env, pipe);

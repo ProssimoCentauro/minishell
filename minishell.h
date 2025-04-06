@@ -28,6 +28,8 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <fcntl.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 typedef struct	s_data
 {
@@ -71,7 +73,6 @@ typedef struct	s_execute
 	int		file_in;
 	int		file_out;
 	char	*filename;
-	int		append;
 	char	**args;
 }				t_execute;
 
@@ -117,7 +118,7 @@ char	*findpath(char **env, char *com);
 void	print_info(t_execute *info);
 void	set_info(t_execute *info);
 t_data	*analize_env(char **env);
-void	execve_cmd(t_execute *info);
+void	execve_cmd(t_execute *info, char **env);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);

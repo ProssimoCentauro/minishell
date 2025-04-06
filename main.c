@@ -149,7 +149,7 @@ int	main(int ac, char **av, char **env)
 		print_args(tokens);
 		executor(tree, env, info);
 		print_info(info);
-		execve_cmd(info);
+		execve_cmd(info, env);
 		i = -1;
 		free_tokens(tokens);
   }

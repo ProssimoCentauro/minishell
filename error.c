@@ -7,7 +7,8 @@ void check_error(int n, char *comm, char *arg)
 		ft_putstr_fd(comm, EXIT_FAILURE);
 		ft_putstr_fd(": ", EXIT_FAILURE);
 		ft_putstr_fd(arg, EXIT_FAILURE);
-		ft_putstr_fd(": ", EXIT_FAILURE);
+		if (arg)
+			ft_putstr_fd(": ", EXIT_FAILURE);
 		perror("");
 	}
 }
