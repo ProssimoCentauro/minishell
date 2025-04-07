@@ -109,32 +109,43 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-int	main(void)
+int	main(int ac, char **av, char **env)
 {
+	(void)ac;
+	//(void)av;
+
 	t_token	**tokens;
 	t_token	*tree;
+	t_data	data;
 	char	*line;
 	size_t	i;
 
+	data.env = env;
+	ft_export(data.env, ++av);
+//	printf("%s\n", ft_getenv("data", data.env));
 	i = -1;
 	while (42)
-  {
+	{
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
 		if (!ft_strcmp(line, "exit"))
 			exit(EXIT_SUCCESS);
+		if (!ft_strcmp(line, "env"))
+			ft_env(data.env);
+		if (!ft_strcmp(line, "export"))
+			ft_export(data.env, NULL);
 		if (tokenizer(line, &tokens))
 			continue ;
 		reorder_tokens(tokens);
 		assign_index(tokens);
-        check_heredoc(tokens);
+		finalize_tokens(tokens, &data);
 
-        ft_printf("assigning args!\n\n");
+        	ft_printf("assigning args!\n\n");
 		assign_args(tokens);
-        printf("assign finished!\n\n");
+        	printf("assign finished!\n\n");
         
-        while (tokens[++i])
+       		 while (tokens[++i])
 			printf("index %d: %s: %s: %s\n",
                     tokens[i]->index,
 				type_to_str(tokens[i]->type),
@@ -146,8 +157,9 @@ int	main(void)
 		tree = build_tree(tokens, &i);
 		print_tree(tree, 0);
 		printf("\n\n");
-        print_args(tokens);
-        i = -1;
+        	print_args(tokens);
+        	i = -1;
 		free_tokens(tokens);
-  }
+		printf("\n\n\n\n\n\n\n");
+	}
 }

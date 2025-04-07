@@ -29,11 +29,6 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 
-typedef struct	s_data
-{
-	char	**variables;
-}	t_data;
-  
 typedef enum e_type
 {
 	NONE = 0,
@@ -64,6 +59,13 @@ typedef struct s_token
 	struct s_token	*right;
 }					t_token;
 
+typedef	struct	s_data
+{
+	char	**variables;
+	t_token	*root;
+	char	**env;
+}	t_data;
+
 // tokens_utils.c && tokens_utils2.c
 t_token				*create_token(void *content, t_type type, t_type sub_type);
 t_token				**add_token(t_token **arr, t_token *token);
@@ -74,6 +76,7 @@ void				print_tokens(t_token **tokens);
 
 //tokenizer.c
 int tokenizer(char *line, t_token ***tokens);
+char    *create_str(char *line, size_t i, size_t j);
 
 //tokens_reoder.c
 void    reorder_tokens(t_token **tokens);
@@ -107,5 +110,7 @@ int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
 
 void    write_on_file(int fd, char *delimeter);
-int     check_heredoc(t_token **tokens);
+//int     check_heredoc(t_token **tokens);
+int     finalize_tokens(t_token **tokens, t_data *data);
+int forbidden_symbols(char c);
 #endif
