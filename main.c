@@ -1,4 +1,7 @@
 #include "minishell.h"
+
+int g_exit_status;
+
 /*
 int main(int ac, char **av, char **env)
 {
@@ -95,12 +98,14 @@ int	main(int ac, char **av, char **env)
 	size_t		i;
 	t_execute	*info;
 	char		*buf;
+	pid_t		pid;
 
 	(void) ac;
 	(void) av;
 	i = -1;
 	info = malloc(sizeof(t_execute));
 	info->pipe_fd = 0;
+	info->pid = - 1;
 	while (42)
 	{
 		buf = set_prompt();
@@ -130,8 +135,10 @@ int	main(int ac, char **av, char **env)
 		print_args(tokens);
 		executor(tree, env, info);
 		print_info(info);
-		check_builtin(info, env);
-		execve_cmd(info, env);
+		pid = fork();
+		if (pid == 0 && check_builtin(info, env) == 0)
+			execve_cmd(info, env);
+		waitpid(pid, NULL, 0);
 		i = -1;
 		free_tokens(tokens);
   }

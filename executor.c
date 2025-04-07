@@ -28,7 +28,7 @@ int	check_builtin(t_execute *info, char **env)
 		ft_exit(info-> args + 1);
 	else if (ft_strncmp(info->com, "unset", ft_strlen("unset") + 1) == 0)
 		ft_unset(info->args + 1, &env);
-	else 
+	else
 		return (0);
 	return (1);
 }
@@ -54,6 +54,8 @@ void	set_command(t_execute *info, t_token *tree)
 
 void	executor(t_token *tree, char **env, t_execute *info)
 {
+	int pid;
+
 	if (!tree)
 		return ;
 	executor(tree->left, env, info);
@@ -62,9 +64,9 @@ void	executor(t_token *tree, char **env, t_execute *info)
 	if (tree->type == DELIMETER || tree->sub_type == PIPE)
 	{
 		print_info(info);
-		if (check_builtin(info, env) == 0)
-			printf("not builtin");
-		execve_cmd(info, env);
+		pid = fork();
+		if (check_builtin(info, env) == 0 && pid == 0)
+			execve_cmd(info, env);
 		set_info(info);
 	}
 	if (tree->sub_type == IN && info->file_in != -1)

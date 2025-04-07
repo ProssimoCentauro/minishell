@@ -10,5 +10,6 @@ void check_error(int n, char *comm, char *arg)
 		if (arg)
 			ft_putstr_fd(": ", EXIT_FAILURE);
 		perror("");
+		g_exit_status = 1;
 	}
 }

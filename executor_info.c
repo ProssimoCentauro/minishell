@@ -8,6 +8,7 @@ void	set_info(t_execute *info)
 	info->pipe = 0;
 	info->args = calloc(1, sizeof(char *));
 	info->filename = NULL;
+	info->pipe_fd = 0;
 }
 
 void	print_info(t_execute *info)

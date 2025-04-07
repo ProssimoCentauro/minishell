@@ -32,11 +32,8 @@ int	execute_pipe(t_execute *info, char **env)
 		dup2(pipefd[1], STDOUT_FILENO);
 		check_error(execve(path, com_flags, NULL), info->com, NULL);
 	}
-	else
-	{
-		wait(NULL);
-		close(pipefd[1]);
-	}
+	wait(NULL);
+	close(pipefd[1]);
 	return (pipefd[0]);
 }
 
@@ -84,5 +81,4 @@ void	execve_cmd(t_execute *info, char **env)
 		close(info->file_in);
 	if (info->file_out != 1)
 		close(info->file_out);
-	return ;
 }

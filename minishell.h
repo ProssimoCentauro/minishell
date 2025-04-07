@@ -13,8 +13,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-
-
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
@@ -30,6 +28,8 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
+
+extern int g_exit_status;
 
 typedef struct	s_data
 {
@@ -75,6 +75,7 @@ typedef struct	s_execute
 	char	*filename;
 	char	**args;
 	int		pipe_fd;
+	int		pid;
 }				t_execute;
 
 // tokens_utils.c && tokens_utils2.c
@@ -125,4 +126,5 @@ char	*set_prompt();
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
+
 #endif
