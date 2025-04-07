@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/07 01:45:37 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/07 02:52:49 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	executor(t_token *tree, char **env, t_execute *info)
 		print_info(info);
 		if (check_builtin(info, env) == 0)
 			printf("not builtin");
-		//execve_cmd(info, env);
+		execve_cmd(info, env);
 		set_info(info);
 	}
 	if (tree->sub_type == IN && info->file_in != -1)

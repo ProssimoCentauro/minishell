@@ -131,7 +131,7 @@ int	main(int ac, char **av, char **env)
 		executor(tree, env, info);
 		print_info(info);
 		check_builtin(info, env);
-		//execve_cmd(info, env);
+		execve_cmd(info, env);
 		i = -1;
 		free_tokens(tokens);
   }
