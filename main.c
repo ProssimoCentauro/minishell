@@ -133,7 +133,6 @@ int	main(int ac, char **av, char **env)
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
 		if (!ft_strcmp(line, "exit"))
-			exit(EXIT_SUCCESS);
 			ft_exit(EXIT_SUCCESS);
 		if (tokenizer(line, &tokens))
 			continue ;

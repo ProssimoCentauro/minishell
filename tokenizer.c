@@ -65,7 +65,7 @@ t_token    *create_cmd(char *line, size_t *i, size_t *j, t_type type)
 		}
 		else if (line[*j] == temp && q == 1)
 			q--;
-		else if (line[*j] == ' ' && q == 0)
+		else if ((line[*j] == ' ' || special_char(line[*j])) && q == 0)
 			break ;
 		(*j)++;
 	}

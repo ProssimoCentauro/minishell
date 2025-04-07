@@ -98,7 +98,7 @@ char *ft_strncpy(char *dest, const char *src, size_t n)
     while (i < n)
     {
         dest[i] = '\0';
-        i++;
+	i++;
     }
     return dest;
 }
@@ -200,20 +200,35 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 int	finalize_tokens(t_token **tokens, t_data *data)
 {
 	size_t	i;
-
+/*
+	i = 0;
+	while (tokens[i])
+	{
+		if (tokens[i]->sub_type == HEREDOC)
+			check_heredoc(tokens, &i, data);
+		else if (tokens[i]->sub_type == CMD)
+			check_export(tokens, &i, data);
+		i++;
+	}*/
+	i = 0;
+	while (tokens[i])
+	{
+		if (tokens[i]->sub_type & (CMD | FILENAME))
+			check_export(tokens, &i, data);
+		i++;
+	}
 	i = 0;
 	while (tokens[i])
 	{
 		if (tokens[i]->sub_type == HEREDOC)
 			check_heredoc(tokens, &i);
-		else if (tokens[i]->sub_type == CMD)
-			check_export(tokens, &i, data);
-		i++;
+		else
+			i++;
 	}
 	return (0);
 }
 
-/* bisogna implementare la funzione che leva le vrigolette per il delimiter*/
+/* bisogna implementare la funzione che leva le virgolette per il delimiter*/
 void	write_on_file(int fd, char *delimiter)
 {
 	char	*line;
