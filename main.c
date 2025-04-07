@@ -111,34 +111,45 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	main(int ac, char **av, char **env)
 {
-	t_token		**tokens;
-	t_token		*tree;
-	char		*line;
-	size_t		i;
+	t_token	**tokens;
+	t_token	*tree;
+	t_data	data;
+	char	*line;
+	size_t	i;
 	t_execute	*info;
+  
+	data.env = env;
+//	ft_export(data.env, ++av);
+//	printf("%s\n", ft_getenv("data", data.env));
 
 	(void) ac;
 	(void) av;
-	i = -1;
 	info = malloc(sizeof(t_execute));
 	while (42)
-  {
+	{
+    i = -1;
 		set_info(info);
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline("~~~>");
 		if (!ft_strcmp(line, "exit"))
+			exit(EXIT_SUCCESS);
 			ft_exit(EXIT_SUCCESS);
 		if (tokenizer(line, &tokens))
 			continue ;
 		reorder_tokens(tokens);
 		assign_index(tokens);
-        ft_printf("assigning args!\n\n");
+		finalize_tokens(tokens, &data);
+
+        	ft_printf("assigning args!\n\n");
 		assign_args(tokens);
-        printf("assign finished!\n\n");
-        while (tokens[++i])
-			printf("index %d: %s: %s: %s\n", tokens[i]->index,
-				type_to_str(tokens[i]->type), type_to_str(tokens[i]->sub_type),
+        	printf("assign finished!\n\n");
+        
+       		 while (tokens[++i])
+			printf("index %d: %s: %s: %s\n",
+                    tokens[i]->index,
+				type_to_str(tokens[i]->type),
+                type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
 
 		printf("\n\n\n");
@@ -150,7 +161,7 @@ int	main(int ac, char **av, char **env)
 		executor(tree, env, info);
 		print_info(info);
 		execve_cmd(info, env);
-		i = -1;
 		free_tokens(tokens);
-  }
+		printf("\n\n\n\n\n\n\n");
+	}
 }

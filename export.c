@@ -3,9 +3,20 @@
 void	add_env(char **env, char *var)
 {
 	int		n;
+	int	error;
+	size_t	i;
 
 	n = 0;
-	if (ft_isalpha(var[0]) == 0)
+	error = 0;
+	i = 0;
+
+	while (var[i] && var[i] != '=')
+	{
+		if (forbidden_symbols(var[i]))
+			error = 1;
+		i++;
+	}
+	if (ft_isalpha(var[0]) == 0 || error == 1)
 	{
 		ft_putstr_fd("export: '",  2);
 		ft_putstr_fd(var, 2);
@@ -82,13 +93,18 @@ void	change_env(char **env, char *var)
 void	ft_export(char **env, char **var)
 {
 	char	**copy;
+	char	*value;
 
 	if (var && *var)
 	{
 		while (*var)
 		{
-			if (ft_getenv(*var, env) == NULL)
+			value = ft_getenv(*var, env);
+			if (ft_strlen(value) == 0)
+			{
+				free(value);
 				add_env(env, *var);
+			}
 			else if (ft_getenv(*var, env))
 				change_env(env, *var);
 			var++;

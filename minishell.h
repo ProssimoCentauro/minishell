@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <stddef.h>
 # include <dirent.h>
+# include <fcntl.h>
 # include <sys/types.h>
 
 # include "ft_printf.h"
@@ -30,11 +31,6 @@
 # include <fcntl.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-
-typedef struct	s_data
-{
-	char	**variables;
-}	t_data;
 
 typedef enum e_type
 {
@@ -66,6 +62,14 @@ typedef struct s_token
 	struct s_token	*right;
 }					t_token;
 
+
+typedef	struct	s_data
+{
+	char	**variables;
+	t_token	*root;
+	char	**env;
+}	t_data;
+
 typedef struct	s_execute
 {
 	char	*com;
@@ -75,6 +79,7 @@ typedef struct	s_execute
 	char	*filename;
 	char	**args;
 }				t_execute;
+
 
 // tokens_utils.c && tokens_utils2.c
 t_token				*create_token(void *content, t_type type, t_type sub_type);
@@ -86,6 +91,7 @@ void				print_tokens(t_token **tokens);
 
 //tokenizer.c
 int tokenizer(char *line, t_token ***tokens);
+char    *create_str(char *line, size_t i, size_t j);
 
 //tokens_reoder.c
 void    reorder_tokens(t_token **tokens);
@@ -122,4 +128,9 @@ void	execve_cmd(t_execute *info, char **env);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
+
+void    write_on_file(int fd, char *delimeter);
+//int     check_heredoc(t_token **tokens);
+int     finalize_tokens(t_token **tokens, t_data *data);
+int forbidden_symbols(char c);
 #endif
