@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 16:32:53 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/02/11 14:49:51 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/07 00:58:22 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,4 @@ void	execve_cmd(t_execute *info, char **env)
 	if (info->file_out != 1)
 		close(info->file_out);
 	return ;
-	// while ((ac - n) != 2)
-	// {
-	// 	pipe = execute_com(av[n], env, pipe);
-	// 	n++;
-	// }
-	// final_process(fd2, pipe, av[ac - 2], env);
 }

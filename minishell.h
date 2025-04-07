@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/04 13:08:18 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/07 02:21:45 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ t_token *build_tree(t_token **tokens, size_t *i);
 
 //built in
 void	ft_echo(char** str);
-void	cd(char **str, char *curr_dir);
+void	cd(char **str);
 void	pwd();
 void	ft_env(char **env);
 void	ft_export(char **env, char **var);
@@ -120,6 +120,8 @@ void	print_info(t_execute *info);
 void	set_info(t_execute *info);
 t_data	*analize_env(char **env);
 void	execve_cmd(t_execute *info, char **env);
+int		check_builtin(t_execute *info, char **env);
+char	*set_prompt();
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);

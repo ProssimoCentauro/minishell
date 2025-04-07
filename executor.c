@@ -6,11 +6,32 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/04 13:25:36 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/07 01:45:37 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	check_builtin(t_execute *info, char **env)
+{
+	if (ft_strncmp(info->com, "echo", ft_strlen("echo") + 1) == 0)
+		ft_echo((info->args) + 1);
+	else if (ft_strncmp(info->com, "cd", ft_strlen("cd") + 1) == 0)
+		cd((info->args) + 1);
+	else if (ft_strncmp(info->com, "pwd", ft_strlen("pwd") + 1) == 0)
+		pwd();
+	else if (ft_strncmp(info->com, "env", ft_strlen("env") + 1) == 0)
+		ft_env(env);
+	else if (ft_strncmp(info->com, "export", ft_strlen("export") + 1) == 0)
+		ft_export(env, (info->args) + 1);
+	else if (ft_strncmp(info->com, "exit", ft_strlen("exit") + 1) == 0)
+		ft_exit(info-> args + 1);
+	else if (ft_strncmp(info->com, "unset", ft_strlen("unset") + 1) == 0)
+		ft_unset(info->args + 1, &env);
+	else 
+		return (0);
+	return (1);
+}
 
 void	set_command(t_execute *info, t_token *tree)
 {
@@ -41,7 +62,9 @@ void	executor(t_token *tree, char **env, t_execute *info)
 	if (tree->type == DELIMETER || tree->sub_type == PIPE)
 	{
 		print_info(info);
-		execve_cmd(info, env);
+		if (check_builtin(info, env) == 0)
+			printf("not builtin");
+		//execve_cmd(info, env);
 		set_info(info);
 	}
 	if (tree->sub_type == IN && info->file_in != -1)
