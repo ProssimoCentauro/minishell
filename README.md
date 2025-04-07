@@ -1,2 +1,5 @@
-# minishell
-As beatiful as a shell
+
+# MINISHELL
+
+As beautiful as a shell
+
