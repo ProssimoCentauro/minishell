@@ -199,6 +199,7 @@ int    tokenizer(char *line, t_token ***tokens)
 {
     size_t  i;
     size_t  j;
+    t_token	*final;
 
     i = 0;
     j = 0;
@@ -220,5 +221,7 @@ int    tokenizer(char *line, t_token ***tokens)
             jump_spaces(line, &i, &j);
         }
     }
+    final = create_token(ft_strdup("newline"), NEW_LINE, NEW_LINE);
+    *tokens = add_token(*tokens, final);
     return (0);
 }
