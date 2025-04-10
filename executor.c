@@ -64,12 +64,10 @@ void	executor(t_token *tree, char **env, t_execute *info)
 		if (check_builtin(info, env) == 0)
 			execve_cmd(info, env);
 		set_info(info);
+		info->delimiter = tree->sub_type;
 	}
 	if (tree->sub_type == IN && info->file_in != -1)
-	{
 		info->file_in = open(info->filename, O_RDWR);
-		check_error(info->file_in, info->com, info->filename);
-	}
 	if (tree->sub_type == OUT && info->file_in != -1)
 		info->file_out = open(info->filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (tree->sub_type == APPEND && info->file_in != -1)

@@ -32,11 +32,6 @@
 
 extern int g_exit_status;
 
-typedef struct	s_data
-{
-	char	**variables;
-}	t_data;
-
 typedef enum e_type
 {
     NONE = 0,
@@ -87,6 +82,7 @@ typedef struct	s_execute
 	char	**args;
 	int		pipe_fd;
 	int		pid;
+	t_type	delimiter;
 }				t_execute;
 
 
