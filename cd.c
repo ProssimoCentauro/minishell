@@ -16,23 +16,27 @@ char	*get_previous_directory(char *curr_dir)
 	prev = ft_substr(curr_dir, 0, len);
 	if (*prev == '\0')
 	{
+		prev = malloc(2 *(sizeof(char)));
 		*prev = '/';
 		*(prev + 1) = '\0';
 	}
 	return (prev);
 }
 
-void	cd(char **str, char *curr_dir)
+void	cd(char **str)
 {
 	int		n;
 	char	*new_dir;
+	char	*curr_dir;
 
 	n = 0;
+	curr_dir = malloc(1024 * (sizeof(char)));
+	getcwd(curr_dir, 1024);
+	new_dir = NULL;
 	if (!str || !str[n])
 	{
-		new_dir = ft_strjoin("/nfs/homes/", getenv("USER"));
-		chdir(new_dir);
-		return (free_array(str), free(new_dir));
+		chdir(getenv("HOME"));
+		return ;
 	}
 	if (str[1] != NULL)
 	{
@@ -43,9 +47,8 @@ void	cd(char **str, char *curr_dir)
 	{
 		new_dir = get_previous_directory(curr_dir);
 		check_error(chdir(new_dir), "cd: ", new_dir);
-		return (free_array(str), free(new_dir));
+		return ;
 	}
 	else
 		check_error(chdir(str[n]), "cd: ", str[n]);
-	free_array(str);
 }
