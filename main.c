@@ -107,7 +107,7 @@ int	main(int ac, char **av, char **env)
 	{
 		printf("metti almeno una variabile per export come: ./minishell data=123\n");
 		exit(EXIT_FAILURE);	
-	}
+  }
 	data.env = env;
 	ft_export(env, ++av);
 //	printf("%s\n", ft_getenv("data", data.env));
