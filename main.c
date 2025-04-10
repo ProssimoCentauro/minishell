@@ -98,14 +98,12 @@ int	main(int ac, char **av, char **env)
 	size_t		i;
 	t_execute	*info;
 	char		*buf;
-	pid_t		pid;
 
 	(void) ac;
 	(void) av;
 	i = -1;
 	info = malloc(sizeof(t_execute));
 	info->pipe_fd = 0;
-	info->pid = - 1;
 	while (42)
 	{
 		buf = set_prompt();
@@ -134,11 +132,13 @@ int	main(int ac, char **av, char **env)
 		printf("\n\n");
 		print_args(tokens);
 		executor(tree, env, info);
-		print_info(info);
-		pid = fork();
-		if (pid == 0 && check_builtin(info, env) == 0)
+		if (check_builtin(info, env) == 0)
 			execve_cmd(info, env);
-		waitpid(pid, NULL, 0);
+		while (info->pid > 0)
+		{
+			waitpid(-1, NULL, 0);
+			info->pid -= 1;
+		}
 		i = -1;
 		free_tokens(tokens);
   }
