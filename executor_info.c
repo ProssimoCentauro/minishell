@@ -4,7 +4,7 @@ void	set_info(t_execute *info)
 {
 	info->com = NULL;
 	info->file_in = 0;
-	info->file_out = 0;
+	info->file_out = 1;
 	info->pipe = 0;
 	info->args = ft_calloc(1, sizeof(char *));
 	info->filename = NULL;
@@ -23,5 +23,6 @@ void	print_info(t_execute *info)
 	}
 	printf("pipe: %d\n", info->pipe);
 	printf("file in: %d\n", info->file_in);
-	printf("file out: %d\n\n", info->file_out);
+	printf("file out: %d\n", info->file_out);
+	printf("pipe fd: %d\n\n", info->pipe_fd);
 }

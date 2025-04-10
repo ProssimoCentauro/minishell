@@ -145,16 +145,27 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 		if (line[j] == '$')
 		{
 			k = ++j;
-			if (!line[j] && line[j] == ' ' && line[j] == '\'' && line[j] == '"'
-					&& line[j] == '$' && !forbidden_symbols(line[j]))
-				continue ;
-			while  (line[j] && line[j] != ' ' && line[j] != '\'' && line[j] != '"'
+			if (line[j] && line[j] != '?')
+			{
+				while  (line[j] && line[j] != ' ' && line[j] != '\'' && line[j] != '"'
 					&& line[j] != '$' && !forbidden_symbols(line[j]))
 				j++;
-			sub_str = create_str(line, k, j - 1);
-			var = ft_getenv(sub_str, data->env);
-			free(sub_str);
-			line = replace_range(line, var, k - 1, j - 1);
+			}
+			else if (!line[j] && line[j] == ' ' && line[j] == '\'' && line[j] == '"'
+					&& line[j] == '$' && !forbidden_symbols(line[j]))
+				continue ;
+			if (j != k)
+			{
+				sub_str = create_str(line, k, j - 1);
+				var = ft_getenv(sub_str, data->env);
+				free(sub_str);
+				line = replace_range(line, var, k - 1, j - 1);
+			}
+			else
+			{
+				var = ft_itoa(g_exit_status);
+				line = replace_range(line, var, k - 1, j);
+			}
 			j = 0;
 		}
 		else if (line[j] == '"')
@@ -164,18 +175,27 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 				if (line[j] == '$')
                 		{
                         		k = ++j;
-					if (!line[j] && line[j] == ' ' && line[j] == '\''  && line[j] == '"' && line[j] == '$')
+					if (line[j] && line[j] != '?')
 					{
-						continue ;
-					}
-					while  (line[j] && line[j] != ' ' && line[j] != '\'' && line[j] != '"' && line[j] != '$')
-					{
+						while  (line[j] && line[j] != ' ' && line[j] != '\'' && line[j] != '"'
+							&& line[j] != '$' && !forbidden_symbols(line[j]))
 						j++;
 					}
-					sub_str = create_str(line, k, j - 1);
-                        		var = ft_getenv(sub_str, data->env);
-					free(sub_str);
-                        		line = replace_range(line, var, k - 1, j - 1);
+					else if (!line[j] && line[j] == ' ' && line[j] == '\''
+							&& line[j] == '"' && line[j] == '$')
+						continue ;
+					if (j != k)
+					{
+						sub_str = create_str(line, k, j - 1);
+						var = ft_getenv(sub_str, data->env);
+						free(sub_str);
+						line = replace_range(line, var, k - 1, j - 1);
+					}
+					else
+					{
+						var = ft_itoa(g_exit_status);
+						line = replace_range(line, var, k - 1, j);
+					}
 					j = 0;
 				}
 			}
@@ -200,16 +220,6 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 int	finalize_tokens(t_token **tokens, t_data *data)
 {
 	size_t	i;
-/*
-	i = 0;
-	while (tokens[i])
-	{
-		if (tokens[i]->sub_type == HEREDOC)
-			check_heredoc(tokens, &i, data);
-		else if (tokens[i]->sub_type == CMD)
-			check_export(tokens, &i, data);
-		i++;
-	}*/
 	i = 0;
 	while (tokens[i])
 	{

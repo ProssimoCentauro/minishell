@@ -88,6 +88,12 @@ t_token	*check_args(t_token **tokens)
 		return (tokens[0]);
 	while (tokens[++i])
 	{
+		if (tokens[i] && tokens[i]->sub_type == AND
+				&& !ft_strcmp((char *)tokens[i]->content, "&"))
+		{
+			res = tokens[i];
+			break ;
+		}
 		if (tokens[i] && check_next(tokens, i, &res))
 			break ;
 		if (tokens[i] && check_quotes(tokens[i], &res))

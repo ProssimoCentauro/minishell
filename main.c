@@ -1,5 +1,28 @@
 #include "minishell.h"
 
+int g_exit_status;
+
+/*
+int main(int ac, char **av, char **env)
+{
+	char	*input;
+	char	*buf;
+
+	input = ft_calloc(1, sizeof(char));
+	(void) ac;
+	(void) av;
+	find_wildcards("*.c");
+	while (1)
+	{
+		buf = ft_calloc(1024, sizeof(char));
+		getcwd(buf, 1024);
+		buf[ft_strlen(buf)] = ' ';
+		buf[ft_strlen(buf) + 1] = '\0';
+		input = readline(buf);
+		free(buf);
+	}
+}*/
+
 static char	*type_to_str(t_type type);
 
 void	print_tree(t_token *root, int depth)
@@ -78,22 +101,28 @@ int	main(int ac, char **av, char **env)
 	char	*line;
 	size_t	i;
 	t_execute	*info;
-  
+	char		*buf;
+ 
+	if (ac <= 1)
+	{
+		printf("metti almeno una variabile per export come: ./minishell data=123\n");
+		exit(EXIT_FAILURE);	
+	}
 	data.env = env;
-//	ft_export(data.env, ++av);
+	ft_export(env, ++av);
 //	printf("%s\n", ft_getenv("data", data.env));
 
-	(void) ac;
-	(void) av;
 	info = malloc(sizeof(t_execute));
+	info->pipe_fd = 0;
 	while (42)
 	{
+		buf = set_prompt();
 		free(info->args);
 		i = -1;
 		set_info(info);
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
-		line = readline("~~~>");
+		line = readline(buf);
 		if (!ft_strcmp(line, "exit"))
 			break ;
 		if (tokenizer(line, &tokens))
@@ -121,9 +150,15 @@ int	main(int ac, char **av, char **env)
 		print_tree(tree, 0);
 		printf("\n\n");
 		print_args(tokens);
-	/*	executor(tree, env, info);
-		print_info(info);
-		execve_cmd(info, env);*/
+		executor(tree, env, info);
+		if (check_builtin(info, env) == 0)
+			execve_cmd(info, env);
+		while (info->pid > 0)
+		{
+			waitpid(-1, NULL, 0);
+			info->pid -= 1;
+		}
+		i = -1;
 		free_tokens(tokens);
 		printf("\n\n\n\n\n\n\n");
 	}
