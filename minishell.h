@@ -32,11 +32,6 @@
 
 extern int g_exit_status;
 
-typedef struct	s_data
-{
-	char	**variables;
-}	t_data;
-
 typedef enum e_type
 {
     NONE = 0,
