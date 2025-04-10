@@ -85,6 +85,9 @@ typedef struct	s_execute
 }				t_execute;
 
 
+//main.c
+int	ft_strcmp(char *s1, char *s2);
+
 // tokens_utils.c && tokens_utils2.c
 t_token				*create_token(void *content, t_type type, t_type sub_type);
 t_token				**add_token(t_token **arr, t_token *token);

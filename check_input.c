@@ -26,39 +26,42 @@ t_token	*check_next(t_token **tokens, size_t i, t_token **res)
 	return (*res);
 }
 
-int	search_quotes(char *str, size_t *i, char to_search)
+int     search_quotes(char *str, size_t *i, char to_search)
 {
-	static	size_t	d_q = 0;
-	static	size_t	s_q = 0;
+        static  size_t  d_q = 0;
+        static  size_t  s_q = 0;
 
-	while(str[*i])
-	{
-		if ((str[*i] == '"' || str[*i] == '\'') && str[*i] != to_search)
-		{
-			if (str[*i] == '"')
-				d_q++;
-			else if (str[*i] == '\'')
-				s_q++;
-			to_search = str[*i];
-			(*i)++;
-			if (search_quotes(str, i, to_search))
-				return (1);
-			(*i)++;
-		}
-		else if ((str[*i] == '"' || str[*i] == '\'') && str[*i] == to_search)
-		{
-			if (str[*i] == '"')
-				d_q--;
-			else if (str[*i] == '\'')
-				s_q--;
-			return(0);
-		}
-		else
-			(*i)++;
-	}
-	if (s_q != 0 || d_q != 0)
-		return (1);
-	return (0);
+        while(str[*i])
+        {
+                if ((str[*i] == '"' || str[*i] == '\'') && str[*i] != to_search)
+                {
+                        if (str[*i] == '"')
+                                d_q++;
+                        else if (str[*i] == '\'')
+                                s_q++;
+                        (*i)++;
+                        if (search_quotes(str, i, str[*i - 1]))
+                                return (1);
+                        (*i)++;
+                }
+                else if ((str[*i] == '"' || str[*i] == '\'') && str[*i] == to_search)
+                {
+                        if (str[*i] == '"')
+                                d_q--;
+                        else if (str[*i] == '\'')
+                                s_q--;
+                        return(0);
+                }
+                else
+                        (*i)++;
+        }
+        if (s_q != 0 || d_q != 0)
+        {
+                s_q = 0;
+                d_q = 0;
+                return (1);
+        }
+        return (0);
 }
 
 t_token	*check_quotes(t_token *token, t_token **res)
@@ -88,6 +91,12 @@ t_token	*check_args(t_token **tokens)
 		return (tokens[0]);
 	while (tokens[++i])
 	{
+		if (tokens[i] && tokens[i]->sub_type == AND
+				&& !ft_strcmp((char *)tokens[i]->content, "&"))
+		{
+			res = tokens[i];
+			break ;
+		}
 		if (tokens[i] && check_next(tokens, i, &res))
 			break ;
 		if (tokens[i] && check_quotes(tokens[i], &res))

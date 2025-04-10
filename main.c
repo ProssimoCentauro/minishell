@@ -102,13 +102,16 @@ int	main(int ac, char **av, char **env)
 	size_t	i;
 	t_execute	*info;
 	char		*buf;
-  
+ 
+	if (ac <= 1)
+	{
+		printf("metti almeno una variabile per export come: ./minishell data=123\n");
+		exit(EXIT_FAILURE);	
+  }
 	data.env = env;
-//	ft_export(data.env, ++av);
+	ft_export(env, ++av);
 //	printf("%s\n", ft_getenv("data", data.env));
 
-	(void) ac;
-	(void) av;
 	info = malloc(sizeof(t_execute));
 	info->pipe_fd = 0;
 	while (42)
