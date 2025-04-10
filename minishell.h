@@ -18,6 +18,7 @@
 # include <stdio.h>
 # include <stddef.h>
 # include <dirent.h>
+# include <fcntl.h>
 # include <sys/types.h>
 
 # include "ft_printf.h"
@@ -38,33 +39,43 @@ typedef struct	s_data
 
 typedef enum e_type
 {
-	NONE = 0,
-	CMD = 1 << 1,
-	LIMITER = 1 << 2,
-	DELIMETER = 1 << 3,
-	REDIRECT = 1 << 4,
-	FILENAME = 1 << 5,
-	AND = 1 << 6,
-	OR = 1 << 7,
-	IN = 1 << 8,
-	OUT = 1 << 9,
-	HEREDOC = 1 << 10,
-	APPEND = 1 << 11,
-	PIPE = 1 << 12,
-	OPEN = 1 << 13,
-	CLOSE = 1 << 14,
-}					t_type;
+    NONE = 0,
+    CMD = 1 << 1,
+    LIMITER = 1 << 2,
+    DELIMETER = 1 << 3,
+    REDIRECT = 1 << 4,
+    FILENAME = 1 << 5,
+    AND = 1 << 6,
+    OR = 1 << 7,
+    IN = 1 << 8,
+    OUT = 1 << 9,
+    HEREDOC = 1 << 10,
+    APPEND = 1 << 11,
+    PIPE = 1 << 12,
+    OPEN = 1 << 13,
+    CLOSE = 1 << 14,
+    NEW_LINE = 1 << 15,
+} t_type;
 
 typedef struct s_token
 {
 	int             index;
 	void			*content;
-    t_type			type;
+	t_type			type;
 	t_type			sub_type;
-    struct s_token  **args;
+	int			quotes;
+	struct s_token  **args;
 	struct s_token	*left;
 	struct s_token	*right;
 }					t_token;
+
+
+typedef	struct	s_data
+{
+	char	**variables;
+	t_token	*root;
+	char	**env;
+}	t_data;
 
 typedef struct	s_execute
 {
@@ -78,6 +89,7 @@ typedef struct	s_execute
 	int		pid;
 }				t_execute;
 
+
 // tokens_utils.c && tokens_utils2.c
 t_token				*create_token(void *content, t_type type, t_type sub_type);
 t_token				**add_token(t_token **arr, t_token *token);
@@ -88,6 +100,7 @@ void				print_tokens(t_token **tokens);
 
 //tokenizer.c
 int tokenizer(char *line, t_token ***tokens);
+char    *create_str(char *line, size_t i, size_t j);
 
 //tokens_reoder.c
 void    reorder_tokens(t_token **tokens);
@@ -126,5 +139,14 @@ char	*set_prompt();
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
+
+void    write_on_file(int fd, char *delimeter);
+//int     check_heredoc(t_token **tokens);
+int     finalize_tokens(t_token **tokens, t_data *data);
+int forbidden_symbols(char c);
+
+int     syntax_error(t_token **tokens, t_token *check);
+
+t_token *check_args(t_token **tokens);
 
 #endif

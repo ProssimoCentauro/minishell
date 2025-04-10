@@ -20,8 +20,9 @@ t_token	*create_token(void *content, t_type type, t_type sub_type)
 	token = ft_calloc(sizeof(t_token), 1);
 	if (!token)
 		return (NULL);
-    token->args = NULL;
-    token->index = 0;
+	token->quotes = 0;
+    	token->args = NULL;
+    	token->index = 0;
 	token->content = content;
 	token->type = type;
 	token->sub_type = sub_type;
@@ -70,6 +71,8 @@ void	free_tokens(t_token **tokens)
 		return ;
 	while (tokens[i])
 	{
+        if (tokens[i]->args != NULL)
+            free(tokens[i]->args);
 		free(tokens[i]->content);
 		free(tokens[i]);
 		i++;

@@ -20,6 +20,13 @@ int special_char(char c)
     return (0);
 }
 
+int	search_special(char *line, size_t i)
+{
+	while (line[i] && line[i] == ' ')
+		i++;
+	return (special_char(line[i]));
+}
+
 // Create the string for the token
 char    *create_str(char *line, size_t i, size_t j)
 {
@@ -40,43 +47,29 @@ char    *create_str(char *line, size_t i, size_t j)
 }
 
 // Create a cmd type token
-t_token    *create_cmd(char *line, size_t *i, size_t *j)
+//logica delle due quotes se trovo uno spazio e q sta a zero allora la parola è finita
+t_token    *create_cmd(char *line, size_t *i, size_t *j, t_type type)
 {
-    t_token *cmd;
-
-    while (line[*j] != ' ' && line[*j] && !special_char(line[*j]))
-    {
-        (*j)++;
-    }
-    cmd = create_token(create_str(line, *i, *j - 1), CMD, CMD);
-    return(cmd);
-}
-
-// Create a filename type token
-t_token    *create_filename(char *line, size_t *i, size_t *j)
-{
-    t_token *cmd;
-
-    while (line[*j] != ' ' && line[*j] && !special_char(line[*j]))
-    {
-        (*j)++;
-    }
-    cmd = create_token(create_str(line, *i, *j - 1),
-            FILENAME, FILENAME);
-    return(cmd);
-}
-
-// Create a limiter type token
-t_token    *create_limiter(char *line, size_t *i, size_t *j)
-{
-    t_token *cmd;
-
-    while (line[*j] != ' ' && line[*j] && !special_char(line[*j]))
-    {
-        (*j)++;
-    }
-    cmd = create_token(create_str(line, *i, *j - 1),
-            LIMITER, LIMITER);
+	t_token *cmd;
+	char	temp;
+	int	q;
+	
+	q = 0;
+	temp = 0;
+	while (line[*j])
+	{
+		if ((line[*j] == '"' || line[*j] == '\'') && q == 0)
+		{
+			temp = line[*j];
+			q++;
+		}
+		else if (line[*j] == temp && q == 1)
+			q--;
+		else if ((line[*j] == ' ' || special_char(line[*j])) && q == 0)
+			break ;
+		(*j)++;
+	}
+    cmd = create_token(create_str(line, *i, *j - 1), type, type);
     return(cmd);
 }
 
@@ -193,11 +186,11 @@ static t_token *select_creation(char *line, size_t *i,
     t_token *token = NULL;
 
     if (!is_arrow(tokens))
-        token = create_cmd(line, i, j);
+        token = create_cmd(line, i, j, CMD);
     else if (is_arrow(tokens) == 1)
-        token = create_filename(line, i, j);
+        token = create_cmd(line, i, j, FILENAME);
     else if (is_arrow(tokens) == 2)
-        token = create_limiter(line, i, j);
+	    token = create_cmd(line, i, j, LIMITER);
     return (token);
 } 
 
@@ -206,6 +199,7 @@ int    tokenizer(char *line, t_token ***tokens)
 {
     size_t  i;
     size_t  j;
+    t_token	*final;
 
     i = 0;
     j = 0;
@@ -227,5 +221,7 @@ int    tokenizer(char *line, t_token ***tokens)
             jump_spaces(line, &i, &j);
         }
     }
+    final = create_token(ft_strdup("newline"), NEW_LINE, NEW_LINE);
+    *tokens = add_token(*tokens, final);
     return (0);
 }

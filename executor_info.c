@@ -6,7 +6,7 @@ void	set_info(t_execute *info)
 	info->file_in = 0;
 	info->file_out = 1;
 	info->pipe = 0;
-	info->args = calloc(1, sizeof(char *));
+	info->args = ft_calloc(1, sizeof(char *));
 	info->filename = NULL;
 }
 
