@@ -31,7 +31,7 @@ char	*ft_getenv(char *variable, char **env)
 		}
 		env++;
 	}
-	if (!value || ft_strlen(value) == 0)
+	if (value && ft_strlen(value) == 0)
 		return (ft_strdup(""));
 	return (value);
 }

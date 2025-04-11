@@ -92,7 +92,7 @@ void	change_env(char **env, char *var)
 	(env[i][n + 1] != '=' || env[i][n + 1] != '\0'))
 		i++;
 	temp = env[i];
-	env[i] = var;
+	env[i] = ft_strdup(var);
 	free(temp);
 }
 
@@ -106,9 +106,8 @@ void	ft_export(char ***env, char **var)
 		while (*var)
 		{
 			value = ft_getenv(*var, *env);
-			if (ft_strlen(value) == 0)
+			if (!value)
 			{
-				free(value);
 				add_env(env, *var);
 			}
 			else if (ft_getenv(*var, *env))
