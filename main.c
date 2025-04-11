@@ -106,11 +106,8 @@ int	main(int ac, char **av, char **env)
 
 	env_copy = copy_array(env);
 	data.env = env_copy;
-//	ft_export(data.env, ++av);
 //	printf("%s\n", ft_getenv("data", data.env));
 
-	(void) ac;
-	(void) av;
 	info = malloc(sizeof(t_execute));
 	info->pid = 0;
 	info->pipe_fd = 0;
