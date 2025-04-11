@@ -78,10 +78,11 @@ typedef struct	s_execute
 	int		pipe;
 	int		file_in;
 	int		file_out;
-	char	*filename;
+	char	*file;
 	char	**args;
 	int		pipe_fd;
 	int		pid;
+	t_type	delimiter;
 }				t_execute;
 
 
@@ -116,7 +117,7 @@ void	ft_echo(char** str);
 void	cd(char **str);
 void	pwd();
 void	ft_env(char **env);
-void	ft_export(char **env, char **var);
+void	ft_export(char ***env, char **var);
 void	ft_exit(char **exit_status);
 void	ft_unset(char **var, char ***env);
 
@@ -126,14 +127,17 @@ void	free_array(char **str);
 char	**copy_array(char **array);
 char	*ft_getenv(char *variable, char **env);
 char	**find_wildcards(char *str);
-void	executor(t_token *tree, char **env, t_execute *info);
+void	executor(t_token *tree, char ***env, t_execute *info);
 char	*findpath(char **env, char *com);
 void	print_info(t_execute *info);
 void	set_info(t_execute *info);
 t_data	*analize_env(char **env);
 void	execve_cmd(t_execute *info, char **env);
-int		check_builtin(t_execute *info, char **env);
+int		check_builtin(t_execute *info, char ***env);
 char	*set_prompt();
+int		array_len(char **array);
+void	command_error(char *comm);
+char	**add_array(char **env, char *var);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
