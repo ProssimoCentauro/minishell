@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd.c                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/11 15:03:13 by ldei-sva          #+#    #+#             */
+/*   Updated: 2025/04/11 15:03:14 by ldei-sva         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*get_previous_directory(char *curr_dir)
@@ -34,21 +46,16 @@ void	cd(char **str)
 	getcwd(curr_dir, 1024);
 	new_dir = NULL;
 	if (!str || !str[n])
-	{
 		chdir(getenv("HOME"));
-		return ;
-	}
-	if (str[1] != NULL)
-	{
+	else if (str[1] != NULL)
 		write(2, "cd: too many arguments\n", 24);
-		return ;
-	}
-	if (ft_strncmp(str[n], "..", ft_strlen("..")) == 0)
+	else if (ft_strncmp(str[n], "..", ft_strlen("..")) == 0)
 	{
 		new_dir = get_previous_directory(curr_dir);
 		check_error(chdir(new_dir), "cd: ", new_dir);
-		return ;
+		free(new_dir);
 	}
 	else
 		check_error(chdir(str[n]), "cd: ", str[n]);
+	free(curr_dir);
 }

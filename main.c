@@ -102,20 +102,22 @@ int	main(int ac, char **av, char **env)
 	size_t	i;
 	t_execute	*info;
 	char		*buf;
+	char	**env_copy;
 
-	data.env = env;
+	env_copy = copy_array(env);
+	data.env = env_copy;
 //	ft_export(data.env, ++av);
 //	printf("%s\n", ft_getenv("data", data.env));
 
 	(void) ac;
 	(void) av;
 	info = malloc(sizeof(t_execute));
+	info->pid = 0;
 	info->pipe_fd = 0;
 	g_exit_status = 0;
 	while (42)
 	{
 		buf = set_prompt();
-		free(info->args);
 		i = -1;
 		set_info(info);
 		tokens = NULL;
@@ -148,9 +150,9 @@ int	main(int ac, char **av, char **env)
 		print_tree(tree, 0);
 		printf("\n\n");
 		print_args(tokens);
-		executor(tree, env, info);
-		if (check_builtin(info, env) == 0)
-			execve_cmd(info, env);
+		executor(tree, &env_copy, info);
+		if (check_builtin(info, &env_copy) == 0)
+			execve_cmd(info, env_copy);
 		while (info->pid > 0)
 		{
 			waitpid(-1, &g_exit_status, 0);
