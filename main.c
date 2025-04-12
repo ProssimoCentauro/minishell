@@ -108,6 +108,7 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 
 	setup_signal_handlers();
+
 	env_copy = copy_array(env);
 	data.env = env_copy;
 //	printf("%s\n", ft_getenv("data", data.env));
