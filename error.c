@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 15:16:37 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/11 15:16:39 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:58:37 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	check_error(int n, char *comm, char *arg)
 		perror("");
 		g_exit_status = 1;
 	}
+	else
+		g_exit_status = 0;
 }
 
 void	command_error(char *comm)

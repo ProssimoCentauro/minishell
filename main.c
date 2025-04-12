@@ -104,6 +104,8 @@ int	main(int ac, char **av, char **env)
 	char		*buf;
 	char	**env_copy;
 
+	(void)ac;
+	(void)av;
 	env_copy = copy_array(env);
 	data.env = env_copy;
 //	printf("%s\n", ft_getenv("data", data.env));

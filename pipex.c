@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 16:32:53 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/07 00:58:22 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:48:51 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void	final_process(t_execute *info, char **env)
 			close(info->file_out);
 		}
 		execve(path, com_flags, NULL);
-		// if (!path)
-		// 	command_error(info->com);
+		if (!path)
+			command_error(info->com);
 	}
 	wait(NULL);
 }
