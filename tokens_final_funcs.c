@@ -158,6 +158,8 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 			{
 				sub_str = create_str(line, k, j - 1);
 				var = ft_getenv(sub_str, data->env);
+				if (!var)
+					var = ft_strdup("");
 				free(sub_str);
 				line = replace_range(line, var, k - 1, j - 1);
 			}
@@ -188,6 +190,8 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 					{
 						sub_str = create_str(line, k, j - 1);
 						var = ft_getenv(sub_str, data->env);
+						if (!var)
+							var = ft_strdup("");
 						free(sub_str);
 						line = replace_range(line, var, k - 1, j - 1);
 					}

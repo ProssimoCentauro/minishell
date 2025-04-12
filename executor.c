@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	check_builtin(t_execute *info, char **env)
+int	check_builtin(t_execute *info, char ***env)
 {
 	if (ft_strncmp(info->com, "echo", ft_strlen("echo") + 1) == 0)
 		ft_echo((info->args) + 1);
@@ -21,13 +21,13 @@ int	check_builtin(t_execute *info, char **env)
 	else if (ft_strncmp(info->com, "pwd", ft_strlen("pwd") + 1) == 0)
 		pwd();
 	else if (ft_strncmp(info->com, "env", ft_strlen("env") + 1) == 0)
-		ft_env(env);
+		ft_env(*env);
 	else if (ft_strncmp(info->com, "export", ft_strlen("export") + 1) == 0)
 		ft_export(env, (info->args) + 1);
 	else if (ft_strncmp(info->com, "exit", ft_strlen("exit") + 1) == 0)
 		ft_exit(info-> args + 1);
 	else if (ft_strncmp(info->com, "unset", ft_strlen("unset") + 1) == 0)
-		ft_unset(info->args + 1, &env);
+		ft_unset(info->args + 1, env);
 	else
 		return (0);
 	return (1);
@@ -52,7 +52,7 @@ void	set_command(t_execute *info, t_token *tree)
 	info->args[i + 1] = NULL;
 }
 
-void	executor(t_token *tree, char **env, t_execute *info)
+void	executor(t_token *tree, char ***env, t_execute *info)
 {
 	if (!tree)
 		return ;
@@ -62,20 +62,18 @@ void	executor(t_token *tree, char **env, t_execute *info)
 	if (tree->type == DELIMETER || tree->sub_type == PIPE)
 	{
 		if (check_builtin(info, env) == 0)
-			execve_cmd(info, env);
+			execve_cmd(info, *env);
 		set_info(info);
+		info->delimiter = tree->sub_type;
 	}
 	if (tree->sub_type == IN && info->file_in != -1)
-	{
-		info->file_in = open(info->filename, O_RDWR);
-		check_error(info->file_in, info->com, info->filename);
-	}
+		info->file_in = open(info->file, O_RDWR);
 	if (tree->sub_type == OUT && info->file_in != -1)
-		info->file_out = open(info->filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
+		info->file_out = open(info->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (tree->sub_type == APPEND && info->file_in != -1)
-		info->file_out = open(info->filename, O_RDWR | O_CREAT | O_APPEND, 0644);
+		info->file_out = open(info->file, O_RDWR | O_CREAT | O_APPEND, 0644);
 	if (tree->type == FILENAME && info->file_in != -1)
-		info->filename = (char *)tree->content;
+		info->file = (char *)tree->content;
 	if (tree->type == CMD)
 		set_command(info, tree);
 	executor(tree->right, env, info);

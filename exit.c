@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exit.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/11 15:35:53 by ldei-sva          #+#    #+#             */
+/*   Updated: 2025/04/11 15:35:58 by ldei-sva         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	check(char *str)
@@ -29,10 +41,11 @@ void	ft_exit(char	**exit_status)
 		printf("exit\n");
 		exit(0);
 	}
-	if (*(exit_status + 1) != NULL)
+	else if (*(exit_status + 1) != NULL)
 	{
+		printf("exit\n");
 		ft_putstr_fd("exit: too many arguments\n", 2);
-		return ;
+		exit(1);
 	}
 	if (check(*exit_status) == 0)
 	{
@@ -41,7 +54,6 @@ void	ft_exit(char	**exit_status)
 		ft_putstr_fd(": numeric argument required\n", 2);
 		printf("exit\n");
 		exit(2);
-		return ;
 	}
 	printf("exit\n");
 	exit(ft_atoi(*exit_status));

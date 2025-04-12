@@ -16,7 +16,7 @@ void	execute_pipe(t_execute *info, char **env)
 {
 	char	*path;
 	char	**com_flags;
-	int		pid;
+	pid_t	pid;
 	int		pipefd[2];
 
 	pipe(pipefd);
@@ -32,7 +32,10 @@ void	execute_pipe(t_execute *info, char **env)
 			close(info->file_in);
 		close(pipefd[0]);
 		dup2(pipefd[1], STDOUT_FILENO);
-		check_error(execve(path, com_flags, NULL), info->com, NULL);
+		printf("executing cat");
+		execve(path, com_flags, NULL);
+		if (!path)
+			command_error(info->com);
 	}
 	close(pipefd[1]);
 	if (info->pipe_fd != 0)
@@ -63,14 +66,19 @@ void	final_process(t_execute *info, char **env)
 			dup2(info->file_out, STDOUT_FILENO);
 			close(info->file_out);
 		}
-		check_error(execve(path, com_flags, NULL), info->com, NULL);
+		execve(path, com_flags, NULL);
+		 if (!path)
+		 	command_error(info->com);
 	}
+	wait(NULL);
 }
 
 void	execve_cmd(t_execute *info, char **env)
 {
-	check_error(info->file_in, info->com, info->filename);
+	check_error(info->file_in, info->com, info->file);
 	if (info->file_in == -1)
+		return ;
+	if ((info->delimiter == AND && g_exit_status != 0) || (info->delimiter == OR && g_exit_status == 0))
 		return ;
 	if (info->pipe_fd != 0)
 		{
@@ -78,10 +86,7 @@ void	execve_cmd(t_execute *info, char **env)
 			info->pipe_fd = 0;
 		}
 	if (info->pipe == 0)
-	{
-
 		final_process(info, env);
-	}
 	else
 		execute_pipe(info, env);
 	if (info->file_in != 0)
