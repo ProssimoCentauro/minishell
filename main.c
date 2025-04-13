@@ -168,8 +168,7 @@ int	main(int ac, char **av, char **env)
 		printf("\n\n");
 		print_args(tokens);
 		executor(data->tree, data, info);
-		if (check_builtin(info, data) == 0)
-			execve_cmd(info, data);
+		execve_cmd(info, data);
 		while (info->pid > 0)
 		{
 			waitpid(-1, &data->exit_status, 0);
@@ -177,7 +176,6 @@ int	main(int ac, char **av, char **env)
 		}
 		i = -1;
 		free_tokens(tokens);
-		printf("last exit code: %d\n", g_exit_status);
 	}
 	rl_clear_history();
 	free(info->args);

@@ -67,6 +67,8 @@ void	final_process(t_execute *info, t_data *data)
 			dup2(info->file_out, STDOUT_FILENO);
 			close(info->file_out);
 		}
+		if (check_builtin(info, data) == 1)
+			exit(data->exit_status);
 		execve(path, com_flags, NULL);
 		if (!path)
 			command_error(info->com, data);
@@ -87,10 +89,7 @@ void	execve_cmd(t_execute *info, t_data *data)
 		info->pipe_fd = 0;
 	}
 	if (info->pipe == 0)
-	{
-		if (check_builtin(info, data) == 0)
-			final_process(info, data);
-	}
+		final_process(info, data);
 	else
 		execute_pipe(info, data);
 	if (info->file_in != 0)
