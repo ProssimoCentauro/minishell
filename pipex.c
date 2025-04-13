@@ -87,9 +87,14 @@ void	execve_cmd(t_execute *info, t_data *data)
 	{
 		info->file_in = info->pipe_fd;
 		info->pipe_fd = 0;
-	}
-	if (info->pipe == 0)
 		final_process(info, data);
+		return ;
+	}
+	else if (info->pipe == 0)
+	{
+		if (check_builtin(info, data) == 0)
+			final_process(info, data);
+	}
 	else
 		execute_pipe(info, data);
 	if (info->file_in != 0)
