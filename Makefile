@@ -1,9 +1,11 @@
 NAME = minishell
 
+LEXF = ./lexer/
+
 SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
-	  ft_getenv.c unset.c wildcards.c tokens_utils.c tokens_utils2.c tokens_reorder.c \
-	  tree_builder.c tokenizer.c token_args_utils.c tokens_final_funcs.c\
-	  executor.c path.c executor_info.c pipex.c check_input.c errors_utils.c set_prompt.c\
+	  ft_getenv.c unset.c wildcards.c $(LEXF)tokens_utils.c $(LEXF)tokens_utils2.c $(LEXF)tokens_reorder.c \
+	  $(LEXF)tree_builder.c $(LEXF)tokenizer.c $(LEXF)token_args_utils.c $(LEXF)tokens_final_funcs.c\
+	  executor.c path.c executor_info.c pipex.c $(LEXF)check_input.c errors_utils.c set_prompt.c\
 	  signal_handlers.c \
 
 OBJ = $(SRC:.c=.o)
@@ -12,7 +14,7 @@ CC = cc
 
 CFLAGS = -Wall -Werror -Wextra -g -gdwarf-4
 
-INCLUDE = -Ilibft/header_files -I/usr/include
+INCLUDE = -Ilibft/header_files -I/usr/include -I./includes
 
 LIBFLAGS = -Llibft -lft -L/usr/lib
 

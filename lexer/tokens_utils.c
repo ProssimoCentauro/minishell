@@ -71,11 +71,17 @@ void	free_tokens(t_token **tokens)
 		return ;
 	while (tokens[i])
 	{
-        if (tokens[i]->args != NULL)
-            free(tokens[i]->args);
+        	if (tokens[i]->args != NULL)
+		{
+			free(tokens[i]->args);
+			tokens[i]->args = NULL;
+		}
 		free(tokens[i]->content);
+		tokens[i]->content = NULL;
 		free(tokens[i]);
+		tokens[i] = NULL;
 		i++;
 	}
 	free(tokens);
+	tokens = NULL;
 }

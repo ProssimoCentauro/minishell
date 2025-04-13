@@ -76,6 +76,8 @@ static char	*type_to_str(t_type type)
 		return ("CLOSE");
 	else if (type == NEW_LINE)
 		return ("NEW_LINE");
+	else if (type == END)
+		return ("END");
 	return ("TYPE ERROR!");
 }
 
@@ -108,7 +110,6 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 
 	setup_signal_handlers();
-
 	env_copy = copy_array(env);
 	data.env = env_copy;
 //	printf("%s\n", ft_getenv("data", data.env));
@@ -136,11 +137,23 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (tokenizer(line, &tokens))
 			continue ;
+       		printf("before reorder:\n");
+		while (tokens[++i])
+			printf("index %d: %s: %s: %s\n",
+                    tokens[i]->index,
+				type_to_str(tokens[i]->type),
+                type_to_str(tokens[i]->sub_type),
+				(char *)tokens[i]->content);
+		i = -1;
 		if (syntax_error(tokens, check_args(tokens)))
 			continue ;
 		reorder_tokens(tokens);
 		assign_index(tokens);
-		finalize_tokens(tokens, &data);
+		if (finalize_tokens(tokens, &data) == 512)
+		{
+			free_tokens(tokens);
+			continue ;
+		}
 
         	ft_printf("assigning args!\n\n");
 		assign_args(tokens);

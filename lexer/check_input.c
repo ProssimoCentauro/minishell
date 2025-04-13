@@ -10,17 +10,22 @@ t_token	*check_next(t_token **tokens, size_t i, t_token **res)
 	}
 	else if (tokens[i]->sub_type & (AND | OR | PIPE))
 	{
-		if (tokens[i + 1]->sub_type & (AND | OR | PIPE | CLOSE | NEW_LINE))
+		if (tokens[i + 1]->sub_type & (AND | OR | PIPE | CLOSE | END))
 			*res = tokens[i + 1];
 	}
 	else if (tokens[i]->sub_type & (OPEN))
 	{
-		if (tokens[i + 1]->sub_type & (AND | OR | PIPE | CLOSE | NEW_LINE))
+		if (tokens[i + 1]->sub_type & (AND | OR | PIPE | CLOSE | END))
 			*res = tokens[i + 1];
 	}
 	else if (tokens[i]->sub_type & (CLOSE))
 	{
 		if (tokens[i + 1]->sub_type & (CMD))
+			*res = tokens[i + 1];
+	}
+	else if (tokens[i]->sub_type & (IN | OUT | APPEND | HEREDOC))
+	{
+		if (tokens[i + 1]->sub_type & (NEW_LINE))
 			*res = tokens[i + 1];
 	}
 	return (*res);
