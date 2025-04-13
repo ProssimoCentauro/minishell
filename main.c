@@ -137,14 +137,14 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (tokenizer(line, &tokens))
 			continue ;
-       		printf("before reorder:\n");
+/*       		printf("before reorder:\n");
 		while (tokens[++i])
 			printf("index %d: %s: %s: %s\n",
                     tokens[i]->index,
 				type_to_str(tokens[i]->type),
                 type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
-		i = -1;
+		i = -1;*/
 		if (syntax_error(tokens, check_args(tokens)))
 			continue ;
 		reorder_tokens(tokens);
