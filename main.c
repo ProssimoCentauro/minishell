@@ -76,6 +76,8 @@ static char	*type_to_str(t_type type)
 		return ("CLOSE");
 	else if (type == NEW_LINE)
 		return ("NEW_LINE");
+	else if (type == END)
+		return ("END");
 	return ("TYPE ERROR!");
 }
 
@@ -106,6 +108,7 @@ int	main(int ac, char **av, char **env)
 	(void)ac;
 	(void)av;
 	data = malloc(sizeof(t_data));
+	setup_signal_handlers();
 	env_copy = copy_array(env);
 	data->env = env_copy;
 //	printf("%s\n", ft_getenv("data", data->env));
@@ -122,10 +125,25 @@ int	main(int ac, char **av, char **env)
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline(buf);
+		if (!line)
+		{
+			write(STDOUT_FILENO, "exit\n", 5);
+			break;
+		}
+		if (line && *line && ft_strcmp(line, "\n"))
+			add_history(line);
 		if (!ft_strcmp(line, "exit"))
 			break ;
 		if (tokenizer(line, &tokens))
 			continue ;
+       		printf("before reorder:\n");
+		while (tokens[++i])
+			printf("index %d: %s: %s: %s\n",
+                    tokens[i]->index,
+				type_to_str(tokens[i]->type),
+                type_to_str(tokens[i]->sub_type),
+				(char *)tokens[i]->content);
+		i = -1;
 		if (syntax_error(tokens, check_args(tokens)))
 			continue ;
 		reorder_tokens(tokens);
@@ -159,8 +177,9 @@ int	main(int ac, char **av, char **env)
 		}
 		i = -1;
 		free_tokens(tokens);
+		printf("last exit code: %d\n", g_exit_status);
 	}
-
+	rl_clear_history();
 	free(info->args);
 	free(info);
 	exit(EXIT_SUCCESS);

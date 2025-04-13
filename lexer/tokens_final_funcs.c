@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	write_on_file(int fd2, char *delimiter);
+int	write_on_file(int fd2, char *delimiter, t_token **tokens);
 
 
 int forbidden_symbols(char c)
@@ -55,19 +55,84 @@ char	*ft_itoa(int n)
 	return (ret);
 }
 
+void	handle_heredoc(int signal)
+{
+	rl_on_new_line();
+	//exit(2);
+	g_exit_status =  signal;
+}
+
+int	set_signal(int signal, void (*f)(int s))
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = f;
+	sa.sa_flags = SA_RESTART;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(signal, &sa, NULL) == -1)
+		return (1);
+	return (0);
+}
+
+
+/* bisogna implementare la funzione che leva le virgolette per il delimiter*/
+int	write_on_file(int fd, char *delimiter, t_token **tokens)
+{
+	char	*line;
+	pid_t	pid;
+	int	ret;
+
+	pid = fork();
+	if (pid == 0)
+	{
+		set_signal(SIGINT, handle_heredoc);
+		while (1)
+		{
+			line = get_next_line(0);
+			if (g_exit_status == SIGINT)
+			{
+				free(line);
+				free_tokens(tokens);
+				exit(2);
+			}
+			if (!line)
+				return (1);
+			if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
+                	&& *(line + ft_strlen(delimiter)) == '\n')
+			{
+				free (line);
+				break ;
+			}
+			write(fd, line, ft_strlen(line));
+			free (line);
+		}
+	}
+	waitpid(pid, &ret, 0);
+	/*if (ret == 512)
+		free(line);
+	*///printf("PIPPO E PIPPI E NON SAPEVO CHE VOLEVI PIPPARE UNA VITA DI PIPPO E PIPPI: %d\n", ret);
+	return (ret);
+}
+
 static int check_heredoc(t_token **tokens, size_t *i)
 {
     int fd;
     char    *temp_file;
     char    *str_i;
+    int	ret;
 
     (*i)++;
     str_i = ft_itoa((int)*i);
     temp_file = ft_strjoin("./temp_file/temp_", str_i);
     free(str_i);
     fd = open(temp_file, O_CREAT | O_RDWR, 0644);
-    write_on_file(fd, (char *)tokens[*i]->content);
+    ret = write_on_file(fd, (char *)tokens[*i]->content, tokens);
     close(fd);
+    if (ret == 512 || ret == 1)
+    {
+	    free(temp_file);
+	    return (ret);
+    }
     free(tokens[*i]->content);
     tokens[*i]->content = ft_strdup(temp_file);
     free(temp_file);
@@ -158,6 +223,8 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 			{
 				sub_str = create_str(line, k, j - 1);
 				var = ft_getenv(sub_str, data->env);
+				if (!var)
+					var = ft_strdup("");
 				free(sub_str);
 				line = replace_range(line, var, k - 1, j - 1);
 			}
@@ -188,6 +255,8 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 					{
 						sub_str = create_str(line, k, j - 1);
 						var = ft_getenv(sub_str, data->env);
+						if (!var)
+							var = ft_strdup("");
 						free(sub_str);
 						line = replace_range(line, var, k - 1, j - 1);
 					}
@@ -231,30 +300,12 @@ int	finalize_tokens(t_token **tokens, t_data *data)
 	while (tokens[i])
 	{
 		if (tokens[i]->sub_type == HEREDOC)
-			check_heredoc(tokens, &i);
+		{
+			if (check_heredoc(tokens, &i) == 512)
+				return (512);
+		}
 		else
 			i++;
 	}
 	return (0);
-}
-
-/* bisogna implementare la funzione che leva le virgolette per il delimiter*/
-void	write_on_file(int fd, char *delimiter)
-{
-	char	*line;
-
-	while (1)
-	{
-		line = get_next_line(0);
-		if (!line)
-			return ;
-		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
-                && *(line + ft_strlen(delimiter)) == '\n')
-		{
-			free (line);
-			break ;
-		}
-		write(fd, line, ft_strlen(line));
-		free (line);
-	}
 }

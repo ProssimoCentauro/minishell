@@ -56,6 +56,12 @@ t_token    *create_cmd(char *line, size_t *i, size_t *j, t_type type)
 	
 	q = 0;
 	temp = 0;
+	if (line[*j] == '\n')
+	{
+		cmd = create_token(ft_strdup("newline"), NEW_LINE, NEW_LINE);
+		(*j)++;
+		return (cmd);
+	}
 	while (line[*j])
 	{
 		if ((line[*j] == '"' || line[*j] == '\'') && q == 0)
@@ -221,7 +227,7 @@ int    tokenizer(char *line, t_token ***tokens)
             jump_spaces(line, &i, &j);
         }
     }
-    final = create_token(ft_strdup("newline"), NEW_LINE, NEW_LINE);
+    final = create_token(ft_strdup("newline"), END, END);
     *tokens = add_token(*tokens, final);
     return (0);
 }

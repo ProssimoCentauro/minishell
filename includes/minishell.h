@@ -50,6 +50,7 @@ typedef enum e_type
     OPEN = 1 << 13,
     CLOSE = 1 << 14,
     NEW_LINE = 1 << 15,
+    END = 1 << 16,
 } t_type;
 
 typedef struct s_token
@@ -144,7 +145,7 @@ char	**add_array(t_data *data, char *var);
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
 
-void    write_on_file(int fd, char *delimeter);
+//int    write_on_file(int fd, char *delimeter);
 //int     check_heredoc(t_token **tokens);
 int     finalize_tokens(t_token **tokens, t_data *data);
 int forbidden_symbols(char c);
@@ -153,4 +154,7 @@ int     syntax_error(t_token **tokens, t_token *check);
 
 t_token *check_args(t_token **tokens);
 
+//signal_handlers.c
+void sigint_handler(int signum);
+void setup_signal_handlers(void);
 #endif
