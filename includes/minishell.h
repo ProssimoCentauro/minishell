@@ -71,6 +71,8 @@ typedef	struct	s_data
 	char	**variables;
 	t_token	*root;
 	char	**env;
+	int		exit_status;
+	t_token	*tree;
 }	t_data;
 
 typedef struct	s_execute
@@ -114,31 +116,31 @@ void print_command_tree(t_token* node, int depth);
 t_token *build_tree(t_token **tokens, size_t *i);
 
 //built in
-void	ft_echo(char** str);
-void	cd(char **str);
-void	pwd();
-void	ft_env(char **env);
-void	ft_export(char ***env, char **var);
+void	ft_echo(char** str, t_data *data);
+void	cd(char **str, t_data *data);
+void	pwd(t_data *data);
+void	ft_env(t_data *data);
+void	ft_export(char **var, t_data *data);
 void	ft_exit(char **exit_status);
-void	ft_unset(char **var, char ***env);
+void	ft_unset(char **var, t_data *data);
 
 void	change_env(char **env, char *var);
-void	check_error(int n, char *comm, char *arg);
+void	check_error(int n, char *comm, char *arg, t_data *data);
 void	free_array(char **str);
 char	**copy_array(char **array);
 char	*ft_getenv(char *variable, char **env);
 char	**find_wildcards(char *str);
-void	executor(t_token *tree, char ***env, t_execute *info);
+void	executor(t_token *tree, t_data *data, t_execute *info);
 char	*findpath(char **env, char *com);
 void	print_info(t_execute *info);
 void	set_info(t_execute *info);
 t_data	*analize_env(char **env);
-void	execve_cmd(t_execute *info, char **env);
-int		check_builtin(t_execute *info, char ***env);
+void	execve_cmd(t_execute *info, t_data *data);
+int		check_builtin(t_execute *info, t_data *data);
 char	*set_prompt();
 int		array_len(char **array);
-void	command_error(char *comm);
-char	**add_array(char **env, char *var);
+void	command_error(char *comm, t_data *data);
+char	**add_array(t_data *data, char *var);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);

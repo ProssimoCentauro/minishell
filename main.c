@@ -98,8 +98,7 @@ int	ft_strcmp(char *s1, char *s2)
 int	main(int ac, char **av, char **env)
 {
 	t_token	**tokens;
-	t_token	*tree;
-	t_data	data;
+	t_data	*data;
 	char	*line;
 	size_t	i;
 	t_execute	*info;
@@ -108,16 +107,16 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
-
+	data = malloc(sizeof(t_data));
 	setup_signal_handlers();
 	env_copy = copy_array(env);
-	data.env = env_copy;
-//	printf("%s\n", ft_getenv("data", data.env));
+	data->env = env_copy;
+//	printf("%s\n", ft_getenv("data", data->env));
 
 	info = malloc(sizeof(t_execute));
 	info->pid = 0;
 	info->pipe_fd = 0;
-	g_exit_status = 0;
+	data->exit_status = 0;
 	while (42)
 	{
 		buf = set_prompt();
@@ -149,11 +148,7 @@ int	main(int ac, char **av, char **env)
 			continue ;
 		reorder_tokens(tokens);
 		assign_index(tokens);
-		if (finalize_tokens(tokens, &data) == 512)
-		{
-			free_tokens(tokens);
-			continue ;
-		}
+		finalize_tokens(tokens, data);
 
         	ft_printf("assigning args!\n\n");
 		assign_args(tokens);
@@ -168,16 +163,16 @@ int	main(int ac, char **av, char **env)
 
 		printf("\n\n\n");
 		i = 0;
-		tree = build_tree(tokens, &i);
-		print_tree(tree, 0);
+		data->tree = build_tree(tokens, &i);
+		print_tree(data->tree, 0);
 		printf("\n\n");
 		print_args(tokens);
-		executor(tree, &data.env, info);
-		if (check_builtin(info, &data.env) == 0)
-			execve_cmd(info, data.env);
+		executor(data->tree, data, info);
+		if (check_builtin(info, data) == 0)
+			execve_cmd(info, data);
 		while (info->pid > 0)
 		{
-			waitpid(-1, &g_exit_status, 0);
+			waitpid(-1, &data->exit_status, 0);
 			info->pid -= 1;
 		}
 		i = -1;
