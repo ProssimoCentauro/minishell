@@ -39,23 +39,23 @@ char	**copy_array(char **array)
 	return (copy);
 }
 
-char	**add_array(char **env, char *var)
+char	**add_array(t_data *data, char *var)
 {
 	int		len;
 	int		i;
 	char	**temp;
 
-	len = array_len(env);
-	temp = env;
+	len = array_len(data->env);
+	temp = data->env;
 	i = 0;
-	env = malloc((len + 2) * (sizeof(char *)));
+	data->env = malloc((len + 2) * (sizeof(char *)));
 	while (temp[i])
 	{
-		env[i] = ft_strdup(temp[i]);
+		data->env[i] = ft_strdup(temp[i]);
 		i++;
 	}
-	env[i] = ft_strdup(var);
-	printf("adding %s\n", env[i]);
-	env[i + 1] = NULL;
-	return(env);
+	data->env[i] = ft_strdup(var);
+	printf("adding %s\n", data->env[i]);
+	data->env[i + 1] = NULL;
+	return(data->env);
 }
