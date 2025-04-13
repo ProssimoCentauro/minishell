@@ -67,8 +67,8 @@ void	final_process(t_execute *info, char **env)
 			close(info->file_out);
 		}
 		execve(path, com_flags, NULL);
-		// if (!path)
-		// 	command_error(info->com);
+		 if (!path)
+		 	command_error(info->com);
 	}
 	wait(NULL);
 }
