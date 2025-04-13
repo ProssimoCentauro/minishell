@@ -141,6 +141,7 @@ char	*set_prompt();
 int		array_len(char **array);
 void	command_error(char *comm, t_data *data);
 char	**add_array(t_data *data, char *var);
+char	*quotes(char *str);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
