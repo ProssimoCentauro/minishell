@@ -57,8 +57,8 @@ static void handle_open(t_token **tokens, t_token **root, t_token **last, size_t
 {
 	if (*root == NULL)
 		*root = tokens[*i];
-	*last = tokens[*i - 1];
-	(*last)->right = tokens[*i];
+	else if (*i > 0 && tokens[*i - 1]->type != CMD)
+		(*last)->right = tokens[*i];
 	*last = tokens[*i];
 }
 
