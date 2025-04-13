@@ -1,6 +1,6 @@
 NAME = minishell
 
-LEXF = ./lexer/
+LEXF = ./parser/
 
 SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
 	  ft_getenv.c unset.c wildcards.c $(LEXF)tokens_utils.c $(LEXF)tokens_utils2.c $(LEXF)tokens_reorder.c \
