@@ -230,7 +230,7 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 			}
 			else
 			{
-				var = ft_itoa(g_exit_status);
+				var = ft_itoa(data->exit_status);
 				line = replace_range(line, var, k - 1, j);
 			}
 			j = 0;
