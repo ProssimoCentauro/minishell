@@ -107,6 +107,12 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	// wildcards = find_wildcards("'echo.c'");
+	// while (wildcards && *wildcards)
+	// {
+	// 	printf("%s\n", *wildcards);
+	// 	wildcards++;
+	// }
 	data = malloc(sizeof(t_data));
 	setup_signal_handlers();
 	env_copy = copy_array(env);
