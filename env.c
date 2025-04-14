@@ -17,7 +17,7 @@ void	ft_env(t_data *data)
 	while (*data->env)
 	{
 		if (*(ft_getenv(*data->env, data->env)) != '\0')
-			printf("%s\n", *data->env);
+			ft_putstr_fd(*data->env, STDOUT_FILENO);
 		data->env++;
 	}
 	data->exit_status = 0;

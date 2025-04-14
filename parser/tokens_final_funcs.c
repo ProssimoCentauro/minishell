@@ -6,7 +6,7 @@ int	write_on_file(int fd2, char *delimiter, t_token **tokens);
 int forbidden_symbols(char c)
 {
     const char *special_symbols = "-!@#$%^&*()+={}[]|\\:;\"'<>,.?";
-    
+
     if (ft_strchr(special_symbols, c) != NULL)
 	    return (1);
     return (0);

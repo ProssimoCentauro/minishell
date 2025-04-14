@@ -34,9 +34,10 @@ void	execute_pipe(t_execute *info, t_data *data)
 		dup2(pipefd[1], STDOUT_FILENO);
 		if (check_builtin(info, data) == 1)
 			exit(data->exit_status);
-		execve(path, com_flags, NULL);
 		if (!path)
 			command_error(info->com, data);
+		execve(path, com_flags, NULL);
+
 	}
 	close(pipefd[1]);
 	if (info->pipe_fd != 0)
@@ -67,11 +68,12 @@ void	final_process(t_execute *info, t_data *data)
 			dup2(info->file_out, STDOUT_FILENO);
 			close(info->file_out);
 		}
-		execve(path, com_flags, NULL);
+		if (check_builtin(info, data) == 1)
+			exit(data->exit_status);
 		if (!path)
 			command_error(info->com, data);
+		execve(path, com_flags, NULL);
 	}
-	wait(NULL);
 }
 
 void	execve_cmd(t_execute *info, t_data *data)
@@ -85,8 +87,10 @@ void	execve_cmd(t_execute *info, t_data *data)
 	{
 		info->file_in = info->pipe_fd;
 		info->pipe_fd = 0;
+		final_process(info, data);
+		return ;
 	}
-	if (info->pipe == 0)
+	else if (info->pipe == 0)
 	{
 		if (check_builtin(info, data) == 0)
 			final_process(info, data);

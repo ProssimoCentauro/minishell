@@ -6,7 +6,7 @@ size_t  count_args(t_token **tokens, size_t i)
 
     count = 0;
     while (tokens[++i] && tokens[i]->type == CMD)
-        count++;
+        count ++;
     return (count);
 }
 
