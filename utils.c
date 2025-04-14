@@ -7,7 +7,7 @@ int	array_len(char **array)
 
 	n = 0;
 	len = 0;
-	while (array[n])
+	while (array && array[n])
 	{
 		if (array[n][0] != '\0')
 			len++;

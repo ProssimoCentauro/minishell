@@ -1,12 +1,37 @@
 #include "minishell.h"
 
+int	char_compare(char **str, char **file)
+{
+	char	c;
+
+	if (**str == '\'' || **str == '"')
+	{
+		c = **str;
+		(*str)++;
+		while (**str != c)
+		{
+			if (*(*str) != *(*file))
+				return(1);
+			(*str)++;
+			(*file)++;
+		}
+		str++;
+		file++;
+		return(0);
+	}
+	else
+		if (**str != **file)
+			return (1);
+	return (0);
+}
+
 int	check_corrispondency(char *str, char *file)
 {
 	char	c;
 
 	while (*str != '*')
 	{
-		if (*str != *file)
+		if (char_compare(&str, &file) == 1)
 			return (1);
 		else if (!(*str))
 			return (0);
@@ -44,6 +69,8 @@ int	len_wildcards(char *str)
 		info = readdir((curr_dir));
 	}
 	closedir(curr_dir);
+	if (len == 0)
+		return (1);
 	return (len);
 }
 
@@ -55,8 +82,6 @@ char	**find_wildcards(char *str)
 	int				len;
 
 	len = len_wildcards(str);
-	if (len == 0)
-		return (NULL);
 	results = malloc((len + 1) * (sizeof(char *)));
 	curr_dir = opendir(".");
 	if (curr_dir == NULL)
@@ -79,6 +104,11 @@ char	**find_wildcards(char *str)
 		info = readdir((curr_dir));
 	}
 	results[len] = NULL;
+	if (!*results)
+	{
+		results[0] = ft_strdup(str);
+		results[1] = NULL;
+	}
 	closedir(curr_dir);
 	return (results);
 }
