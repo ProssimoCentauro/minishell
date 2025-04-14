@@ -171,11 +171,11 @@ int	main(int ac, char **av, char **env)
 		execve_cmd(info, data);
 		while (info->pid > 0)
 		{
-			waitpid(-1, &data->exit_status, 0);
+			waitpid(-1, &(data->exit_status), 0);
 			info->pid -= 1;
 		}
 		i = -1;
-		free_tokens(tokens);
+		// free_tokens(tokens);
 	}
 	rl_clear_history();
 	free(info->args);

@@ -35,4 +35,5 @@ void	command_error(char *comm, t_data *data)
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd("Command not found\n", STDERR_FILENO);
 	data->exit_status = 127;
+	exit(127);
 }

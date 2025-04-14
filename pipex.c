@@ -34,9 +34,10 @@ void	execute_pipe(t_execute *info, t_data *data)
 		dup2(pipefd[1], STDOUT_FILENO);
 		if (check_builtin(info, data) == 1)
 			exit(data->exit_status);
-		execve(path, com_flags, NULL);
 		if (!path)
 			command_error(info->com, data);
+		execve(path, com_flags, NULL);
+
 	}
 	close(pipefd[1]);
 	if (info->pipe_fd != 0)
@@ -69,11 +70,10 @@ void	final_process(t_execute *info, t_data *data)
 		}
 		if (check_builtin(info, data) == 1)
 			exit(data->exit_status);
-		execve(path, com_flags, NULL);
 		if (!path)
 			command_error(info->com, data);
+		execve(path, com_flags, NULL);
 	}
-	wait(NULL);
 }
 
 void	execve_cmd(t_execute *info, t_data *data)
