@@ -110,5 +110,5 @@ char	**find_wildcards(char *str)
 		results[1] = NULL;
 	}
 	closedir(curr_dir);
-	return (results);
+	return (sort_array(results));
 }

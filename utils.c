@@ -59,3 +59,28 @@ char	**add_array(t_data *data, char *var)
 	data->env[i + 1] = NULL;
 	return(data->env);
 }
+
+char	**sort_array(char **env)
+{
+	char	*temp;
+	int		n;
+	int		b;
+
+	n = 0;
+	while (env[n])
+	{
+		b = n + 1;
+		while (env[b])
+		{
+			if (ft_strncmp(env[n], env[b], ft_strlen(env[b]) + 1) > 0)
+			{
+				temp = env[n];
+				env[n] = env[b];
+				env[b] = temp;
+			}
+			b++;
+		}
+		n++;
+	}
+	return (env);
+}
