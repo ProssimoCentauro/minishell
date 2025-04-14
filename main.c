@@ -104,9 +104,15 @@ int	main(int ac, char **av, char **env)
 	t_execute	*info;
 	char		*buf;
 	char	**env_copy;
+	char	**wildcards;
 
 	(void)ac;
 	(void)av;
+	while (*wildcards)
+	{
+		printf("%s\n", *wildcards);
+		wildcards++;
+	}
 	data = malloc(sizeof(t_data));
 	setup_signal_handlers();
 	env_copy = copy_array(env);
