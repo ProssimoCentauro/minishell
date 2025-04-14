@@ -1,28 +1,23 @@
 #include "minishell.h"
 
-int	char_compare(char **str, char **file)
+char	*quote_compare(char *str, char *file)
 {
 	char	c;
 
-	if (**str == '\'' || **str == '"')
+	if (*str == '\'' || *str == '"')
 	{
-		c = **str;
-		(*str)++;
-		while (**str != c)
+		c = *str;
+		str++;
+		while (*str != c)
 		{
-			if (*(*str) != *(*file))
-				return(1);
-			(*str)++;
-			(*file)++;
+			if (*str != *file)
+				return(str);
+			str++;
+			file++;
 		}
 		str++;
-		file++;
-		return(0);
 	}
-	else
-		if (**str != **file)
-			return (1);
-	return (0);
+	return (str);
 }
 
 int	check_corrispondency(char *str, char *file)
@@ -31,12 +26,17 @@ int	check_corrispondency(char *str, char *file)
 
 	while (*str != '*')
 	{
-		if (char_compare(&str, &file) == 1)
+		if (*str == '\'' || *str == '"')
+			str = quote_compare(str, file);
+		else if (*str != *file)
 			return (1);
 		else if (!(*str))
 			return (0);
-		str++;
-		file++;
+		else
+		{
+			str++;
+			file++;
+		}
 	}
 	while (*(str + 1) == '*')
 		str++;
