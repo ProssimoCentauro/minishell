@@ -27,12 +27,13 @@ int	check_echo_flag(char *str)
 	return (0);
 }
 
-void	ft_echo(char **str)
+void	ft_echo(char **str, t_data *data)
 {
 	int	n;
 	int	newline;
 
 	n = 0;
+	data->exit_status = 0;
 	newline = 1;
 	if (!str || !str[n])
 		return ;
@@ -43,11 +44,12 @@ void	ft_echo(char **str)
 	}
 	while (str[n])
 	{
-		ft_printf("%s", str[n]);
+		ft_putstr_fd(str[n], STDOUT_FILENO);
 		if (str[n + 1] != NULL)
-			ft_printf("%s", " ");
+			ft_putstr_fd(" ", STDOUT_FILENO);
 		n++;
 	}
 	if (newline == 1)
-		ft_printf("%s", "\n");
+		ft_putstr_fd("\n", STDOUT_FILENO);
+
 }

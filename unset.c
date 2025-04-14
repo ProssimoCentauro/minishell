@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	ft_unset(char **var, char ***env)
+void	ft_unset(char **var, t_data *data)
 {
 	int		i;
 	int		len;
@@ -8,19 +8,21 @@ void	ft_unset(char **var, char ***env)
 	char	*to_delete;
 
 	i = 0;
-	if (!(*var))
-		return ;
-	if (ft_getenv(*var, *env))
+	if ((*var))
 	{
-		len = ft_strlen(*var);
-		while (ft_strncmp((*env)[i], *var, len) != 0 && \
-		((*env)[i][len + 1] != '=' || (*env)[i][len + 1] != '\0'))
-			i++;
-		to_delete = (*env)[i];
-		(*env)[i] = ft_strdup("");
-		free(to_delete);
-		//temp = *env;
-		*env = copy_array(*env);
-		//free_array(temp);
+		if (ft_getenv(*var, data->env))
+		{
+			len = ft_strlen(*var);
+			while (ft_strncmp((data->env)[i], *var, len) != 0 && \
+			(data->env[i][len + 1] != '=' || data->env[i][len + 1] != '\0'))
+				i++;
+			to_delete = data->env[i];
+			data->env[i] = ft_strdup("");
+			free(to_delete);
+			//temp = *env;
+			data->env = copy_array(data->env);
+			//free_array(temp);
+		}
 	}
+	data->exit_status = 0;
 }

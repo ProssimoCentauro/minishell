@@ -1,6 +1,7 @@
 #include "minishell.h"
 
 
+
 int	check_corrispondency(char *str, char *file)
 {
 	char	c;
@@ -24,6 +25,26 @@ int	check_corrispondency(char *str, char *file)
 		file++;
 	}
 	return (check_corrispondency(str + 1, file));
+}
+
+int	len_wildcards(char *str)
+{
+	DIR				*curr_dir;
+	struct dirent	*info;
+	int				len;
+
+	len = 0;
+	curr_dir = opendir(".");
+	if (curr_dir == NULL)
+		perror("opendir");
+	info = readdir((curr_dir));
+	while (info != NULL)
+	{
+		if (info->d_type == DT_REG || info->d_type == 0)
+			if (check_corrispondency(str, info->d_name) == 0)
+			len ++;
+	}
+	return (len);
 }
 
 char	**find_wildcards(char *str)

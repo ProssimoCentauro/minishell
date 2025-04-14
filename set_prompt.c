@@ -22,10 +22,5 @@ char	*set_prompt()
 	free(buf);
 	buf = NULL;
 	buf = ft_strjoin(prompt, " ---> ");
-	//ft_strlcpy(buf, prompt, len - copy);
-	//buf[len - copy] = '-';
-	//buf[len - copy + 1] = '>';
-	//buf[len - copy + 2] = ' ';
-	//buf[len - copy + 3] = '\0';
 	return (free(prompt), buf);
-}	
+}

@@ -6,13 +6,13 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 16:32:53 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/07 00:58:22 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:48:51 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execute_pipe(t_execute *info, char **env)
+void	execute_pipe(t_execute *info, t_data *data)
 {
 	char	*path;
 	char	**com_flags;
@@ -26,16 +26,18 @@ void	execute_pipe(t_execute *info, char **env)
 	if (pid == 0)
 	{
 		com_flags = info->args;
-		path = findpath(env, com_flags[0]);
+		path = findpath(data->env, com_flags[0]);
 		dup2(info->file_in, STDIN_FILENO);
 		if (info->file_in != 0)
 			close(info->file_in);
 		close(pipefd[0]);
 		dup2(pipefd[1], STDOUT_FILENO);
-		printf("executing cat");
-		execve(path, com_flags, NULL);
+		if (check_builtin(info, data) == 1)
+			exit(data->exit_status);
 		if (!path)
-			command_error(info->com);
+			command_error(info->com, data);
+		execve(path, com_flags, NULL);
+
 	}
 	close(pipefd[1]);
 	if (info->pipe_fd != 0)
@@ -43,7 +45,7 @@ void	execute_pipe(t_execute *info, char **env)
 	info->pipe_fd = pipefd[0];
 }
 
-void	final_process(t_execute *info, char **env)
+void	final_process(t_execute *info, t_data *data)
 {
 	char	*path;
 	char	**com_flags;
@@ -55,7 +57,7 @@ void	final_process(t_execute *info, char **env)
 	if (pid == 0)
 	{
 		com_flags = info->args;
-		path = findpath(env, com_flags[0]);
+		path = findpath(data->env, com_flags[0]);
 		if (info->file_in != 0)
 		{
 			dup2(info->file_in, STDIN_FILENO);
@@ -66,29 +68,35 @@ void	final_process(t_execute *info, char **env)
 			dup2(info->file_out, STDOUT_FILENO);
 			close(info->file_out);
 		}
+		if (check_builtin(info, data) == 1)
+			exit(data->exit_status);
+		if (!path)
+			command_error(info->com, data);
 		execve(path, com_flags, NULL);
-		 if (!path)
-		 	command_error(info->com);
 	}
-	wait(NULL);
 }
 
-void	execve_cmd(t_execute *info, char **env)
+void	execve_cmd(t_execute *info, t_data *data)
 {
-	check_error(info->file_in, info->com, info->file);
+	check_error(info->file_in, info->com, info->file, data);
 	if (info->file_in == -1)
 		return ;
-	if ((info->delimiter == AND && g_exit_status != 0) || (info->delimiter == OR && g_exit_status == 0))
+	if ((info->delimiter == AND && data->exit_status != 0) || (info->delimiter == OR && data->exit_status == 0))
 		return ;
 	if (info->pipe_fd != 0)
-		{
-			info->file_in = info->pipe_fd;
-			info->pipe_fd = 0;
-		}
-	if (info->pipe == 0)
-		final_process(info, env);
+	{
+		info->file_in = info->pipe_fd;
+		info->pipe_fd = 0;
+		final_process(info, data);
+		return ;
+	}
+	else if (info->pipe == 0)
+	{
+		if (check_builtin(info, data) == 0)
+			final_process(info, data);
+	}
 	else
-		execute_pipe(info, env);
+		execute_pipe(info, data);
 	if (info->file_in != 0)
 		close(info->file_in);
 	if (info->file_out != 1)

@@ -6,7 +6,7 @@ int	write_on_file(int fd2, char *delimiter, t_token **tokens);
 int forbidden_symbols(char c)
 {
     const char *special_symbols = "-!@#$%^&*()+={}[]|\\:;\"'<>,.?";
-    
+
     if (ft_strchr(special_symbols, c) != NULL)
 	    return (1);
     return (0);
@@ -230,7 +230,7 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 			}
 			else
 			{
-				var = ft_itoa(g_exit_status);
+				var = ft_itoa(data->exit_status);
 				line = replace_range(line, var, k - 1, j);
 			}
 			j = 0;
@@ -262,7 +262,7 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 					}
 					else
 					{
-						var = ft_itoa(g_exit_status);
+						var = ft_itoa(data->exit_status);
 						line = replace_range(line, var, k - 1, j);
 					}
 					j = 0;

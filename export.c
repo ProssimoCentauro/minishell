@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	add_env(char ***env, char *var)
+void	add_env(char *var, t_data *data)
 {
 	int		error;
 	size_t	i;
@@ -30,9 +30,11 @@ void	add_env(char ***env, char *var)
 		ft_putstr_fd("export: '", 2);
 		ft_putstr_fd(var, 2);
 		ft_putstr_fd("': not a valid identifier\n", 2);
+		data->exit_status = 1;
 		return ;
 	}
-	*env = add_array(*env, var);
+	data->env = add_array(data, var);
+	data->exit_status = 0;
 }
 
 void	print_line(char *str)
@@ -96,7 +98,7 @@ void	change_env(char **env, char *var)
 	free(temp);
 }
 
-void	ft_export(char ***env, char **var)
+void	ft_export(char **var, t_data *data)
 {
 	char	**copy;
 	char	*value;
@@ -105,18 +107,20 @@ void	ft_export(char ***env, char **var)
 	{
 		while (*var)
 		{
-			value = ft_getenv(*var, *env);
+			value = ft_getenv(*var, data->env);
 			if (!value)
+				add_env(*var, data);
+			else if (ft_getenv(*var, data->env))
 			{
-				add_env(env, *var);
+				change_env(data->env, *var);
+				data->exit_status = 0;
 			}
-			else if (ft_getenv(*var, *env))
-				change_env(*env, *var);
 			var++;
 		}
 		return ;
 	}
-	copy = copy_array(*env);
+	copy = copy_array(data->env);
 	sort_array(copy);
+	data->exit_status = 0;
 	//free_array(copy);
 }

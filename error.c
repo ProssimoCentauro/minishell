@@ -6,13 +6,13 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 15:16:37 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/11 15:16:39 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/12 11:58:37 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	check_error(int n, char *comm, char *arg)
+void	check_error(int n, char *comm, char *arg, t_data *data)
 {
 	if (n == -1)
 	{
@@ -23,14 +23,17 @@ void	check_error(int n, char *comm, char *arg)
 		if (arg)
 			ft_putstr_fd(": ", STDERR_FILENO);
 		perror("");
-		g_exit_status = 1;
+		data->exit_status = 1;
 	}
+	else
+		data->exit_status = 0;
 }
 
-void	command_error(char *comm)
+void	command_error(char *comm, t_data *data)
 {
 	ft_putstr_fd(comm, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd("Command not found\n", STDERR_FILENO);
-	g_exit_status = 127;
+	data->exit_status = 127;
+	exit(127);
 }
