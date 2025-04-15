@@ -168,4 +168,7 @@ t_token *check_args(t_token **tokens);
 //signal_handlers.c
 void sigint_handler(int signum);
 void setup_signal_handlers(void);
+
+//quotes_utils.c
+void remove_quotes(char *line);
 #endif

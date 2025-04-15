@@ -30,7 +30,7 @@ t_token	*check_next(t_token **tokens, size_t i, t_token **res)
 	}
 	return (*res);
 }
-
+/*
 int     search_quotes(char *str, size_t *i, char to_search)
 {
         static  size_t  d_q = 0;
@@ -78,6 +78,33 @@ t_token	*check_quotes(t_token *token, t_token **res)
 	{
 		token->quotes = 1;
 		*res = token;
+	}
+	return (*res);
+}*/
+
+t_token	*check_quotes(t_token *token, t_token **res)
+{
+	size_t	j;
+	char	*line;
+	char	to_find;
+
+	j = 0;
+	line = (char *)token->content;
+	to_find = 0;
+	while (line[j])
+	{
+		if (line[j] == '"' || line[j] == '\'')
+		{
+			to_find = line[j++];
+			while (line[j] && line[j] != to_find)
+				j++;
+			if (!line[j])
+			{
+				*res = token;
+				break;
+			}
+		}
+		j++;
 	}
 	return (*res);
 }
