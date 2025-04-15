@@ -4,7 +4,7 @@ void	ft_unset(char **var, t_data *data)
 {
 	int		i;
 	int		len;
-	//char	**temp;
+	extern char	**environ;
 	char	*to_delete;
 
 	i = 0;
@@ -21,7 +21,7 @@ void	ft_unset(char **var, t_data *data)
 			free(to_delete);
 			//temp = *env;
 			data->env = copy_array(data->env);
-			//free_array(temp);
+			environ = data->env;
 		}
 	}
 	data->exit_status = 0;

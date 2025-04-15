@@ -102,6 +102,7 @@ void	ft_export(char **var, t_data *data)
 {
 	char	**copy;
 	char	*value;
+	extern char	**environ;
 
 	if (var && *var)
 	{
@@ -117,6 +118,7 @@ void	ft_export(char **var, t_data *data)
 			}
 			var++;
 		}
+		environ = data->env;
 		return ;
 	}
 	copy = copy_array(data->env);

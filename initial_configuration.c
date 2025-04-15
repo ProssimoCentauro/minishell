@@ -12,22 +12,26 @@
 
 #include "minishell.h"
 
-void	initial_configuration(t_data *data, t_execute *info, char **env)
+void	initial_configuration(t_data *data, t_execute *info)
 {
-	char	*bash_level;
-	int		new_level;
+	extern char **environ;
+	char		*bash_level;
+	int			new_level;
 
 	setup_signal_handlers();
-	data->env = copy_array(env);
+	data->env = copy_array(environ);
 	info->pid = 0;
 	info->pipe_fd = 0;
 	data->exit_status = 0;
-	bash_level = ft_getenv("SHLVL", env);
+	bash_level = ft_getenv("SHLVL", data->env);
+	if (!bash_level)
+		return ;
 	new_level = ft_atoi(bash_level) + 1;
 	free(bash_level);
 	bash_level = malloc(8);
 	ft_strlcpy(bash_level, "SHLVL=", 7);
 	bash_level = ft_strjoin(bash_level, ft_itoa(new_level));
 	ft_export(ft_split(bash_level, ' '), data);
+	environ = data->env;
 }
 

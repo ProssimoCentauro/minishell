@@ -36,7 +36,7 @@ void	execute_pipe(t_execute *info, t_data *data)
 			exit(data->exit_status);
 		if (!path)
 			command_error(com_flags[0], data);
-		if (execve(path, com_flags, NULL) == -1)
+		if (execve(path, com_flags, data->env) == -1)
 			exit(2);
 	}
 	close(pipefd[1]);
@@ -71,8 +71,11 @@ void	final_process(t_execute *info, t_data *data)
 		if (check_builtin(info, data) == 1)
 			exit(data->exit_status);
 		if (!path)
-			command_error(com_flags[0], data);
-		if (execve(path, com_flags, NULL) == -1)
+		{
+			if (execve(com_flags[0], com_flags, data->env) == -1)
+				command_error(com_flags[0], data);
+		}
+		if (execve(path, com_flags, data->env) == -1)
 			exit (2);
 	}
 	waitpid(-1, &(data->exit_status), 0);

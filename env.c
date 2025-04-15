@@ -14,11 +14,17 @@
 
 void	ft_env(t_data *data)
 {
-	while (*data->env)
+	int	i;
+
+	i = 0;
+	while (data->env[i])
 	{
-		if (*(ft_getenv(*data->env, data->env)) != '\0')
-			ft_putstr_fd(*data->env, STDOUT_FILENO);
-		data->env++;
+		if (*(ft_getenv(data->env[i], data->env)) != '\0')
+		{
+			ft_putstr_fd(data->env[i], STDOUT_FILENO);
+			ft_putstr_fd("\n", STDOUT_FILENO);
+		}
+		i++;
 	}
 	data->exit_status = 0;
 }

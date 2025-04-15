@@ -32,6 +32,8 @@
 
 extern int g_exit_status;
 
+extern char		**env_copy;
+
 typedef enum e_type
 {
     NONE = 0,
@@ -145,6 +147,7 @@ char	*quotes(char *str);
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);
 char	**sort_array(char **env);
+void	initial_configuration(t_data *data, t_execute *info);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
