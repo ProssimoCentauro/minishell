@@ -1,23 +1,22 @@
 #include "minishell.h"
 
-char	*quote_compare(char *str, char *file)
+void	quote_compare(char **str, char **file)
 {
 	char	c;
 
-	if (*str == '\'' || *str == '"')
+	if (**str == '\'' || **str == '"')
 	{
-		c = *str;
-		str++;
-		while (*str != c)
+		c = **str;
+		(*str)++;
+		while (**str != c)
 		{
-			if (*str != *file)
-				return(str);
-			str++;
-			file++;
+			if (**str != **file)
+				return ;
+			(*str)++;
+			(*file)++;
 		}
-		str++;
+		(*str)++;
 	}
-	return (str);
 }
 
 int	check_corrispondency(char *str, char *file)
@@ -27,7 +26,7 @@ int	check_corrispondency(char *str, char *file)
 	while (*str != '*')
 	{
 		if (*str == '\'' || *str == '"')
-			str = quote_compare(str, file);
+			quote_compare(&str, &file);
 		else if (*str != *file)
 			return (1);
 		else if (!(*str))
@@ -40,7 +39,10 @@ int	check_corrispondency(char *str, char *file)
 	}
 	while (*(str + 1) == '*')
 		str++;
-	c = *(str + 1);
+	if (*(str + 1) == '\'' || *(str + 1) == '"')
+		c = *(str + 2);
+	else
+		c = *(str + 1);
 	while (*file != c)
 	{
 		if (!(*file))
@@ -104,7 +106,7 @@ char	**find_wildcards(char *str)
 		info = readdir((curr_dir));
 	}
 	results[len] = NULL;
-	if (!*results)
+	if (!(*results))
 	{
 		results[0] = ft_strdup(str);
 		results[1] = NULL;
