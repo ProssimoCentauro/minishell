@@ -110,8 +110,8 @@ int	main(int ac, char **av)
 		}
 		if (line && *line && ft_strcmp(line, "\n"))
 			add_history(line);
-		if (!ft_strcmp(line, "exit"))
-			break ;
+/*		if (!ft_strcmp(line, "exit"))
+			break ;*/
 		if (tokenizer(line, &tokens))
 			continue ;
 /*       		printf("before reorder:\n");
