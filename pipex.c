@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 16:32:53 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/12 11:48:51 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/15 12:51:32 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	execute_pipe(t_execute *info, t_data *data)
 			exit(data->exit_status);
 		if (!path)
 			command_error(com_flags[0], data);
-		execve(path, com_flags, NULL);
+		if (execve(path, com_flags, NULL) == -1)
+			exit(2);
 	}
 	close(pipefd[1]);
 	if (info->pipe_fd != 0)
@@ -71,8 +72,10 @@ void	final_process(t_execute *info, t_data *data)
 			exit(data->exit_status);
 		if (!path)
 			command_error(com_flags[0], data);
-		execve(path, com_flags, NULL);
+		if (execve(path, com_flags, NULL) == -1)
+			exit (2);
 	}
+	waitpid(-1, &(data->exit_status), 0);
 	if (info->file_in != 0)
 		close(info->file_in);
 }
