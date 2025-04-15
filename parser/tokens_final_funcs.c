@@ -5,7 +5,7 @@ int	write_on_file(int fd2, char *delimiter, t_token **tokens);
 
 int forbidden_symbols(char c)
 {
-    const char *special_symbols = "-!@#$%^&*()+={}[]|\\:;\"'<>,.?";
+    const char *special_symbols = "-!@$#%^&*()+={}[]|\\:;\"'<>,.?";
 
     if (ft_strchr(special_symbols, c) != NULL)
 	    return (1);
@@ -231,8 +231,8 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 					&& line[j] != '$' && !forbidden_symbols(line[j]))
 				j++;
 			}
-			else if (!line[j] && line[j] == ' ' && line[j] == '\'' && line[j] == '"'
-					&& line[j] == '$' && !forbidden_symbols(line[j]))
+			else if (!line[j] || line[j] == ' ' || line[j] == '\'' || line[j] == '"'
+					|| line[j] == '$' || !forbidden_symbols(line[j]))
 				continue ;
 			if (j != k)
 			{
@@ -243,12 +243,18 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 				free(sub_str);
 				line = replace_range(line, var, k - 1, j - 1);
 			}
-			else
+			else if (line[j] == '?' && line[k] == '?')
 			{
 				var = ft_itoa(WEXITSTATUS(data->exit_status));
 				line = replace_range(line, var, k - 1, j);
 			}
-			j = 0;
+			else if (line[j] == line[k])
+			{
+				j++;
+				k++;
+			}
+			else
+				j = 0;
 		}
 		else if (line[j] == '"')
 		{
@@ -263,8 +269,8 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 							&& line[j] != '$' && !forbidden_symbols(line[j]))
 						j++;
 					}
-					else if (!line[j] && line[j] == ' ' && line[j] == '\''
-							&& line[j] == '"' && line[j] == '$')
+					else if (!line[j] || line[j] == ' ' || line[j] == '\'' || line[j] == '"'
+							|| line[j] == '$' || !forbidden_symbols(line[j]))
 						continue ;
 					if (j != k)
 					{

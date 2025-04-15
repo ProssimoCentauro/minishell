@@ -1,12 +1,12 @@
 NAME = minishell
 
-LEXF = ./parser/
+PARSER = ./parser/
 
 SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
-	  ft_getenv.c unset.c wildcards.c $(LEXF)tokens_utils.c $(LEXF)tokens_utils2.c $(LEXF)tokens_reorder.c \
-	  $(LEXF)tree_builder.c $(LEXF)tokenizer.c $(LEXF)token_args_utils.c $(LEXF)tokens_final_funcs.c\
-	  executor.c path.c executor_info.c pipex.c $(LEXF)check_input.c errors_utils.c set_prompt.c\
-	  signal_handlers.c expand_input.c ft_arrayjoin.c initial_configuration.c\
+	  ft_getenv.c unset.c wildcards.c $(PARSER)tokens_utils.c $(PARSER)tokens_utils2.c $(PARSER)tokens_reorder.c \
+	  $(PARSER)tree_builder.c $(PARSER)tokenizer.c $(PARSER)token_args_utils.c $(PARSER)tokens_final_funcs.c\
+	  executor.c path.c executor_info.c pipex.c $(PARSER)check_input.c errors_utils.c set_prompt.c\
+	  signal_handlers.c expand_input.c ft_arrayjoin.c initial_configuration.c $(PARSER)quotes_utils.c\
 
 OBJ = $(SRC:.c=.o)
 
