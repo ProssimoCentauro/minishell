@@ -80,7 +80,7 @@ int	main(int ac, char **av)
 	size_t	i;
 	t_execute	*info;
 	char		*buf;
-	extern char	**environ;
+//	extern char	**environ;
 
 	(void)ac;
 	(void)av;
