@@ -72,7 +72,7 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-int	main(int ac, char **av, char **env)
+int	main(int ac, char **av)
 {
 	t_token	**tokens;
 	t_data	*data;
@@ -80,7 +80,7 @@ int	main(int ac, char **av, char **env)
 	size_t	i;
 	t_execute	*info;
 	char		*buf;
-	char	**env_copy;
+//	extern char	**environ;
 
 	(void)ac;
 	(void)av;
@@ -93,15 +93,8 @@ int	main(int ac, char **av, char **env)
 	// }
 
 	data = malloc(sizeof(t_data));
-	setup_signal_handlers();
-	env_copy = copy_array(env);
-	data->env = env_copy;
-//	printf("%s\n", ft_getenv("data", data->env));
-
 	info = malloc(sizeof(t_execute));
-	info->pid = 0;
-	info->pipe_fd = 0;
-	data->exit_status = 0;
+	initial_configuration(data, info);
 	while (42)
 	{
 		buf = set_prompt();
@@ -117,8 +110,8 @@ int	main(int ac, char **av, char **env)
 		}
 		if (line && *line && ft_strcmp(line, "\n"))
 			add_history(line);
-		if (!ft_strcmp(line, "exit"))
-			break ;
+/*		if (!ft_strcmp(line, "exit"))
+			break ;*/
 		if (tokenizer(line, &tokens))
 			continue ;
 /*       		printf("before reorder:\n");

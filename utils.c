@@ -55,7 +55,6 @@ char	**add_array(t_data *data, char *var)
 		i++;
 	}
 	data->env[i] = ft_strdup(var);
-	printf("adding %s\n", data->env[i]);
 	data->env[i + 1] = NULL;
 	return(data->env);
 }

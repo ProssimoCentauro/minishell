@@ -15,15 +15,17 @@
 char	**look_for_path(char **env)
 {
 	char	**paths;
+	int		i;
 
-	while (*env)
+	i = 0;
+	while (env[i])
 	{
-		if (ft_strnstr(*env, "PATH", 4) != NULL)
+		if (ft_strnstr(env[i], "PATH", 4) != NULL)
 		{
-			paths = ft_split(*(env) + 5, ':');
+			paths = ft_split(env[i] + 5, ':');
 			return (paths);
 		}
-		env++;
+		i++;
 	}
 	return (NULL);
 }

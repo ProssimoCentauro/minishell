@@ -12,6 +12,26 @@
 
 #include "minishell.h"
 
+void	set_files(t_token *tree, t_execute *info)
+{
+	if ((tree->sub_type == IN || tree->sub_type == HEREDOC) && info->file_in >= 0)
+		info->file_in = open(info->file, O_RDWR);
+	if (tree->sub_type == OUT && info->file_in > 0)
+		info->file_out = open(info->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
+	if (tree->sub_type == APPEND && info->file_in >= 0)
+		info->file_out = open(info->file, O_RDWR | O_CREAT | O_APPEND, 0644);
+	if ((tree->type == FILENAME || tree->type == LIMITER) && info->file_in  >= 0)
+	{
+		if (len_wildcards((char *)tree->content) > 1)
+		{
+			ft_putstr_fd((char *)tree->content, 2);
+			ft_putstr_fd(": ambiguous redirect\n", 2);
+			info->file_in = -2;
+		}
+		info->file = (char *)tree->content;
+	}
+}
+
 int	check_builtin(t_execute *info, t_data *data)
 {
 	if (ft_strncmp(info->com, "echo", ft_strlen("echo") + 1) == 0)
@@ -60,14 +80,7 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 		set_info(info);
 		info->delimiter = tree->sub_type;
 	}
-	if (tree->sub_type == IN && info->file_in != -1)
-		info->file_in = open(info->file, O_RDWR);
-	if (tree->sub_type == OUT && info->file_in != -1)
-		info->file_out = open(info->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
-	if (tree->sub_type == APPEND && info->file_in != -1)
-		info->file_out = open(info->file, O_RDWR | O_CREAT | O_APPEND, 0644);
-	if (tree->type == FILENAME && info->file_in != -1)
-		info->file = (char *)tree->content;
+	set_files(tree, info);
 	if (tree->type == CMD)
 		set_command(info, tree);
 	executor(tree->right, data, info);
