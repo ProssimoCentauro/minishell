@@ -18,18 +18,20 @@ char	*ft_getenv(char *variable, char **env)
 {
 	char	*value;
 	int		len;
+	int		i;
 
 	value = NULL;
 	len = 0;
+	i = 0;
 	while (variable[len] != '=' && variable[len] != '\0')
 		len++;
-	while (*env)
+	while (env[i])
 	{
-		if (ft_strncmp(variable, *env, len) == 0 && ((*env)[len] == '=' || (*env)[len] == '\0'))
+		if (ft_strncmp(variable, env[i], len) == 0 && (env[i][len] == '=' || env[i][len] == '\0'))
 		{
-			value = get_value(*env);
+			value = get_value(env[i]);
 		}
-		env++;
+		i++;
 	}
 	if (value && ft_strlen(value) == 0)
 		return (ft_strdup(""));
