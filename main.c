@@ -1,49 +1,7 @@
 #include "minishell.h"
 
 int g_exit_status;
-
 /*
-int main(int ac, char **av, char **env)
-{
-	char	*input;
-	char	*buf;
-
-	input = ft_calloc(1, sizeof(char));
-	(void) ac;
-	(void) av;
-	find_wildcards("*.c");
-	while (1)
-	{
-		buf = ft_calloc(1024, sizeof(char));
-		getcwd(buf, 1024);
-		buf[ft_strlen(buf)] = ' ';
-		buf[ft_strlen(buf) + 1] = '\0';
-		input = readline(buf);
-		free(buf);
-	}
-}*/
-
-static char	*type_to_str(t_type type);
-
-void	print_tree(t_token *root, int depth)
-{
-	int	i;
-
-	if (root == NULL)
-		return ;
-	depth += 5;
-	print_tree(root->right, depth);
-	ft_printf("\n");
-	i = 5;
-	while (i < depth)
-	{
-		ft_printf(" ");
-		i++;
-	}
-	ft_printf("%s\n", (char *)root->content);
-	print_tree(root->left, depth);
-}
-
 static char	*type_to_str(t_type type)
 {
 	if (type == CMD)
@@ -79,6 +37,25 @@ static char	*type_to_str(t_type type)
 	else if (type == END)
 		return ("END");
 	return ("TYPE ERROR!");
+}*/
+
+void	print_tree(t_token *root, int depth)
+{
+	int	i;
+
+	if (root == NULL)
+		return ;
+	depth += 5;
+	print_tree(root->right, depth);
+	ft_printf("\n");
+	i = 5;
+	while (i < depth)
+	{
+		ft_printf(" ");
+		i++;
+	}
+	ft_printf("%s\n", (char *)root->content);
+	print_tree(root->left, depth);
 }
 
 int	ft_strcmp(char *s1, char *s2)
@@ -152,20 +129,39 @@ int	main(int ac, char **av, char **env)
 		assign_index(tokens);
 		finalize_tokens(tokens, data);
 
-        	ft_printf("assigning args!\n\n");
+        	//ft_printf("assigning args!\n\n");
 		assign_args(tokens);
-        	printf("assign finished!\n\n");
-
+		//printf("assign finished!\n\n");
+/*
        		 while (tokens[++i])
 			printf("index %d: %s: %s: %s\n",
                     tokens[i]->index,
 				type_to_str(tokens[i]->type),
                 type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
-
-		printf("\n\n\n");
+*/
+//		printf("\n\n\n");
 		i = 0;
-		data->tree = build_tree(tokens, &i);
+
+		while (tokens[i])
+		{
+			data->tree = build_tree(tokens, &i);
+//			print_tree(data->tree, 0);
+//			printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+//			print_args(tokens);
+			executor(data->tree, data, info);
+			execve_cmd(info, data);
+			while (info->pid > 0)
+			{
+				waitpid(-1, &(data->exit_status), 0);
+				info->pid -= 1;
+			}
+			data->tree = NULL;
+			set_info(info);
+			while (tokens[i] && (tokens[i]->type & (NEW_LINE | END)))
+				i++;
+		}
+/*		data->tree = build_tree(tokens, &i);
 		print_tree(data->tree, 0);
 		printf("\n\n");
 		print_args(tokens);
@@ -176,7 +172,7 @@ int	main(int ac, char **av, char **env)
 			waitpid(-1, &(data->exit_status), 0);
 			info->pid -= 1;
 		}
-		i = -1;
+		i = -1;*/
 		// free_tokens(tokens);
 	}
 	rl_clear_history();
