@@ -80,8 +80,10 @@ t_token *build_tree(t_token **tokens, size_t *i)
 {
     t_token *root = NULL;
     t_token *last = NULL;
+    size_t	j;
 
-    while (tokens[*i])
+    j = 0;
+    while (tokens[*i] && !(tokens[*i]->type & (NEW_LINE | END)))
     {
         if (tokens[*i]->type == CMD)
             handle_cmd(tokens, &root, &last, i);
@@ -104,6 +106,13 @@ t_token *build_tree(t_token **tokens, size_t *i)
         else if (tokens[*i]->sub_type & (CLOSE))
                 return (root);
         (*i)++;
+	    j = *i;
+	    if (tokens[j]->type == NEW_LINE && tokens[j - 1]->sub_type & (AND | OR | PIPE))
+	    {
+		    while (tokens[j]->type == NEW_LINE)
+			    j++;
+		    *i = j;
+	    }
     }
 
     return (root);

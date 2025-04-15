@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:27 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/03/25 16:30:28 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/14 16:43:14 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,14 @@ void	print_tokens(t_token **tokens)
 			printf("(null)\n");
 		i++;
 	}
+}
+
+int	free_token(t_token *token)
+{
+	if (token->content)
+		free(token->content);
+	if (token->args)
+		free(token->args);
+	free(token);
+	return (0);
 }

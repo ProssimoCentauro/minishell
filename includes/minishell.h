@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/07 02:21:45 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/14 17:01:20 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,15 @@ typedef struct	s_execute
 int	ft_strcmp(char *s1, char *s2);
 
 // tokens_utils.c && tokens_utils2.c
+t_token **remove_token_at(t_token **arr, size_t index);
+t_token **add_token_at(t_token **arr, t_token *token, size_t index);
 t_token				*create_token(void *content, t_type type, t_type sub_type);
 t_token				**add_token(t_token **arr, t_token *token);
 void				copy_arr(t_token **new_arr, t_token **arr, size_t size);
 void				free_tokens(t_token **tokens);
 size_t				count_tokens(t_token **tokens);
 void				print_tokens(t_token **tokens);
+int	free_token(t_token *token);
 
 //tokenizer.c
 int tokenizer(char *line, t_token ***tokens);
@@ -142,6 +145,7 @@ int		array_len(char **array);
 void	command_error(char *comm, t_data *data);
 char	**add_array(t_data *data, char *var);
 char	*quotes(char *str);
+
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);
 char	**sort_array(char **env);

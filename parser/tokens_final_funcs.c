@@ -57,8 +57,11 @@ char	*ft_itoa(int n)
 
 void	handle_heredoc(int signal)
 {
-	rl_on_new_line();
+	//rl_on_new_line();
 	//exit(2);
+        rl_replace_line("", 0);
+        rl_on_new_line();
+        rl_redisplay();
 	g_exit_status =  signal;
 }
 
@@ -78,25 +81,30 @@ int	set_signal(int signal, void (*f)(int s))
 /* bisogna implementare la funzione che leva le virgolette per il delimiter*/
 int	write_on_file(int fd, char *delimiter, t_token **tokens)
 {
+	(void)tokens;
 	char	*line;
-	pid_t	pid;
+//	pid_t	pid;
 	int	ret;
-
-	pid = fork();
-	if (pid == 0)
-	{
-		set_signal(SIGINT, handle_heredoc);
+	ret = 0;
+//	pid = fork();
+//	if (pid == 0)
+//	{
+//		set_signal(SIGINT, handle_heredoc);
 		while (1)
 		{
 			line = get_next_line(0);
-			if (g_exit_status == SIGINT)
-			{
-				free(line);
-				free_tokens(tokens);
-				exit(2);
-			}
+//			if (g_exit_status == SIGINT)
+//			{
+//				free(line);
+//				free_tokens(tokens);
+//				exit(2);
+//				break;
+//			}
 			if (!line)
+			{
+				printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
 				return (1);
+			}
 			if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
                 	&& *(line + ft_strlen(delimiter)) == '\n')
 			{
@@ -106,11 +114,13 @@ int	write_on_file(int fd, char *delimiter, t_token **tokens)
 			write(fd, line, ft_strlen(line));
 			free (line);
 		}
-	}
-	waitpid(pid, &ret, 0);
+//	}
+//	waitpid(pid, &ret, 0);
 	/*if (ret == 512)
 		free(line);
 	*///printf("PIPPO E PIPPI E NON SAPEVO CHE VOLEVI PIPPARE UNA VITA DI PIPPO E PIPPI: %d\n", ret);
+	if (g_exit_status == SIGINT)
+		ret = 512;
 	return (ret);
 }
 
@@ -123,19 +133,24 @@ static int check_heredoc(t_token **tokens, size_t *i)
 
     (*i)++;
     str_i = ft_itoa((int)*i);
-    temp_file = ft_strjoin("./temp_file/temp_", str_i);
+    temp_file = ft_strjoin("./temp_files/temp_", str_i);
     free(str_i);
     fd = open(temp_file, O_CREAT | O_RDWR, 0644);
     ret = write_on_file(fd, (char *)tokens[*i]->content, tokens);
     close(fd);
-    if (ret == 512 || ret == 1)
+    /*if (ret == 512 || ret == 1)
     {
 	    free(temp_file);
 	    return (ret);
-    }
+    }*/
     free(tokens[*i]->content);
     tokens[*i]->content = ft_strdup(temp_file);
     free(temp_file);
+    if (ret == 512 || ret == 1)
+    {
+//	    free(temp_file);
+	    return (ret);
+    }
     (*i)++;
     return (0);
 }

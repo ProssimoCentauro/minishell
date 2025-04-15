@@ -25,7 +25,7 @@ t_token	*check_next(t_token **tokens, size_t i, t_token **res)
 	}
 	else if (tokens[i]->sub_type & (IN | OUT | APPEND | HEREDOC))
 	{
-		if (tokens[i + 1]->sub_type & (NEW_LINE))
+		if (tokens[i + 1]->sub_type & (NEW_LINE | END))
 			*res = tokens[i + 1];
 	}
 	return (*res);

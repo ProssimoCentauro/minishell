@@ -20,6 +20,7 @@ char	*quote_compare(char *str, char *file)
 	return (str);
 }
 
+
 int	check_corrispondency(char *str, char *file)
 {
 	char	c;
@@ -66,6 +67,7 @@ int	len_wildcards(char *str)
 		if (info->d_type == DT_REG || info->d_type == 0)
 			if (check_corrispondency(str, info->d_name) == 0)
 			len ++;
+
 		info = readdir((curr_dir));
 	}
 	closedir(curr_dir);
