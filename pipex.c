@@ -35,9 +35,8 @@ void	execute_pipe(t_execute *info, t_data *data)
 		if (check_builtin(info, data) == 1)
 			exit(data->exit_status);
 		if (!path)
-			command_error(info->com, data);
+			command_error(com_flags[0], data);
 		execve(path, com_flags, NULL);
-
 	}
 	close(pipefd[1]);
 	if (info->pipe_fd != 0)
@@ -71,9 +70,11 @@ void	final_process(t_execute *info, t_data *data)
 		if (check_builtin(info, data) == 1)
 			exit(data->exit_status);
 		if (!path)
-			command_error(info->com, data);
+			command_error(com_flags[0], data);
 		execve(path, com_flags, NULL);
 	}
+	if (info->file_in != 0)
+		close(info->file_in);
 }
 
 void	execve_cmd(t_execute *info, t_data *data)
@@ -83,19 +84,21 @@ void	execve_cmd(t_execute *info, t_data *data)
 		return ;
 	if ((info->delimiter == AND && data->exit_status != 0) || (info->delimiter == OR && data->exit_status == 0))
 		return ;
-	if (info->pipe_fd != 0)
+	if (info->pipe_fd != 0 )
 	{
 		info->file_in = info->pipe_fd;
 		info->pipe_fd = 0;
-		final_process(info, data);
-		return ;
+		if (info->pipe == 0)
+			final_process(info, data);
+		else
+			execute_pipe(info, data);
 	}
 	else if (info->pipe == 0)
 	{
 		if (check_builtin(info, data) == 0)
 			final_process(info, data);
 	}
-	else
+	else if (info->pipe == 1)
 		execute_pipe(info, data);
 	if (info->file_in != 0)
 		close(info->file_in);

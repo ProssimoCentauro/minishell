@@ -51,7 +51,7 @@ void	print_line(char *str)
 		printf("\n");
 }
 
-void	sort_array(char **env)
+void	print_sort_array(char **env)
 {
 	char	*temp;
 	int		n;
@@ -63,7 +63,7 @@ void	sort_array(char **env)
 		b = n + 1;
 		while (env[b])
 		{
-			if (ft_strncmp(env[n], env[b], ft_strlen(env[b])) > 0)
+			if (ft_strncmp(env[n], env[b], ft_strlen(env[b]) + 1) > 0)
 			{
 				temp = env[n];
 				env[n] = env[b];
@@ -120,7 +120,7 @@ void	ft_export(char **var, t_data *data)
 		return ;
 	}
 	copy = copy_array(data->env);
-	sort_array(copy);
+	print_sort_array(copy);
 	data->exit_status = 0;
 	//free_array(copy);
 }

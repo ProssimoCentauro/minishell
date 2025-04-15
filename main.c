@@ -84,6 +84,14 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+
+	// wildcards = find_wildcards("'echo.c'");
+	// while (wildcards && *wildcards)
+	// {
+	// 	printf("%s\n", *wildcards);
+	// 	wildcards++;
+	// }
+
 	data = malloc(sizeof(t_data));
 	setup_signal_handlers();
 	env_copy = copy_array(env);
@@ -142,7 +150,6 @@ int	main(int ac, char **av, char **env)
 */
 //		printf("\n\n\n");
 		i = 0;
-
 		while (tokens[i])
 		{
 			data->tree = build_tree(tokens, &i);
@@ -161,19 +168,9 @@ int	main(int ac, char **av, char **env)
 			while (tokens[i] && (tokens[i]->type & (NEW_LINE | END)))
 				i++;
 		}
-/*		data->tree = build_tree(tokens, &i);
-		print_tree(data->tree, 0);
-		printf("\n\n");
-		print_args(tokens);
-		executor(data->tree, data, info);
-		execve_cmd(info, data);
-		while (info->pid > 0)
-		{
-			waitpid(-1, &(data->exit_status), 0);
-			info->pid -= 1;
-		}
-		i = -1;*/
-		// free_tokens(tokens);
+		data->tree = build_tree(tokens, &i);
+		//i = -1;
+    free_tokens(tokens);
 	}
 	rl_clear_history();
 	free(info->args);

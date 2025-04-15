@@ -146,6 +146,10 @@ void	command_error(char *comm, t_data *data);
 char	**add_array(t_data *data, char *var);
 char	*quotes(char *str);
 
+int		len_wildcards(char *str);
+char	**ft_arrayjoin(char **s1, char **s2);
+char	**sort_array(char **env);
+
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
 

@@ -39,17 +39,12 @@ void	set_command(t_execute *info, t_token *tree)
 
 	i = 0;
 	info->com = (char *)tree->content;
-	while (tree->args && tree->args[i])
-		i++;
-	info->args = malloc((i + 2) * (sizeof(char *)));
-	i = 0;
-	info->args[0] = (char *)tree->content;
+	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
 	{
-		info->args[i + 1] = (char *)(tree->args[i]->content);
+		info->args = ft_arrayjoin(info->args, find_wildcards((char *)(tree->args[i]->content)));
 		i++;
 	}
-	info->args[i + 1] = NULL;
 }
 
 void	executor(t_token *tree, t_data *data, t_execute *info)
