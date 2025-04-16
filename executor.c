@@ -53,11 +53,13 @@ int	check_builtin(t_execute *info, t_data *data)
 	return (1);
 }
 
-void	set_command(t_execute *info, t_token *tree)
+void	set_command(t_execute *info, t_token *tree, t_data *data)
 {
 	int	i;
 
 	i = 0;
+	if ((is_a_free_variable((char *)tree->content, data) == 0))
+		return ;
 	info->com = (char *)tree->content;
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
@@ -82,6 +84,6 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	}
 	set_files(tree, info);
 	if (tree->type == CMD)
-		set_command(info, tree);
+		set_command(info, tree, data);
 	executor(tree->right, data, info);
 }

@@ -39,24 +39,24 @@ char	**copy_array(char **array)
 	return (copy);
 }
 
-char	**add_array(t_data *data, char *var)
+char	**add_array(char **data, char *var)
 {
 	int		len;
 	int		i;
 	char	**temp;
 
-	len = array_len(data->env);
-	temp = data->env;
+	len = array_len(data);
+	temp = data;
 	i = 0;
-	data->env = malloc((len + 2) * (sizeof(char *)));
+	data = malloc((len + 2) * (sizeof(char *)));
 	while (temp[i])
 	{
-		data->env[i] = ft_strdup(temp[i]);
+		data[i] = ft_strdup(temp[i]);
 		i++;
 	}
-	data->env[i] = ft_strdup(var);
-	data->env[i + 1] = NULL;
-	return(data->env);
+	data[i] = ft_strdup(var);
+	data[i + 1] = NULL;
+	return(data);
 }
 
 char	**sort_array(char **env)

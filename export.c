@@ -33,7 +33,7 @@ void	add_env(char *var, t_data *data)
 		data->exit_status = 1;
 		return ;
 	}
-	data->env = add_array(data, var);
+	data->env = add_array(data->env, var);
 	data->exit_status = 0;
 }
 
@@ -42,14 +42,14 @@ void	print_line(char *str)
 	ft_putstr_fd("declare -x ", STDOUT_FILENO);
 	while (*str != '=' && *str != '\0')
 	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putchar_fd(*str , STDOUT_FILENO);
 		str++;
 	}
 	if (*str == '=')
 	{
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putstr_fd("=\"", STDOUT_FILENO);
 		ft_putstr_fd(str +1, STDOUT_FILENO);
-		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putstr_fd("\"\n", STDOUT_FILENO);
 	}
 	else
 		ft_putstr_fd("\n", STDOUT_FILENO);

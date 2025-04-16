@@ -75,6 +75,7 @@ typedef	struct	s_data
 	char	**env;
 	int		exit_status;
 	t_token	*tree;
+	char	**free_variables;
 }	t_data;
 
 typedef struct	s_execute
@@ -146,14 +147,16 @@ void	execve_cmd(t_execute *info, t_data *data);
 int		check_builtin(t_execute *info, t_data *data);
 char	*set_prompt();
 int		array_len(char **array);
-void	command_error(char *comm, t_data *data, t_execute *info);
-char	**add_array(t_data *data, char *var);
+void	command_error(char *comm, t_data *data);
+char	**add_array(char **data, char *var);
 char	*quotes(char *str);
 void	set_fd(t_execute *info);
 void	restore_fd(t_execute *info);
-void	check_dup(int n, t_execute *info, int fd);
+void	check_dup(int n, int fd);
 void	close_fd(int fd1, int fd2, int fd3);
-void	exit_and_free(int exit_status, t_execute *info, char *com);
+void	exit_and_free(int exit_status, char *com);
+int		is_a_free_variable(char *str, t_data *data);
+void	add_env(char *var, t_data *data);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);

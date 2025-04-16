@@ -20,10 +20,10 @@ void	execution(t_execute *info, t_data *data)
 	com_flags = info->args;
 	path = findpath(data->env, com_flags[0]);
 	if (check_builtin(info, data) == 1)
-		exit_and_free(data->exit_status, info, path);
+		exit_and_free(data->exit_status, path);
 	if (!path)
 		if (execve(com_flags[0], com_flags, data->env) == -1)
-			command_error(com_flags[0], data, info);
+			command_error(com_flags[0], data);
 	execve(path, com_flags, data->env);
 }
 
@@ -37,7 +37,7 @@ void	execute_pipe(t_execute *info, t_data *data)
 	pid = fork();
 	if (pid == 0)
 	{
-		check_dup(dup2(info->file_in, STDIN_FILENO), info, pipefd[1]);
+		check_dup(dup2(info->file_in, STDIN_FILENO), pipefd[1]);
 		dup2(pipefd[1], STDOUT_FILENO);
 		close_fd(info->file_in, pipefd[1], pipefd[0]);
 		execution(info, data);
@@ -54,7 +54,7 @@ void	final_process(t_execute *info, t_data *data)
 	pid = fork();
 	if (pid == 0)
 	{
-		check_dup(dup2(info->file_in, STDIN_FILENO), info, info->file_in);
+		check_dup(dup2(info->file_in, STDIN_FILENO), info->file_in);
 		dup2(info->file_out, STDOUT_FILENO);
 		close_fd(info->file_in, info->file_out, 0);
 		execution(info, data);

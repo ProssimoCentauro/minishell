@@ -20,6 +20,7 @@ void	initial_configuration(t_data *data, t_execute *info)
 
 	setup_signal_handlers();
 	data->env = copy_array(environ);
+	data->free_variables = calloc(1, sizeof(char *));
 	info->pid = 0;
 	info->pipe_fd = 0;
 	info->std_in = dup(STDIN_FILENO);
