@@ -1,16 +1,58 @@
 #include "minishell.h"
 
-char	*quotes(char *str)
+int	len_w_quote(char *str)
 {
-	char	*temp;
+	char	c;
+	int		len;
 
-	if (!str)
-		return (NULL);
-	if (*str == 39)
+	len = 0;
+	while (*str)
 	{
-		temp = str;
-		str = ft_substr(str, 1, ft_strlen(str) - 2);
-		return (free(temp), str);
+		if (*str == '\'' || *str == '"')
+		{
+			c = *str;
+			str++;
+			while (*str != c)
+			{
+				str++;
+				len++;
+			}
+		}
+		len++;
+		str++;
 	}
-	return (str);
+	return (len);
+}
+
+char	*ft_strdup_quote(char *str)
+{
+	int		len;
+	char	c;
+	char	*result;
+	int		i;
+
+	i = 0;
+	len = len_w_quote(str);
+	result = malloc(len + 1);
+	while (*str)
+	{
+		if (*str == '\'' || *str == '"')
+		{
+			c = *str;
+			str++;
+			while (*str != c)
+			{
+				result[i] = *str;
+				i++;
+			}
+			str++;
+		}
+		if (!(*str))
+			break ;
+		result[i] = *str;
+		i++;
+		str++;
+	}
+	result[i] = '\0';
+	return (result);
 }

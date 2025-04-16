@@ -27,7 +27,8 @@ void	execute_pipe(t_execute *info, t_data *data)
 	{
 		com_flags = info->args;
 		path = findpath(data->env, com_flags[0]);
-		dup2(info->file_in, STDIN_FILENO);
+		if (dup2(info->file_in, STDIN_FILENO) == -1)
+			exit(1);
 		if (info->file_in != 0)
 			close(info->file_in);
 		close(pipefd[0]);
@@ -59,7 +60,8 @@ void	final_process(t_execute *info, t_data *data)
 		path = findpath(data->env, com_flags[0]);
 		if (info->file_in != 0)
 		{
-			dup2(info->file_in, STDIN_FILENO);
+			if (dup2(info->file_in, STDIN_FILENO) == -1)
+				exit (1);
 			close(info->file_in);
 		}
 		if (info->file_out != 1)
@@ -83,9 +85,10 @@ void	final_process(t_execute *info, t_data *data)
 
 void	execve_cmd(t_execute *info, t_data *data)
 {
+	signal(SIGINT, SIG_IGN);
 	if (info->file_in != -2)
 		check_error(info->file_in, info->com, info->file, data);
-	if (info->file_in < 0 || info->com == NULL)
+	if (info->file_in == -2 || info->com == NULL)
 		return ;
 	if ((info->delimiter == AND && data->exit_status != 0) || (info->delimiter == OR && data->exit_status == 0))
 		return ;

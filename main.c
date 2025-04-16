@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int g_exit_status;
+int g_last_signal;
 /*
 static char	*type_to_str(t_type type)
 {
