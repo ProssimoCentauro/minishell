@@ -39,25 +39,30 @@ void	add_env(char *var, t_data *data)
 
 void	print_line(char *str)
 {
-	printf("declare -x ");
+	ft_putstr_fd("declare -x ", STDOUT_FILENO);
 	while (*str != '=' && *str != '\0')
 	{
-		printf("%c", *str);
+		ft_putstr_fd("\n", STDOUT_FILENO);
 		str++;
 	}
 	if (*str == '=')
-		printf("=\"%s\"\n", str + 1);
+	{
+		ft_putstr_fd("\n", STDOUT_FILENO);
+		ft_putstr_fd(str +1, STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	}
 	else
-		printf("\n");
+		ft_putstr_fd("\n", STDOUT_FILENO);
 }
 
-void	print_sort_array(char **env)
+void	print_sort_array(char **env, t_execute *info)
 {
 	char	*temp;
 	int		n;
 	int		b;
 
 	n = 0;
+	set_fd(info);
 	while (env[n])
 	{
 		b = n + 1;
@@ -74,6 +79,7 @@ void	print_sort_array(char **env)
 		print_line(env[n]);
 		n++;
 	}
+	restore_fd(info);
 }
 
 void	change_env(char **env, char *var)
@@ -98,7 +104,7 @@ void	change_env(char **env, char *var)
 	free(temp);
 }
 
-void	ft_export(char **var, t_data *data)
+void	ft_export(char **var, t_data *data, t_execute *info)
 {
 	char	**copy;
 	char	*value;
@@ -122,7 +128,7 @@ void	ft_export(char **var, t_data *data)
 		return ;
 	}
 	copy = copy_array(data->env);
-	print_sort_array(copy);
+	print_sort_array(copy, info);
 	data->exit_status = 0;
 	//free_array(copy);
 }

@@ -12,11 +12,12 @@
 
 #include "minishell.h"
 
-void	ft_env(t_data *data)
+void	ft_env(t_data *data, t_execute *info)
 {
 	int	i;
 
 	i = 0;
+	set_fd(info);
 	while (data->env[i])
 	{
 		if (*(ft_getenv(data->env[i], data->env)) != '\0')
@@ -27,6 +28,7 @@ void	ft_env(t_data *data)
 		i++;
 	}
 	data->exit_status = 0;
+	restore_fd(info);
 }
 
 t_data	*analize_env(char **env)

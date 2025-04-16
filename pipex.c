@@ -78,7 +78,7 @@ void	final_process(t_execute *info, t_data *data)
 		}
 		execve(path, com_flags, data->env);
 	}
-	waitpid(-1, &(data->exit_status), 0);
+	waitpid(pid, &(data->exit_status), 0);
 	if (info->file_in != 0)
 		close(info->file_in);
 }

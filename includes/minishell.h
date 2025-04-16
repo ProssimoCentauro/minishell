@@ -87,6 +87,8 @@ typedef struct	s_execute
 	char	**args;
 	int		pipe_fd;
 	int		pid;
+	int		std_in;
+	int		std_out;
 	t_type	delimiter;
 }				t_execute;
 
@@ -121,11 +123,11 @@ void print_command_tree(t_token* node, int depth);
 t_token *build_tree(t_token **tokens, size_t *i);
 
 //built in
-void	ft_echo(char** str, t_data *data);
+void	ft_echo(char** str, t_data *data, t_execute *info);
 void	cd(char **str, t_data *data);
-void	pwd(t_data *data);
-void	ft_env(t_data *data);
-void	ft_export(char **var, t_data *data);
+void	pwd(t_data *data, t_execute *info);
+void	ft_env(t_data *data, t_execute *info);
+void	ft_export(char **var, t_data *data, t_execute *info);
 void	ft_exit(char **exit_status);
 void	ft_unset(char **var, t_data *data);
 
@@ -147,6 +149,8 @@ int		array_len(char **array);
 void	command_error(char *comm, t_data *data);
 char	**add_array(t_data *data, char *var);
 char	*quotes(char *str);
+void	set_fd(t_execute *info);
+void	restore_fd(t_execute *info);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);

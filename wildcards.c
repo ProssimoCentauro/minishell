@@ -19,7 +19,6 @@ void	quote_compare(char **str, char **file)
 	}
 }
 
-
 int	check_corrispondency(char *str, char *file)
 {
 	char	c;

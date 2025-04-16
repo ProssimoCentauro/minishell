@@ -35,15 +35,15 @@ void	set_files(t_token *tree, t_execute *info)
 int	check_builtin(t_execute *info, t_data *data)
 {
 	if (ft_strncmp(info->com, "echo", ft_strlen("echo") + 1) == 0)
-		ft_echo((info->args) + 1, data);
+		ft_echo((info->args) + 1, data, info);
 	else if (ft_strncmp(info->com, "cd", ft_strlen("cd") + 1) == 0)
 		cd((info->args) + 1, data);
 	else if (ft_strncmp(info->com, "pwd", ft_strlen("pwd") + 1) == 0)
-		pwd(data);
+		pwd(data, info);
 	else if (ft_strncmp(info->com, "env", ft_strlen("env") + 1) == 0)
-		ft_env(data);
+		ft_env(data, info);
 	else if (ft_strncmp(info->com, "export", ft_strlen("export") + 1) == 0)
-		ft_export((info->args) + 1, data);
+		ft_export((info->args) + 1, data, info);
 	else if (ft_strncmp(info->com, "exit", ft_strlen("exit") + 1) == 0)
 		ft_exit(info-> args + 1);
 	else if (ft_strncmp(info->com, "unset", ft_strlen("unset") + 1) == 0)
