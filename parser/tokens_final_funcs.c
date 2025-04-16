@@ -295,7 +295,10 @@ int	finalize_tokens(t_token **tokens, t_data *data)
 		if (tokens[i]->sub_type == HEREDOC)
 		{
 			if (check_heredoc(tokens, &i) == 512)
+			{
+				data->exit_status = 130;
 				return (512);
+			}
 		}
 		else
 			i++;
