@@ -29,11 +29,24 @@ void	check_error(int n, char *comm, char *arg, t_data *data)
 		data->exit_status = 0;
 }
 
-void	command_error(char *comm, t_data *data)
+void	command_error(char *comm, t_data *data, t_execute *info)
 {
 	ft_putstr_fd(comm, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd("Command not found\n", STDERR_FILENO);
 	data->exit_status = 127;
+	free_array(info->args);
+	free(info);
 	exit(127);
+}
+
+void	check_dup(int n, t_execute *info, int fd)
+{
+	if (n == -1)
+	{
+		free_array(info->args);
+		free(info);
+		close(fd);
+		exit(1);
+	}
 }

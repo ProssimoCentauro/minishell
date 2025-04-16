@@ -33,7 +33,7 @@ void	initial_configuration(t_data *data, t_execute *info)
 	bash_level = malloc(8);
 	ft_strlcpy(bash_level, "SHLVL=", 7);
 	bash_level = ft_strjoin(bash_level, ft_itoa(new_level));
-	ft_export(ft_split(bash_level, ' '), data);
+	ft_export(ft_split(bash_level, ' '), data, info);
 	environ = data->env;
 }
 

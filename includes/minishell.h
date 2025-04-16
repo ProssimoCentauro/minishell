@@ -146,11 +146,14 @@ void	execve_cmd(t_execute *info, t_data *data);
 int		check_builtin(t_execute *info, t_data *data);
 char	*set_prompt();
 int		array_len(char **array);
-void	command_error(char *comm, t_data *data);
+void	command_error(char *comm, t_data *data, t_execute *info);
 char	**add_array(t_data *data, char *var);
 char	*quotes(char *str);
 void	set_fd(t_execute *info);
 void	restore_fd(t_execute *info);
+void	check_dup(int n, t_execute *info, int fd);
+void	close_fd(int fd1, int fd2, int fd3);
+void	exit_and_free(int exit_status, t_execute *info, char *com);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);
@@ -176,4 +179,5 @@ void setup_signal_handlers(void);
 
 //quotes_utils.c
 void remove_quotes(char *line);
+
 #endif

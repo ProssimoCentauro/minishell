@@ -19,3 +19,13 @@ void	restore_fd(t_execute *info)
 	dup2(info->std_in, STDIN_FILENO);
 	dup2(info->std_out, STDOUT_FILENO);
 }
+
+void	close_fd(int fd1, int fd2, int fd3)
+{
+	if (fd1 > 2)
+		close(fd1);
+	if (fd2 > 2)
+		close(fd2);
+	if (fd3 > 2)
+		close(fd3);
+}
