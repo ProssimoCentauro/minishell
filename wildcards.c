@@ -68,8 +68,8 @@ int	len_wildcards(char *str)
 	{
 		if (info->d_type == DT_REG || info->d_type == 0)
 			if (check_corrispondency(str, info->d_name) == 0)
-			len ++;
-
+				if (info->d_name[0] != '.' || (info->d_name[0] == '.' && str[0] == '.'))
+					len++;
 		info = readdir((curr_dir));
 	}
 	closedir(curr_dir);
@@ -94,11 +94,11 @@ char	**find_wildcards(char *str)
 	len = 0;
 	while (info != NULL)
 	{
-		if (info->d_type == DT_REG || info->d_type == 0)
+		if (info->d_type == DT_REG || info->d_type == 0 || info->d_name[0] == '.')
 		{
 			if (check_corrispondency(str, info->d_name) == 0)
 			{
-				if (info->d_name[0] != '.')
+				if (info->d_name[0] != '.' || (info->d_name[0] == '.' && str[0] == '.'))
 				{
 					results[len] = ft_strdup(info->d_name);
 					len++;
@@ -110,7 +110,8 @@ char	**find_wildcards(char *str)
 	results[len] = NULL;
 	if (!(*results))
 	{
-		results[0] = ft_strdup_quote(str);
+		remove_quotes(str);
+		results[0] = str;
 		results[1] = NULL;
 	}
 	closedir(curr_dir);
