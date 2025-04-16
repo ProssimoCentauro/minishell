@@ -110,7 +110,7 @@ char	**find_wildcards(char *str)
 	results[len] = NULL;
 	if (!(*results))
 	{
-		results[0] = ft_strdup(str);
+		results[0] = ft_strdup_quote(str);
 		results[1] = NULL;
 	}
 	closedir(curr_dir);

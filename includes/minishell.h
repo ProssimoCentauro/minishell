@@ -152,6 +152,7 @@ int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);
 char	**sort_array(char **env);
 void	initial_configuration(t_data *data, t_execute *info);
+char	*ft_strdup_quote(char *str);
 
 int     assign_args(t_token **tokens);
 void    print_args(t_token **tokens);
