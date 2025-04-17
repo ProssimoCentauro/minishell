@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/14 17:01:20 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/17 14:22:38 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ int		check_builtin(t_execute *info, t_data *data);
 char	*set_prompt();
 int		array_len(char **array);
 void	command_error(char *comm, t_data *data);
-char	**add_array(char **data, char *var);
+char	**add_array(t_data *data, char *var);
 char	*quotes(char *str);
 void	set_fd(t_execute *info);
 void	restore_fd(t_execute *info);
@@ -157,6 +157,9 @@ void	close_fd(int fd1, int fd2, int fd3);
 void	exit_and_free(int exit_status, char *com);
 int		is_a_free_variable(char *str, t_data *data);
 void	add_env(char *var, t_data *data);
+char    *get_value(char *str);
+char    *export_join(char *str);
+char    *get_export_variable(char *str);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);

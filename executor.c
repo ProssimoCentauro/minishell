@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/07 02:52:49 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:17:02 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,9 @@ void	set_command(t_execute *info, t_token *tree, t_data *data)
 	int	i;
 
 	i = 0;
-	if ((is_a_free_variable((char *)tree->content, data) == 0))
-		return ;
+	(void) data;
+	/*if ((is_a_free_variable((char *)tree->content, data) == 0))
+		return ;*/
 	info->com = (char *)tree->content;
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
