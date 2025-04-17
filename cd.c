@@ -28,6 +28,7 @@ char	*get_previous_directory(char *curr_dir)
 	prev = ft_substr(curr_dir, 0, len);
 	if (*prev == '\0')
 	{
+		free(prev);
 		prev = malloc(2 *(sizeof(char)));
 		*prev = '/';
 		*(prev + 1) = '\0';
@@ -37,37 +38,28 @@ char	*get_previous_directory(char *curr_dir)
 
 void	cd(char **str, t_data *data)
 {
-	int		n;
 	char	*new_dir;
 	char	*curr_dir;
+	char	*temp;
 
-	n = 0;
 	curr_dir = malloc(1024 * (sizeof(char)));
 	getcwd(curr_dir, 1024);
-	new_dir = NULL;
-	if (!str || !str[n] || (str[n][0] == '~' && str[n][1] == '\0'))
-	{
-		chdir(ft_getenv("HOME", data->env));
-		data->exit_status = 0;
-	}
+	temp = ft_getenv("HOME", data->env);
+	if (!str || !*str || (**str == '~' && str[0][1] == '\0'))
+		new_dir = ft_getenv("HOME", data->env);
 	else if (str[1] != NULL)
 	{
 		write(2, "cd: too many arguments\n", 24);
 		data->exit_status = 1;
+		return (free(curr_dir), free(temp));
 	}
-	else if(str[n][0] == '~')
-	{
-		new_dir = ft_strjoin(ft_getenv("HOME", data->env), str[n] + 1);
-		check_error(chdir(new_dir), "cd: ", new_dir, data);
-	}
-	else if (ft_strncmp(str[n], "..", ft_strlen("..")) == 0)
-	{
+	else if (**str == '~')
+		new_dir = ft_strjoin(temp, *str + 1);
+	else if (ft_strncmp(*str, "..", ft_strlen("..")) == 0)
 		new_dir = get_previous_directory(curr_dir);
-		data->exit_status = 0;
-		check_error(chdir(new_dir), "cd: ", new_dir, data);
-		free(new_dir);
-	}
 	else
-		check_error(chdir(str[n]), "cd: ", str[n], data);
-	free(curr_dir);
+		new_dir = ft_strdup(*str);
+	check_error(chdir(new_dir), "cd: ", new_dir, data);
+	data->exit_status = 0;
+	return (free(curr_dir), free(new_dir), free(temp));
 }
