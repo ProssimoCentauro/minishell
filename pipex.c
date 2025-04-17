@@ -34,7 +34,7 @@ void	execute_pipe(t_execute *info, t_data *data)
 	int		pipefd[2];
 
 	pipe(pipefd);
-	info->pid  += 1;
+	info->pid += 1;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -72,9 +72,10 @@ void	execve_cmd(t_execute *info, t_data *data)
 		check_error(info->file_in, info->com, info->file, data);
 	if (info->file_in == -2 || info->com == NULL)
 		return ;
-	if ((info->delimiter == AND && data->exit_status != 0) || (info->delimiter == OR && data->exit_status == 0))
+	if ((info->delimiter == AND && data->exit_status != 0) || \
+	(info->delimiter == OR && data->exit_status == 0))
 		return ;
-	if (info->pipe_fd != 0 )
+	if (info->pipe_fd != 0)
 	{
 		info->file_in = info->pipe_fd;
 		info->pipe_fd = 0;

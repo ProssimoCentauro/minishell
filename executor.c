@@ -14,13 +14,15 @@
 
 void	set_files(t_token *tree, t_execute *info)
 {
-	if ((tree->sub_type == IN || tree->sub_type == HEREDOC) && info->file_in >= 0)
-		info->file_in = open(info->file, O_RDWR);
+	if ((tree->sub_type == IN || tree->sub_type == HEREDOC))
+		if (info->file_in >= 0)
+			info->file_in = open(info->file, O_RDWR);
 	if (tree->sub_type == OUT && info->file_in >= 0)
 		info->file_out = open(info->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (tree->sub_type == APPEND && info->file_in >= 0)
 		info->file_out = open(info->file, O_RDWR | O_CREAT | O_APPEND, 0644);
-	if ((tree->type == FILENAME || tree->type == LIMITER) && info->file_in  >= 0)
+	if ((tree->type == FILENAME || tree->type == LIMITER) && \
+	info->file_in >= 0)
 	{
 		if (len_wildcards((char *)tree->content) > 1)
 		{
@@ -55,7 +57,8 @@ int	check_builtin(t_execute *info, t_data *data)
 
 void	set_command(t_execute *info, t_token *tree, t_data *data)
 {
-	int	i;
+	int		i;
+	char	*arg;
 
 	i = 0;
 	(void) data;
@@ -63,7 +66,8 @@ void	set_command(t_execute *info, t_token *tree, t_data *data)
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
 	{
-		info->args = ft_arrayjoin(info->args, find_wildcards((char *)(tree->args[i]->content)));
+		arg = (char *)(tree->args[i]->content);
+		info->args = ft_arrayjoin(info->args, find_wildcards(arg));
 		i++;
 	}
 }

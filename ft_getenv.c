@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_getenv.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/17 20:24:19 by ldei-sva          #+#    #+#             */
+/*   Updated: 2025/04/17 20:24:21 by ldei-sva         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 char	*get_value(char *str)
@@ -8,26 +20,12 @@ char	*get_value(char *str)
 	while (str[n] != '=')
 	{
 		if (str[n] == '\0')
-			return ("\0");
+			return (ft_strdup("\0"));
 		n++;
 	}
 	return (ft_substr(str, n + 1, ft_strlen(str) - n));
 }
 
-char	*get_export_variable(char *str)
-{
-	int	n;
-
-	n = 0;
-	while (str[n] != '=' && str[n] != '\0')
-	{
-		if (str[n] == '+' && str[n + 1] == '=')
-			break ;
-		n++;
-	}
-	return (ft_substr(str, 0, n));
-}
-	
 char	*ft_getenv(char *variable, char **env)
 {
 	char	*value;
@@ -39,13 +37,14 @@ char	*ft_getenv(char *variable, char **env)
 	i = 0;
 	while (env[i])
 	{
-		if (ft_strncmp(variable, env[i], len) == 0 && (env[i][len] == '=' || env[i][len] == '\0'))
+		if (ft_strncmp(variable, env[i], len) == 0 && \
+		(env[i][len] == '=' || env[i][len] == '\0'))
 		{
 			value = get_value(env[i]);
 		}
 		i++;
 	}
 	if (value && ft_strlen(value) == 0)
-		return (ft_strdup(""));
+		return (free(value), ft_strdup(""));
 	return (value);
 }

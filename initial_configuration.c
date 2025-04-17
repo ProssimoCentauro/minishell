@@ -14,9 +14,10 @@
 
 void	initial_configuration(t_data *data, t_execute *info)
 {
-	extern char **environ;
+	extern char	**environ;
 	char		*bash_level;
 	int			new_level;
+	char		**temp;
 
 	setup_signal_handlers();
 	data->env = copy_array(environ);
@@ -33,8 +34,9 @@ void	initial_configuration(t_data *data, t_execute *info)
 	free(bash_level);
 	bash_level = malloc(8);
 	ft_strlcpy(bash_level, "SHLVL=", 7);
-	bash_level = ft_strjoin(bash_level, ft_itoa(new_level));
-	ft_export(ft_split(bash_level, ' '), data, info);
+	bash_level = ft_strjoin2(bash_level, ft_itoa(new_level));
+	temp = ft_split(bash_level, ' ');
+	ft_export(temp, data, info);
 	environ = data->env;
+	free(temp);
 }
-

@@ -38,8 +38,3 @@ char	**ft_arrayjoin(char **s1, char **s2)
 	result[len] = NULL;
 	return (free(s1), free(s2), result);
 }
-
-/*int main(int ac, char **av)
-{
-	printf("%s", ft_strjoin(av[1], av[2]));
-}*/

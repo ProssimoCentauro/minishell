@@ -56,5 +56,6 @@ char	*findpath(char **env, char *com)
 
 	paths = look_for_path(env);
 	right_path = look_for_rightpath(paths, com);
+	free_array(paths);
 	return (right_path);
 }

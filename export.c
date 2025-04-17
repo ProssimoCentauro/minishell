@@ -44,7 +44,7 @@ void	print_line(char *str)
 	ft_putstr_fd("declare -x ", STDOUT_FILENO);
 	while (*str != '=' && *str != '\0')
 	{
-		ft_putchar_fd(*str , STDOUT_FILENO);
+		ft_putchar_fd(*str, STDOUT_FILENO);
 		str++;
 	}
 	if (*str == '=')
@@ -84,14 +84,10 @@ void	print_sort_array(char **env, t_execute *info)
 	restore_fd(info);
 }
 
-void	change_env(char **env, char *var)
+void	change_env(t_data *data, char *var, int i, int n)
 {
-	int		n;
-	int		i;
 	char	*temp;
 
-	n = 0;
-	i = 0;
 	while (var[n] != '=')
 	{
 		if (var[n] == '+')
@@ -100,46 +96,46 @@ void	change_env(char **env, char *var)
 			return ;
 		n++;
 	}
-	while (ft_strncmp(env[i], var, n) != 0 && \
-	(env[i][n + 1] != '=' || env[i][n + 1] != '\0'))
+	while (ft_strncmp(data->env[i], var, n) != 0 && \
+	(data->env[i][n + 1] != '=' || data->env[i][n + 1] != '\0'))
 		i++;
-	temp = env[i];
+	temp = data->env[i];
 	if (var[n] == '+')
 	{
-		env[i] = ft_strjoin(get_export_variable(var), "=");
-		env[i] = ft_strjoin(env[i], get_value(temp));
-		env[i]= ft_strjoin(env[i], get_value(var));
+		data->env[i] = ft_strjoin2(get_export_variable(var), ft_strdup("="));
+		data->env[i] = ft_strjoin2(data->env[i], get_value(temp));
+		data->env[i] = ft_strjoin2(data->env[i], get_value(var));
 	}
 	else
-		env[i] = ft_strdup(var);
+		data->env[i] = ft_strdup(var);
+	data->exit_status = 0;
 	free(temp);
 }
 
 void	ft_export(char **var, t_data *data, t_execute *info)
 {
-	char	**copy;
-	char	*value;
+	char		**copy;
+	char		*value;
 	extern char	**environ;
+	char		*variable;
 
 	if (var && *var)
 	{
 		while (*var)
 		{
-			value = ft_getenv(get_export_variable(*var), data->env);
+			variable = get_export_variable(*var);
+			value = ft_getenv(variable, data->env);
 			if (!value)
 				add_env(*var, data);
-			else if (ft_getenv(get_export_variable(*var), data->env))
-			{
-				change_env(data->env, *var);
-				data->exit_status = 0;
-			}
+			else
+				change_env(data, *var, 0, 0);
 			var++;
 		}
 		environ = data->env;
-		return ;
+		return (free(value), free(variable));
 	}
 	copy = copy_array(data->env);
 	print_sort_array(copy, info);
 	data->exit_status = 0;
-	//free_array(copy);
+	free_array(copy);
 }

@@ -132,7 +132,7 @@ void	ft_export(char **var, t_data *data, t_execute *info);
 void	ft_exit(char **exit_status);
 void	ft_unset(char **var, t_data *data);
 
-void	change_env(char **env, char *var);
+void	change_env(t_data *data, char *var, int i, int n);
 void	check_error(int n, char *comm, char *arg, t_data *data);
 void	free_array(char **str);
 char	**copy_array(char **array);
@@ -149,7 +149,6 @@ char	*set_prompt();
 int		array_len(char **array);
 void	command_error(char *comm, t_data *data);
 char	**add_array(t_data *data, char *var);
-char	*quotes(char *str);
 void	set_fd(t_execute *info);
 void	restore_fd(t_execute *info);
 void	check_dup(int n, int fd);
@@ -160,6 +159,7 @@ void	add_env(char *var, t_data *data);
 char    *get_value(char *str);
 char    *export_join(char *str);
 char    *get_export_variable(char *str);
+char	*ft_strjoin2(char *s1, char *s2);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);

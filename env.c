@@ -14,18 +14,21 @@
 
 void	ft_env(t_data *data, t_execute *info)
 {
-	int	i;
+	int		i;
+	char	*value;
 
 	i = 0;
 	set_fd(info);
 	while (data->env[i])
 	{
-		if (*(ft_getenv(data->env[i], data->env)) != '\0')
+		value = ft_getenv(data->env[i], data->env);
+		if (*value != '\0')
 		{
 			ft_putstr_fd(data->env[i], STDOUT_FILENO);
 			ft_putstr_fd("\n", STDOUT_FILENO);
 		}
 		i++;
+		free (value);
 	}
 	data->exit_status = 0;
 	restore_fd(info);
