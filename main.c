@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int g_exit_status;
+int g_last_signal;
 /*
 static char	*type_to_str(t_type type)
 {
@@ -128,7 +128,12 @@ int	main(int ac, char **av)
 		//tokens = remove_token_at(tokens, 0);
 		reorder_tokens(tokens);
 		assign_index(tokens);
-		finalize_tokens(tokens, data);
+		if (finalize_tokens(tokens, data) == 512)
+		{
+			data->exit_status = 130;
+			free_tokens(tokens);
+			continue ;
+		}
 
         	//ft_printf("assigning args!\n\n");
 		assign_args(tokens);

@@ -85,6 +85,7 @@ void	final_process(t_execute *info, t_data *data)
 
 void	execve_cmd(t_execute *info, t_data *data)
 {
+	signal(SIGINT, SIG_IGN);
 	if (info->file_in != -2)
 		check_error(info->file_in, info->com, info->file, data);
 	if (info->file_in == -2 || info->com == NULL)

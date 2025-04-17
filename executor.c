@@ -84,4 +84,5 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	if (tree->type == CMD)
 		set_command(info, tree);
 	executor(tree->right, data, info);
+	signal_manager(SIGINT, sigint_handler);
 }

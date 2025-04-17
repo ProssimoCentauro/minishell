@@ -30,7 +30,7 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-extern int g_exit_status;
+extern int g_last_signal;
 
 extern char		**env_copy;
 
@@ -169,6 +169,8 @@ t_token *check_args(t_token **tokens);
 //signal_handlers.c
 void sigint_handler(int signum);
 void setup_signal_handlers(void);
+void    handle_heredoc(int signum);
+int     signal_manager(int signum, void (*handler)(int s));
 
 //quotes_utils.c
 void remove_quotes(char *line);
