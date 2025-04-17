@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 int g_last_signal;
-/*
+
 static char	*type_to_str(t_type type)
 {
 	if (type == CMD)
@@ -37,7 +37,7 @@ static char	*type_to_str(t_type type)
 	else if (type == END)
 		return ("END");
 	return ("TYPE ERROR!");
-}*/
+}
 
 void	print_tree(t_token *root, int depth)
 {
@@ -134,28 +134,28 @@ int	main(int ac, char **av)
 			free_tokens(tokens);
 			continue ;
 		}
-
         	//ft_printf("assigning args!\n\n");
 		assign_args(tokens);
 		//printf("assign finished!\n\n");
-/*
+
        		 while (tokens[++i])
 			printf("index %d: %s: %s: %s\n",
                     tokens[i]->index,
 				type_to_str(tokens[i]->type),
                 type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
-*/
+
 //		printf("\n\n\n");
 		i = 0;
 		while (tokens[i])
 		{
 			data->tree = build_tree(tokens, &i);
-//			print_tree(data->tree, 0);
-//			printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-//			print_args(tokens);
+			print_tree(data->tree, 0);
+			printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+			print_args(tokens);
 			executor(data->tree, data, info);
 			execve_cmd(info, data);
+			//signal_manager(SIGINT, sigint_handler);
 			while (info->pid > 0)
 			{
 				waitpid(-1, &(data->exit_status), 0);
@@ -166,9 +166,8 @@ int	main(int ac, char **av)
 			while (tokens[i] && (tokens[i]->type & (NEW_LINE | END)))
 				i++;
 		}
-		data->tree = build_tree(tokens, &i);
-		//i = -1;
-    free_tokens(tokens);
+		//data->tree = build_tree(tokens, &i);
+		free_tokens(tokens);
 	}
 	rl_clear_history();
 	free(info->args);

@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	write_on_file(int fd2, char *delimiter, t_token **tokens);
+int	write_on_file(int fd2, char *delimiter, t_token **tokens, t_data *data);
 
 
 int forbidden_symbols(char c)
@@ -56,12 +56,17 @@ char	*ft_itoa(int n)
 }
 
 /* bisogna implementare la funzione che leva le virgolette per il delimiter*/
-int     write_on_file(int fd, char *delimiter, t_token **tokens)
+int	write_on_file(int fd, char *delimiter, t_token **tokens, t_data *data)
 {
         (void)tokens;
         char    *line;
         int     ret;
+	int	flag;
 
+	flag = 0;
+	if (ft_strchr(delimiter, '"') || ft_strchr(delimiter, '\''))
+		flag = 1;
+	remove_quotes(delimiter);
         ret = 0;
         while (1)
         {
@@ -71,7 +76,7 @@ int     write_on_file(int fd, char *delimiter, t_token **tokens)
                 if (!line)
                 {
                         printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", delimiter);
-                        return (1);
+                        return (0);
                 }
                 /*if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0
                 && *(line + ft_strlen(delimiter)) == '\n')*/
@@ -80,6 +85,8 @@ int     write_on_file(int fd, char *delimiter, t_token **tokens)
                         free (line);
                         break ;
                 }
+		if (flag == 0)
+			line = check_export2(line, data);
                 write(fd, line, ft_strlen(line));
                 free (line);
         }
@@ -87,7 +94,7 @@ int     write_on_file(int fd, char *delimiter, t_token **tokens)
 }
 
 
-static int check_heredoc(t_token **tokens, size_t *i)
+static int check_heredoc(t_token **tokens, size_t *i, t_data *data)
 {
     int fd;
     char    *temp_file;
@@ -105,24 +112,22 @@ static int check_heredoc(t_token **tokens, size_t *i)
     {
         g_last_signal = 0;
         signal_manager(SIGINT, handle_heredoc);
-        ret = write_on_file(fd, (char *)tokens[*i]->content, tokens);
-        close(fd);
-        free(tokens[*i]->content);
-        tokens[*i]->content = ft_strdup(temp_file);
-        free(temp_file);
-    }
-    waitpid(pid, &ret, 0);
-    if (ret == 256)
-    {
-            ret = 512;
-            close(fd);
-            free(tokens[*i]->content);
-            tokens[*i]->content = ft_strdup(temp_file);
-            free(temp_file);
-            g_last_signal = 0;
+        ret = write_on_file(fd, (char *)tokens[*i]->content, tokens, data);
+	exit(ret);
     }
     else
-            (*i)++;
+	    (*i)++;
+    waitpid(pid, &ret, 0);
+    (*i)--;
+    close(fd);
+    free(tokens[*i]->content);
+    tokens[*i]->content = ft_strdup(temp_file);
+    free(temp_file);
+    g_last_signal = 0;
+    if (ret == 256)
+	    ret = 512;
+    signal(SIGINT, SIG_IGN);
+    signal_manager(SIGINT, sigint_handler);
     return (ret);
 }
 
@@ -178,7 +183,7 @@ char *replace_range(char *s1, char *s2, size_t i, size_t j)
     free(s2);
     return (result);
 }
-
+/*
 static int	check_export(t_token **tokens, size_t *i, t_data *data)
 {
 	char	*line;
@@ -255,7 +260,7 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 					}
 					else
 					{
-						var = ft_itoa(WEXITSTATUS(data->exit_status));
+							var = ft_itoa(WEXITSTATUS(data->exit_status));
 						line = replace_range(line, var, k - 1, j);
 					}
 					j = 0;
@@ -277,24 +282,122 @@ static int	check_export(t_token **tokens, size_t *i, t_data *data)
 	}
 	return (0);
 }
+*/
+
+char	*check_export2(char *line, t_data *data)
+{
+	char	*var;
+	char	*sub_str;
+	size_t	j;
+	size_t	k;
+
+	j = 0;
+	k = 0;
+
+	while (line[j])
+	{
+		if (line[j] == '$')
+		{
+			k = ++j;
+			if (line[j] && line[j] != '?')
+			{
+				while  (line[j] && line[j] != ' ' && line[j] != '\'' && line[j] != '"'
+					&& line[j] != '$' && !forbidden_symbols(line[j]))
+				j++;
+			}
+			else if (!line[j] || line[j] == ' ' || line[j] == '\'' || line[j] == '"'
+					|| line[j] == '$' || !forbidden_symbols(line[j]))
+				continue ;
+			if (j != k)
+			{
+				sub_str = create_str(line, k, j - 1);
+				var = ft_getenv(sub_str, data->env);
+				if (!var)
+					var = ft_strdup("");
+				free(sub_str);
+				line = replace_range(line, var, k - 1, j - 1);
+			}
+			else if (line[j] == '?' && line[k] == '?')
+			{
+				var = ft_itoa(data->exit_status);
+				line = replace_range(line, var, k - 1, j);
+			}
+			else if (line[j] == line[k])
+			{
+				j++;
+				k++;
+			}
+			else
+				j = 0;
+		}
+		else if (line[j] == '"')
+		{
+			while(line[++j] && line[j] != '"' && !forbidden_symbols(line[j]))
+			{
+				if (line[j] == '$')
+                		{
+                        		k = ++j;
+					if (line[j] && line[j] != '?')
+					{
+						while  (line[j] && line[j] != ' ' && line[j] != '\'' && line[j] != '"'
+							&& line[j] != '$' && !forbidden_symbols(line[j]))
+						j++;
+					}
+					else if (!line[j] || line[j] == ' ' || line[j] == '\'' || line[j] == '"'
+							|| line[j] == '$' || !forbidden_symbols(line[j]))
+						continue ;
+					if (j != k)
+					{
+						sub_str = create_str(line, k, j - 1);
+						var = ft_getenv(sub_str, data->env);
+						if (!var)
+							var = ft_strdup("");
+						free(sub_str);
+						line = replace_range(line, var, k - 1, j - 1);
+					}
+					else
+					{
+							var = ft_itoa(data->exit_status);
+						line = replace_range(line, var, k - 1, j);
+					}
+					j = 0;
+				}
+			}
+			if (line[j] == '"')
+				j++;
+		}
+		else if (line[j] == '\'')
+		{
+			j++;
+			while (line[j] && line[j] != '\'')
+				j++;
+			j++;
+		}
+		else
+			j++;
+	}
+//	printf("linea: %s\n", line);
+	return (line);
+}
+
 
 
 int	finalize_tokens(t_token **tokens, t_data *data)
 {
 	size_t	i;
 	i = 0;
-	while (tokens[i])
+/*	while (tokens[i])
 	{
 		if (tokens[i]->sub_type & (CMD | FILENAME))
 			check_export(tokens, &i, data);
 		i++;
 	}
-	i = 0;
+	i = 0;*/
 	while (tokens[i])
 	{
 		if (tokens[i]->sub_type == HEREDOC)
 		{
-			if (check_heredoc(tokens, &i) == 512)
+			if (check_heredoc(tokens, &i, data) == 512)
 			{
 				data->exit_status = 130;
 				return (512);
