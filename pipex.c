@@ -12,73 +12,54 @@
 
 #include "minishell.h"
 
-void	execute_pipe(t_execute *info, t_data *data)
+void	execution(t_execute *info, t_data *data)
 {
 	char	*path;
 	char	**com_flags;
+
+	com_flags = info->args;
+	path = findpath(data->env, com_flags[0]);
+	if (check_builtin(info, data) == 1)
+		exit_and_free(data->exit_status, path);
+	if (!path)
+		if (execve(com_flags[0], com_flags, data->env) == -1)
+			command_error(com_flags[0], data);
+	execve(path, com_flags, data->env);
+}
+
+void	execute_pipe(t_execute *info, t_data *data)
+{
 	pid_t	pid;
 	int		pipefd[2];
 
 	pipe(pipefd);
 	info->pid  += 1;
-	print_info(info);
 	pid = fork();
 	if (pid == 0)
 	{
-		com_flags = info->args;
-		path = findpath(data->env, com_flags[0]);
-		if (dup2(info->file_in, STDIN_FILENO) == -1)
-			exit(1);
-		if (info->file_in != 0)
-			close(info->file_in);
-		close(pipefd[0]);
+		check_dup(dup2(info->file_in, STDIN_FILENO), pipefd[1]);
 		dup2(pipefd[1], STDOUT_FILENO);
-		if (check_builtin(info, data) == 1)
-			exit(data->exit_status);
-		if (!path)
-			command_error(com_flags[0], data);
-		execve(path, com_flags, data->env);
+		close_fd(info->file_in, pipefd[1], pipefd[0]);
+		execution(info, data);
 	}
-	close(pipefd[1]);
-	if (info->pipe_fd != 0)
-		close(info->pipe_fd);
+	close_fd(pipefd[1], info->pipe_fd, 0);
 	info->pipe_fd = pipefd[0];
 }
 
 void	final_process(t_execute *info, t_data *data)
 {
-	char	*path;
-	char	**com_flags;
 	int		pid;
 
 	info->pid += 1;
-	print_info(info);
 	pid = fork();
 	if (pid == 0)
 	{
-		com_flags = info->args;
-		path = findpath(data->env, com_flags[0]);
-		if (info->file_in != 0)
-		{
-			if (dup2(info->file_in, STDIN_FILENO) == -1)
-				exit (1);
-			close(info->file_in);
-		}
-		if (info->file_out != 1)
-		{
-			dup2(info->file_out, STDOUT_FILENO);
-			close(info->file_out);
-		}
-		if (check_builtin(info, data) == 1)
-			exit(data->exit_status);
-		if (!path)
-		{
-			if (execve(com_flags[0], com_flags, data->env) == -1)
-				command_error(com_flags[0], data);
-		}
-		execve(path, com_flags, data->env);
+		check_dup(dup2(info->file_in, STDIN_FILENO), info->file_in);
+		dup2(info->file_out, STDOUT_FILENO);
+		close_fd(info->file_in, info->file_out, 0);
+		execution(info, data);
 	}
-	waitpid(-1, &(data->exit_status), 0);
+	waitpid(pid, &(data->exit_status), 0);
 	if (info->file_in != 0)
 		close(info->file_in);
 }
@@ -108,8 +89,5 @@ void	execve_cmd(t_execute *info, t_data *data)
 	}
 	else if (info->pipe == 1)
 		execute_pipe(info, data);
-	if (info->file_in != 0)
-		close(info->file_in);
-	if (info->file_out != 1)
-		close(info->file_out);
+	close_fd(info->file_in, info->file_out, 0);
 }

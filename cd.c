@@ -45,7 +45,7 @@ void	cd(char **str, t_data *data)
 	curr_dir = malloc(1024 * (sizeof(char)));
 	getcwd(curr_dir, 1024);
 	new_dir = NULL;
-	if (!str || !str[n])
+	if (!str || !str[n] || str[n][0] == '~')
 	{
 		chdir(getenv("HOME"));
 		data->exit_status = 0;

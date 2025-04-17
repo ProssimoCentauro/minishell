@@ -20,8 +20,11 @@ void	initial_configuration(t_data *data, t_execute *info)
 
 	setup_signal_handlers();
 	data->env = copy_array(environ);
+	data->free_variables = calloc(1, sizeof(char *));
 	info->pid = 0;
 	info->pipe_fd = 0;
+	info->std_in = dup(STDIN_FILENO);
+	info->std_out = dup(STDOUT_FILENO);
 	data->exit_status = 0;
 	bash_level = ft_getenv("SHLVL", data->env);
 	if (!bash_level)
@@ -31,7 +34,7 @@ void	initial_configuration(t_data *data, t_execute *info)
 	bash_level = malloc(8);
 	ft_strlcpy(bash_level, "SHLVL=", 7);
 	bash_level = ft_strjoin(bash_level, ft_itoa(new_level));
-	ft_export(ft_split(bash_level, ' '), data);
+	ft_export(ft_split(bash_level, ' '), data, info);
 	environ = data->env;
 }
 

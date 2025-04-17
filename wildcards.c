@@ -19,7 +19,6 @@ void	quote_compare(char **str, char **file)
 	}
 }
 
-
 int	check_corrispondency(char *str, char *file)
 {
 	char	c;
@@ -111,7 +110,7 @@ char	**find_wildcards(char *str)
 	if (!(*results))
 	{
 		remove_quotes(str);
-		results[0] = str;
+		results[0] = ft_strdup(str);
 		results[1] = NULL;
 	}
 	closedir(curr_dir);

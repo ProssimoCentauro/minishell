@@ -37,3 +37,12 @@ void	command_error(char *comm, t_data *data)
 	data->exit_status = 127;
 	exit(127);
 }
+
+void	check_dup(int n, int fd)
+{
+	if (n == -1)
+	{
+		close(fd);
+		exit(1);
+	}
+}

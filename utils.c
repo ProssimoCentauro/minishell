@@ -54,6 +54,7 @@ char	**add_array(t_data *data, char *var)
 		data->env[i] = ft_strdup(temp[i]);
 		i++;
 	}
+	var = export_join(var);
 	data->env[i] = ft_strdup(var);
 	data->env[i + 1] = NULL;
 	return(data->env);
