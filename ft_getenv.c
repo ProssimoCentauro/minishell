@@ -14,6 +14,20 @@ char	*get_value(char *str)
 	return (ft_substr(str, n + 1, ft_strlen(str) - n));
 }
 
+char	*get_export_variable(char *str)
+{
+	int	n;
+
+	n = 0;
+	while (str[n] != '=' && str[n] != '\0')
+	{
+		if (str[n] == '+' && str[n + 1] == '=')
+			break ;
+		n++;
+	}
+	return (ft_substr(str, 0, n));
+}
+	
 char	*ft_getenv(char *variable, char **env)
 {
 	char	*value;
@@ -21,10 +35,8 @@ char	*ft_getenv(char *variable, char **env)
 	int		i;
 
 	value = NULL;
-	len = 0;
+	len = ft_strlen(variable);
 	i = 0;
-	while (variable[len] != '=' && variable[len] != '\0')
-		len++;
 	while (env[i])
 	{
 		if (ft_strncmp(variable, env[i], len) == 0 && (env[i][len] == '=' || env[i][len] == '\0'))

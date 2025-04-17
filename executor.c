@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/07 02:52:49 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/17 14:17:02 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,15 @@ void	set_files(t_token *tree, t_execute *info)
 int	check_builtin(t_execute *info, t_data *data)
 {
 	if (ft_strncmp(info->com, "echo", ft_strlen("echo") + 1) == 0)
-		ft_echo((info->args) + 1, data);
+		ft_echo((info->args) + 1, data, info);
 	else if (ft_strncmp(info->com, "cd", ft_strlen("cd") + 1) == 0)
 		cd((info->args) + 1, data);
 	else if (ft_strncmp(info->com, "pwd", ft_strlen("pwd") + 1) == 0)
-		pwd(data);
+		pwd(data, info);
 	else if (ft_strncmp(info->com, "env", ft_strlen("env") + 1) == 0)
-		ft_env(data);
+		ft_env(data, info);
 	else if (ft_strncmp(info->com, "export", ft_strlen("export") + 1) == 0)
-		ft_export((info->args) + 1, data);
+		ft_export((info->args) + 1, data, info);
 	else if (ft_strncmp(info->com, "exit", ft_strlen("exit") + 1) == 0)
 		ft_exit(info-> args + 1);
 	else if (ft_strncmp(info->com, "unset", ft_strlen("unset") + 1) == 0)
@@ -53,11 +53,14 @@ int	check_builtin(t_execute *info, t_data *data)
 	return (1);
 }
 
-void	set_command(t_execute *info, t_token *tree)
+void	set_command(t_execute *info, t_token *tree, t_data *data)
 {
 	int	i;
 
 	i = 0;
+	(void) data;
+	/*if ((is_a_free_variable((char *)tree->content, data) == 0))
+		return ;*/
 	info->com = (char *)tree->content;
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
@@ -82,7 +85,7 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	}
 	set_files(tree, info);
 	if (tree->type == CMD)
-		set_command(info, tree);
+		set_command(info, tree, data);
 	executor(tree->right, data, info);
 	signal_manager(SIGINT, sigint_handler);
 }

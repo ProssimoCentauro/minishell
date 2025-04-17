@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/14 17:01:20 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/17 14:22:38 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ typedef	struct	s_data
 	char	**env;
 	int		exit_status;
 	t_token	*tree;
+	char	**free_variables;
 }	t_data;
 
 typedef struct	s_execute
@@ -87,6 +88,8 @@ typedef struct	s_execute
 	char	**args;
 	int		pipe_fd;
 	int		pid;
+	int		std_in;
+	int		std_out;
 	t_type	delimiter;
 }				t_execute;
 
@@ -121,11 +124,11 @@ void print_command_tree(t_token* node, int depth);
 t_token *build_tree(t_token **tokens, size_t *i);
 
 //built in
-void	ft_echo(char** str, t_data *data);
+void	ft_echo(char** str, t_data *data, t_execute *info);
 void	cd(char **str, t_data *data);
-void	pwd(t_data *data);
-void	ft_env(t_data *data);
-void	ft_export(char **var, t_data *data);
+void	pwd(t_data *data, t_execute *info);
+void	ft_env(t_data *data, t_execute *info);
+void	ft_export(char **var, t_data *data, t_execute *info);
 void	ft_exit(char **exit_status);
 void	ft_unset(char **var, t_data *data);
 
@@ -147,6 +150,16 @@ int		array_len(char **array);
 void	command_error(char *comm, t_data *data);
 char	**add_array(t_data *data, char *var);
 char	*quotes(char *str);
+void	set_fd(t_execute *info);
+void	restore_fd(t_execute *info);
+void	check_dup(int n, int fd);
+void	close_fd(int fd1, int fd2, int fd3);
+void	exit_and_free(int exit_status, char *com);
+int		is_a_free_variable(char *str, t_data *data);
+void	add_env(char *var, t_data *data);
+char    *get_value(char *str);
+char    *export_join(char *str);
+char    *get_export_variable(char *str);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);
@@ -174,4 +187,5 @@ int     signal_manager(int signum, void (*handler)(int s));
 
 //quotes_utils.c
 void remove_quotes(char *line);
+
 #endif
