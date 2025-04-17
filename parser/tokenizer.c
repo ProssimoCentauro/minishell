@@ -1,23 +1,21 @@
 #include "minishell.h"
 
-// Jump space chars
-void    jump_spaces(char *line, size_t *i, size_t *j)
+void	jump_spaces(char *line, size_t *i, size_t *j)
 {
-    while (line[*j] == ' ')
-        (*j)++;
-    *i = *j;
+	while (line[*j] == ' ')
+		(*j)++;
+	*i = *j;
 }
 
-// Detect special chars
-int special_char(char c)
+int	special_char(char c)
 {
-    if (c == '|' || c == '&')
-        return (1);
-    if (c == '<'|| c == '>')
-        return (2);
-    if ( c == '(' || c == ')')
-        return (3);
-    return (0);
+	if (c == '|' || c == '&')
+		return (1);
+	if (c == '<' || c == '>')
+		return (2);
+	if (c == '(' || c == ')')
+		return (3);
+	return (0);
 }
 
 int	search_special(char *line, size_t i)
@@ -27,33 +25,51 @@ int	search_special(char *line, size_t i)
 	return (special_char(line[i]));
 }
 
-// Create the string for the token
-char    *create_str(char *line, size_t i, size_t j)
+char	*create_str(char *line, size_t i, size_t j)
 {
-    char *res;
-    size_t  k;
+	char	*res;
+	size_t	k;
 
-
-    res = (char *)malloc(j - i + 2);
-    k = 0;
-    while (i <= j)
-    {
-        res[k] = line[i];
-        i++;
-        k++;
-    }
-    res[k] = '\0';
-    return (res);
+	res = (char *)malloc(j - i + 2);
+	k = 0;
+	while (i <= j)
+	{
+		res[k] = line[i];
+		i++;
+		k++;
+	}
+	res[k] = '\0';
+	return (res);
 }
 
-// Create a cmd type token
-//logica delle due quotes se trovo uno spazio e q sta a zero allora la parola è finita
-t_token    *create_cmd(char *line, size_t *i, size_t *j, t_type type)
+static int	is_quote_open(char c, int q, char *temp)
 {
-	t_token *cmd;
+	if ((c == '"' || c == '\'') && q == 0)
+	{
+		*temp = c;
+		return (1);
+	}
+	return (0);
+}
+
+static int	is_quote_close(char c, int q, char temp)
+{
+	return (c == temp && q == 1);
+}
+
+static int	is_end_char(char c, int q)
+{
+	if (q != 0)
+		return (0);
+	return (c == ' ' || c == '\n' || special_char(c));
+}
+
+t_token	*create_cmd(char *line, size_t *i, size_t *j, t_type type)
+{
+	t_token	*cmd;
 	char	temp;
-	int	q;
-	
+	int		q;
+
 	q = 0;
 	temp = 0;
 	if (line[*j] == '\n')
@@ -64,170 +80,166 @@ t_token    *create_cmd(char *line, size_t *i, size_t *j, t_type type)
 	}
 	while (line[*j])
 	{
-		if ((line[*j] == '"' || line[*j] == '\'') && q == 0)
-		{
-			temp = line[*j];
+		if (is_quote_open(line[*j], q, &temp))
 			q++;
-		}
-		else if (line[*j] == temp && q == 1)
+		else if (is_quote_close(line[*j], q, temp))
 			q--;
-		else if ((line[*j] == ' ' || line[*j] == '\n' || special_char(line[*j])) && q == 0)
+		else if (is_end_char(line[*j], q))
 			break ;
 		(*j)++;
 	}
-    cmd = create_token(create_str(line, *i, *j - 1), type, type);
-    return(cmd);
+	cmd = create_token(create_str(line, *i, *j - 1), type, type);
+	return (cmd);
 }
 
-// Create a special type token
-t_token    *create_special(char *line,
-        size_t *i, size_t *j)
+static t_token	*handle_and(char *line, size_t *i, size_t *j)
 {
-    t_token *special = NULL;
-    
-    if (line[*j] == '&')
-    {
-        if (line[*j + 1] == '&')
-        {
-            special = create_token(ft_strdup("&&"),
-                    DELIMETER, AND);
-            *j = *j + 2;
-            *i = *j;
-        }
-        else
-        {
-            special = create_token(ft_strdup("&"),
-                    DELIMETER, AND);
-            (*j)++;
-            *i = *j;
-        }
-    }
-    else if (line[*j] == '|')
-    {
-        if (line[*j + 1] == '|')
-        {
-            special = create_token(ft_strdup("||"),
-                    DELIMETER, OR);
-            *j = *j + 2;
-            *i = *j;
-        }
-        else
-        {
-            special = create_token(ft_strdup("|"),
-                    REDIRECT, PIPE);
-            (*j)++;
-            *i = *j;
-        }
-    }
-    else if (line[*j] == '<')
-    {
-        if (line[*j + 1] == '<')
-        {
-            special = create_token(ft_strdup("<<"),
-                    REDIRECT, HEREDOC);
-            *j = *j + 2;
-            *i = *j;
-        }
-        else
-        {
-            special = create_token(ft_strdup("<"),
-                    REDIRECT, IN);
-            (*j)++;
-            *i = *j;
-        }
-    }
-    else if (line[*j] == '>')
-    {
-        if (line[*j + 1] == '>')
-        {
-            special = create_token(ft_strdup(">>"),
-                    REDIRECT, APPEND);
-            *j = *j + 2;
-            *i = *j;
-        }
-        else
-        {
-            special = create_token(ft_strdup(">"),
-                    REDIRECT, OUT);
-            (*j)++;
-            *i = *j;
-        }
-    }
-    else if (line[*j] == '(')
-    {
-        special = create_token(ft_strdup("("),
-                OPEN, OPEN);
-        (*j)++;
-        *i = *j;
-    }
-    else if (line[*j] == ')')
-    {
-        special = create_token(ft_strdup(")"),
-                CLOSE, CLOSE);
-        (*j)++;
-        *i = *j;
-    }
-    return (special);
+	if (line[*j + 1] == '&')
+	{
+		*j += 2;
+		*i = *j;
+		return (create_token(ft_strdup("&&"), DELIMETER, AND));
+	}
+	(*j)++;
+	*i = *j;
+	return (create_token(ft_strdup("&"), DELIMETER, AND));
 }
 
-// Detect if last token is a redirection (pipe excluded)
-static int is_arrow(t_token **mat)
+static t_token	*handle_or(char *line, size_t *i, size_t *j)
 {
-    size_t  count;
-
-    if (mat == NULL)
-        return (0);
-    count = count_tokens(mat) - 1;
-    if (mat[count]->sub_type & (IN | OUT | APPEND))
-        return (1);
-    else if (mat[count]->sub_type & HEREDOC)
-        return (2);
-    return (0);
+	if (line[*j + 1] == '|')
+	{
+		*j += 2;
+		*i = *j;
+		return (create_token(ft_strdup("||"), DELIMETER, OR));
+	}
+	(*j)++;
+	*i = *j;
+	return (create_token(ft_strdup("|"), REDIRECT, PIPE));
 }
 
-// Select the type of token to create
-static t_token *select_creation(char *line, size_t *i,
-        size_t *j, t_token **tokens)
+static t_token	*handle_less(char *line, size_t *i, size_t *j)
 {
-    t_token *token = NULL;
+	if (line[*j + 1] == '<')
+	{
+		*j += 2;
+		*i = *j;
+		return (create_token(ft_strdup("<<"), REDIRECT, HEREDOC));
+	}
+	(*j)++;
+	*i = *j;
+	return (create_token(ft_strdup("<"), REDIRECT, IN));
+}
 
-    if (!is_arrow(tokens))
-        token = create_cmd(line, i, j, CMD);
-    else if (is_arrow(tokens) == 1)
-        token = create_cmd(line, i, j, FILENAME);
-    else if (is_arrow(tokens) == 2)
-	    token = create_cmd(line, i, j, LIMITER);
-    return (token);
-} 
-
-// Transform the received line 
-int    tokenizer(char *line, t_token ***tokens)
+static t_token	*handle_greater(char *line, size_t *i, size_t *j)
 {
-    size_t  i;
-    size_t  j;
-    t_token	*final;
+	if (line[*j + 1] == '>')
+	{
+		*j += 2;
+		*i = *j;
+		return (create_token(ft_strdup(">>"), REDIRECT, APPEND));
+	}
+	(*j)++;
+	*i = *j;
+	return (create_token(ft_strdup(">"), REDIRECT, OUT));
+}
 
-    i = 0;
-    j = 0;
-    if (!line[0])
-        return (1);
-    while(line[j])
-    {
-        jump_spaces(line, &i, &j);
-        while (line[j] && !special_char(line[j]))
-        {
-                *tokens = add_token(*tokens,
-                        select_creation(line, &i, &j, *tokens));
-            jump_spaces(line, &i, &j);
-        }
-        while (line[j] && special_char(line[j]))
-        {
-            *tokens = add_token(*tokens,
-                    create_special(line, &i, &j));
-            jump_spaces(line, &i, &j);
-        }
-    }
-    final = create_token(ft_strdup("newline"), END, END);
-    *tokens = add_token(*tokens, final);
-    return (0);
+t_token	*create_special(char *line, size_t *i, size_t *j)
+{
+	if (line[*j] == '&')
+		return (handle_and(line, i, j));
+	if (line[*j] == '|')
+		return (handle_or(line, i, j));
+	if (line[*j] == '<')
+		return (handle_less(line, i, j));
+	if (line[*j] == '>')
+		return (handle_greater(line, i, j));
+	if (line[*j] == '(')
+	{
+		(*j)++;
+		*i = *j;
+		return (create_token(ft_strdup("("), OPEN, OPEN));
+	}
+	if (line[*j] == ')')
+	{
+		(*j)++;
+		*i = *j;
+		return (create_token(ft_strdup(")"), CLOSE, CLOSE));
+	}
+	return (NULL);
+}
+
+static int	is_arrow(t_token **mat)
+{
+	size_t	count;
+
+	if (mat == NULL)
+		return (0);
+	count = count_tokens(mat) - 1;
+	if (mat[count]->sub_type & (IN | OUT | APPEND))
+		return (1);
+	else if (mat[count]->sub_type & HEREDOC)
+		return (2);
+	return (0);
+}
+
+static t_token	*select_creation(char *line, size_t *i, size_t *j,
+		t_token **tokens)
+{
+	t_token	*token;
+
+	token = NULL;
+	if (!is_arrow(tokens))
+		token = create_cmd(line, i, j, CMD);
+	else if (is_arrow(tokens) == 1)
+		token = create_cmd(line, i, j, FILENAME);
+	else if (is_arrow(tokens) == 2)
+		token = create_cmd(line, i, j, LIMITER);
+	return (token);
+}
+
+static int	is_empty_line(char *line)
+{
+	return (line[0] == '\0');
+}
+
+static void	process_non_special_chars(char *line, size_t *i, size_t *j,
+		t_token ***tokens)
+{
+	while (line[*j] && !special_char(line[*j]))
+	{
+		*tokens = add_token(*tokens, select_creation(line, i, j, *tokens));
+		jump_spaces(line, i, j);
+	}
+}
+
+static void	process_special_chars(char *line, size_t *i, size_t *j,
+		t_token ***tokens)
+{
+	while (line[*j] && special_char(line[*j]))
+	{
+		*tokens = add_token(*tokens, create_special(line, i, j));
+		jump_spaces(line, i, j);
+	}
+}
+
+int	tokenizer(char *line, t_token ***tokens)
+{
+	size_t	i;
+	size_t	j;
+	t_token	*final;
+
+	i = 0;
+	j = 0;
+	if (is_empty_line(line))
+		return (1);
+	while (line[j])
+	{
+		jump_spaces(line, &i, &j);
+		process_non_special_chars(line, &i, &j, tokens);
+		process_special_chars(line, &i, &j, tokens);
+	}
+	final = create_token(ft_strdup("newline"), END, END);
+	*tokens = add_token(*tokens, final);
+	return (0);
 }
