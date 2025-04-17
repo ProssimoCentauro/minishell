@@ -36,7 +36,6 @@ void	ft_echo(char **str, t_data *data, t_execute *info)
 	n = 0;
 	data->exit_status = 0;
 	newline = 1;
-	print_info(info);
 	if (!str || !str[n])
 		return ;
 	while (check_echo_flag(str[n]) == 0)

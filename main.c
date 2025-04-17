@@ -159,6 +159,7 @@ int	main(int ac, char **av)
 			while (info->pid > 0)
 			{
 				waitpid(-1, &(data->exit_status), 0);
+				data->exit_status = WEXITSTATUS(data->exit_status);
 				info->pid -= 1;
 			}
 			data->tree = NULL;

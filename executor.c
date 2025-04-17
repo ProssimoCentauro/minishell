@@ -59,8 +59,6 @@ void	set_command(t_execute *info, t_token *tree, t_data *data)
 
 	i = 0;
 	(void) data;
-	/*if ((is_a_free_variable((char *)tree->content, data) == 0))
-		return ;*/
 	info->com = (char *)tree->content;
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])

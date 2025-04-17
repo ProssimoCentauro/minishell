@@ -45,15 +45,20 @@ void	cd(char **str, t_data *data)
 	curr_dir = malloc(1024 * (sizeof(char)));
 	getcwd(curr_dir, 1024);
 	new_dir = NULL;
-	if (!str || !str[n] || str[n][0] == '~')
+	if (!str || !str[n] || (str[n][0] == '~' && str[n][1] == '\0'))
 	{
-		chdir(getenv("HOME"));
+		chdir(ft_getenv("HOME", data->env));
 		data->exit_status = 0;
 	}
 	else if (str[1] != NULL)
 	{
 		write(2, "cd: too many arguments\n", 24);
 		data->exit_status = 1;
+	}
+	else if(str[n][0] == '~')
+	{
+		new_dir = ft_strjoin(ft_getenv("HOME", data->env), str[n] + 1);
+		check_error(chdir(new_dir), "cd: ", new_dir, data);
 	}
 	else if (ft_strncmp(str[n], "..", ft_strlen("..")) == 0)
 	{

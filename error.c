@@ -25,8 +25,6 @@ void	check_error(int n, char *comm, char *arg, t_data *data)
 		perror("");
 		data->exit_status = 1;
 	}
-	else
-		data->exit_status = 0;
 }
 
 void	command_error(char *comm, t_data *data)

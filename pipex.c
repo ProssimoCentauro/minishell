@@ -24,7 +24,8 @@ void	execution(t_execute *info, t_data *data)
 	if (!path)
 		if (execve(com_flags[0], com_flags, data->env) == -1)
 			command_error(com_flags[0], data);
-	execve(path, com_flags, data->env);
+	if (execve(path, com_flags, data->env) == -1)
+		exit (2);
 }
 
 void	execute_pipe(t_execute *info, t_data *data)
