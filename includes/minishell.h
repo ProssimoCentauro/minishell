@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/17 14:22:38 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/17 18:02:44 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,4 +188,5 @@ int     signal_manager(int signum, void (*handler)(int s));
 //quotes_utils.c
 void remove_quotes(char *line);
 
+char	*check_export2(char *line, t_data *data);
 #endif

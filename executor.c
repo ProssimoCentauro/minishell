@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/17 14:17:02 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/17 18:26:42 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,12 @@ void	set_command(t_execute *info, t_token *tree, t_data *data)
 	(void) data;
 	/*if ((is_a_free_variable((char *)tree->content, data) == 0))
 		return ;*/
+	tree->content = check_export2((char *)(tree->content), data);
 	info->com = (char *)tree->content;
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
 	{
+		tree->args[i]->content = check_export2((char *)(tree->args[i]->content), data);
 		info->args = ft_arrayjoin(info->args, find_wildcards((char *)(tree->args[i]->content)));
 		i++;
 	}
@@ -87,5 +89,4 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	if (tree->type == CMD)
 		set_command(info, tree, data);
 	executor(tree->right, data, info);
-	signal_manager(SIGINT, sigint_handler);
 }
