@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/17 18:02:44 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/18 16:03:59 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,11 @@ int     signal_manager(int signum, void (*handler)(int s));
 
 //quotes_utils.c
 void remove_quotes(char *line);
+t_token	*check_quotes(t_token *token, t_token **res);
 
 char	*check_export2(char *line, t_data *data);
+
+//check_next.c
+t_token *check_next(t_token **tokens, size_t i, t_token **res);
+
 #endif
