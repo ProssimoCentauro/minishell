@@ -309,7 +309,6 @@ char    *check_export2(char *line, t_data *data)
 
 int	finalize_tokens(t_token **tokens, t_data *data)
 {
-	signal_manager(SIGINT, exit);
 	size_t	i;
 
 	i = 0;
