@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/18 16:03:59 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/18 16:26:20 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,14 @@ size_t				count_tokens(t_token **tokens);
 void				print_tokens(t_token **tokens);
 int	free_token(t_token *token);
 
+//tokenizer_utils.c
+int     special_char(char c);
+char    *create_str(char *line, size_t i, size_t j);
+int     search_special(char *line, size_t i);
+void    jump_spaces(char *line, size_t *i, size_t *j);
+
 //tokenizer.c
 int tokenizer(char *line, t_token ***tokens);
-char    *create_str(char *line, size_t i, size_t j);
 
 //tokens_reoder.c
 void    reorder_tokens(t_token **tokens);
@@ -193,5 +198,11 @@ char	*check_export2(char *line, t_data *data);
 
 //check_next.c
 t_token *check_next(t_token **tokens, size_t i, t_token **res);
+
+//create_special.c
+t_token	*create_special(char *line, size_t *i, size_t *j);
+
+//create_cmd.c
+t_token	*create_cmd(char *line, size_t *i, size_t *j, t_type type);
 
 #endif
