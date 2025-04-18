@@ -25,8 +25,15 @@ void	free_array(char **str)
 	free(str);
 }
 
-void	exit_and_free(int exit_status, char *com)
+void	exit_and_free(t_data *data, t_execute *info)
 {
-	free(com);
+	int	exit_status;
+
+	exit_status = data->exit_status;
+	free_array(info->args);
+	free(info);
+	free_array(data->env);
+	free_tokens(data->tokens);
+	free(data);
 	exit(exit_status);
 }

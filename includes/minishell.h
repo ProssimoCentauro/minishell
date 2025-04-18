@@ -153,7 +153,7 @@ void	set_fd(t_execute *info);
 void	restore_fd(t_execute *info);
 void	check_dup(int n, t_execute *info, t_data *data, int fd);
 void	close_fd(int fd1, int fd2, int fd3);
-void	exit_and_free(int exit_status, char *com);
+void	exit_and_free(t_data *data, t_execute *info);
 int		is_a_free_variable(char *str, t_data *data);
 void	add_env(char *var, t_data *data);
 char    *get_value(char *str);

@@ -17,14 +17,14 @@ void	execution(t_execute *info, t_data *data)
 	char	*path;
 	char	**com_flags;
 
+	if (check_builtin(info, data) == 1)
+		exit_and_free(data, info);
 	com_flags = info->args;
 	path = findpath(data->env, com_flags[0]);
-	if (check_builtin(info, data) == 1)
-		exit_and_free(data->exit_status, path);
 	if (!path)
 		if (execve(com_flags[0], com_flags, data->env) == -1)
 			command_error(com_flags[0], data, info);
-	check_dup(execve(path, com_flags, data->env), info, data, 0);
+	execve(path, com_flags, data->env);
 	exit (2);
 }
 
