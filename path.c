@@ -44,6 +44,7 @@ char	*look_for_rightpath(char **paths, char *com)
 		free(temp);
 		if (access(path, F_OK) == 0)
 			return (path);
+		free(path);
 		n++;
 	}
 	return (NULL);
@@ -56,5 +57,6 @@ char	*findpath(char **env, char *com)
 
 	paths = look_for_path(env);
 	right_path = look_for_rightpath(paths, com);
+	free_array(paths);
 	return (right_path);
 }

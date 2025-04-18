@@ -19,7 +19,7 @@ char	**ft_arrayjoin(char **s1, char **s2)
 	char	**result;
 
 	i = 0;
-	len = array_len(s1) + array_len(s2) + 1;
+	len = array_len_norm(s1) + array_len_norm(s2) + 1;
 	result = (char **) malloc (len * (sizeof(char *)));
 	if (result == NULL)
 		return (NULL);
@@ -38,8 +38,3 @@ char	**ft_arrayjoin(char **s1, char **s2)
 	result[len] = NULL;
 	return (free(s1), free(s2), result);
 }
-
-/*int main(int ac, char **av)
-{
-	printf("%s", ft_strjoin(av[1], av[2]));
-}*/
