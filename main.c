@@ -107,7 +107,7 @@ int	main(int ac, char **av)
 			continue ;
 		reorder_tokens(tokens);
 		assign_index(tokens);
-		if (finalize_tokens(tokens, data) == 512)
+		if (finalize_tokens(tokens, data) == 256)
 		{
 			data->exit_status = 130;
 			free_tokens(tokens);
