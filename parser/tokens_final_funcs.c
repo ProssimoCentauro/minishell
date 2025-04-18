@@ -227,34 +227,47 @@ char	*replace_range(char *s1, char *s2, size_t i, size_t j)
 	return (result);
 }
 
+static int	move_index(char *line, long *j)
+{
+	while (line[*j] && !forbidden_symbols(line[*j]))
+		(*j)++;
+	return (*j);
+}
+
+static char	*replace_env_var(char *line, long k, long j, t_data *data)
+{
+	char	*sub_str;
+	char	*var;
+
+	sub_str = create_str(line, k, j - 1);
+	var = ft_getenv(sub_str, data->env);
+	if (!var)
+		var = ft_strdup("");
+	free(sub_str);
+	line = replace_range(line, var, k - 1, j - 1);
+	return (line);
+}
+
+static char	*replace_exit_status(char *line, long k, long j, t_data *data)
+{
+	char	*var;
+
+	var = ft_itoa(data->exit_status);
+	return (replace_range(line, var, k - 1, j));
+}
 
 char	*process_string(char *line, t_data *data, long *j, long *k)
 {
-	char *var;
-	char *sub_str;
-
-	*k = ++(*j);
+	*k = *j + 1;
+	*j = *k;
 	if (line[*j] && line[*j] != '?')
-	{
-		while  (line[*j] && !forbidden_symbols(line[*j]))
-			(*j)++;
-	}
+		move_index(line, j);
 	else if (!line[*j] || !forbidden_symbols(line[*j]))
 		return (NULL);
 	if (*j != *k)
-	{
-		sub_str = create_str(line, *k, *j - 1);
-		var = ft_getenv(sub_str, data->env);
-		if (!var)
-			var = ft_strdup("");
-		free(sub_str);
-		line = replace_range(line, var, *k - 1, *j - 1);
-	}
+		line = replace_env_var(line, *k, *j, data);
 	else if (line[*j] == '?' && line[*k] == '?')
-	{
-		var = ft_itoa(data->exit_status);
-		line = replace_range(line, var, *k - 1, *j);
-	}
+		line = replace_exit_status(line, *k, *j, data);
 	else if (line[*j] == line[*k])
 	{
 		(*j)++;
@@ -263,48 +276,58 @@ char	*process_string(char *line, t_data *data, long *j, long *k)
 	*j = -1;
 	return (line);
 }
-//echo '$data''$var'"$data"$data
-char    *check_export2(char *line, t_data *data)
+
+static void	skip_single_quotes(char *line, long *j)
 {
-        long  j;
-        long  k;
+	(*j)++;
+	while (line[*j] && line[*j] != '\'')
+		(*j)++;
+}
+
+int	iterate_double_quotes(char **line, t_data *data, long *j, long *k)
+{
 	char	*temp_line;
 
-        j = -1;
-        k = 0;
+	while ((*line)[++(*j)] && (*line)[*j] != '"')
+	{
+		if ((*line)[*j] == '$')
+		{
+			temp_line = process_string(*line, data, j, k);
+			if (!temp_line)
+				return (0);
+			*line = temp_line;
+			return (1);
+		}
+	}
+	return (0);
+}
 
-        while (line[++j])
-        {
-                if (line[j] == '$')
-                {
+char	*check_export2(char *line, t_data *data)
+{
+	long	j;
+	long	k;
+	char	*temp_line;
+
+	j = -1;
+	k = 0;
+	while (line[++j])
+	{
+		if (line[j] == '$')
+		{
 			temp_line = process_string(line, data, &j, &k);
 			if (!temp_line)
 				continue ;
 			line = temp_line;
-                }
-                else if (line[j] == '"')
-                {
-                        while(line[++j] && line[j] != '"')
-                        {
-
-				if (line[j] == '$')
-				{
-					temp_line = process_string(line, data, &j, &k);
-					if (!temp_line)
-						continue ;
-					line = temp_line;
-					break ;
-				}
-                        }
-                }
-                else if (line[j] == '\'')
-                {
-                        j++;
-                        while (line[j] && line[j] != '\'')
-                                j++;
-                }
-        }
-        return (line);
+		}
+		else if (line[j] == '"')
+		{
+			if (iterate_double_quotes(&line, data, &j, &k))
+				continue ;
+		}
+		else if (line[j] == '\'')
+			skip_single_quotes(line, &j);
+	}
+	return (line);
 }
 
 int	finalize_tokens(t_token **tokens, t_data *data)
