@@ -7,7 +7,10 @@ SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
 	  $(PARSER)tree_builder.c $(PARSER)tokenizer.c $(PARSER)token_args_utils.c $(PARSER)tokens_final_funcs.c\
 	  executor.c path.c executor_info.c pipex.c $(PARSER)check_input.c errors_utils.c set_prompt.c\
 	  signal_handlers.c expand_input.c ft_arrayjoin.c initial_configuration.c $(PARSER)quotes_utils.c\
-	  fd_utils.c export_utils.c
+	  fd_utils.c export_utils.c $(PARSER)check_next.c $(PARSER)create_special.c \
+	  $(PARSER)create_cmd.c $(PARSER)tokenizer_utils.c $(PARSER)select_handler.c \
+	  $(PARSER)write_on_file.c $(PARSER)check_heredoc.c $(PARSER)tokens_final_funcs_utils.c\
+	  $(PARSER)process_string.c
 
 OBJ = $(SRC:.c=.o)
 

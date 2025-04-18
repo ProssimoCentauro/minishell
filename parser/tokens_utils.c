@@ -21,8 +21,8 @@ t_token	*create_token(void *content, t_type type, t_type sub_type)
 	if (!token)
 		return (NULL);
 	token->quotes = 0;
-    	token->args = NULL;
-    	token->index = 0;
+	token->args = NULL;
+	token->index = 0;
 	token->content = content;
 	token->type = type;
 	token->sub_type = sub_type;
@@ -71,7 +71,7 @@ void	free_tokens(t_token **tokens)
 		return ;
 	while (tokens[i])
 	{
-        	if (tokens[i]->args != NULL)
+		if (tokens[i]->args != NULL)
 		{
 			free(tokens[i]->args);
 			tokens[i]->args = NULL;
@@ -85,86 +85,3 @@ void	free_tokens(t_token **tokens)
 	free(tokens);
 	tokens = NULL;
 }
-
-t_token **add_token_at(t_token **arr, t_token *token, size_t index)
-{
-    size_t  size;
-    t_token **new_arr;
-    size_t  i;
-
-    if (!token)
-        return (arr);
-
-    size = count_tokens(arr);
-
-    if (index > size)
-        index = size; // se index è troppo grande, aggiunge in fondo
-
-    new_arr = ft_calloc(sizeof(t_token *), size + 2); // +1 per nuovo token, +1 per NULL
-    if (!new_arr)
-        return (NULL);
-
-    // Copia gli elementi prima della posizione desiderata
-    i = 0;
-    while (i < index)
-    {
-        new_arr[i] = arr[i];
-        i++;
-    }
-
-    // Inserisce il nuovo token
-    new_arr[i] = token;
-    i++;
-
-    // Copia il resto degli elementi (dopo l'inserimento)
-    while (i <= size)
-    {
-        new_arr[i] = arr[i - 1];
-        i++;
-    }
-
-    new_arr[size + 1] = NULL;
-
-    free(arr);
-    return (new_arr);
-}
-
-t_token **remove_token_at(t_token **arr, size_t index)
-{
-    size_t  size;
-    t_token **new_arr;
-    size_t  i;
-    size_t  j;
-
-    if (!arr)
-        return (NULL);
-
-    size = count_tokens(arr);
-    if (index >= size)
-        return (arr); // indice fuori range, non fa nulla
-
-    new_arr = ft_calloc(sizeof(t_token *), size); // -1 per il token rimosso, +1 per NULL
-    if (!new_arr)
-        return (NULL);
-
-    i = 0;
-    j = 0;
-    while (i < size)
-    {
-        if (i != index)
-        {
-            new_arr[j] = arr[i];
-            j++;
-        }
-        else
-        {
-            free_token(arr[i]);
-        }
-        i++;
-    }
-
-    new_arr[size - 1] = NULL;
-    free(arr);
-    return (new_arr);
-}
-
