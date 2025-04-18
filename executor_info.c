@@ -18,9 +18,14 @@ void	set_info(t_execute *info)
 	info->file_in = 0;
 	info->file_out = 1;
 	info->pipe = 0;
-	info->args = ft_calloc(1, sizeof(char *));
 	info->file = NULL;
+	info->args = NULL;
 	info->delimiter = 0;
+}
+
+void	free_info(t_execute *info)
+{
+	free_array(info->args);
 }
 
 void	print_info(t_execute *info)

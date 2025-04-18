@@ -74,7 +74,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	main(int ac, char **av)
 {
-	t_token	**tokens;
+	//t_token	**tokens;
 	t_data	*data;
 	char	*line;
 	size_t	i;
@@ -95,6 +95,7 @@ int	main(int ac, char **av)
 		tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
 		line = readline(buf);
+		free (buf);
 		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
@@ -111,12 +112,12 @@ int	main(int ac, char **av)
 		if (finalize_tokens(tokens, data) == 256)
 		{
 			data->exit_status = 130;
-			free_tokens(tokens);
+			free_tokens(data->tokens);
 			continue ;
 		}
 		assign_args(tokens);
 		i = 0;
-		while (tokens[i])
+		while (data->tokens[i])
 		{
 			data->tree = build_tree(tokens, &i);
 			executor(data->tree, data, info);
@@ -124,17 +125,22 @@ int	main(int ac, char **av)
 			while (info->pid > 0)
 			{
 				waitpid(-1, &(data->exit_status), 0);
+				data->exit_status = WEXITSTATUS(data->exit_status);
 				info->pid -= 1;
 			}
 			data->tree = NULL;
+			free_array(info->args);
 			set_info(info);
-			while (tokens[i] && (tokens[i]->type & (NEW_LINE | END)))
+			while (data->tokens[i] && (data->tokens[i]->type & (NEW_LINE | END)))
 				i++;
 		}
+		//data->tree = build_tree(data->tokens, &i);
 		free_tokens(tokens);
 	}
 	rl_clear_history();
+	free_array(data->env);
 	free(info->args);
 	free(info);
+	free(data);
 	exit(EXIT_SUCCESS);
 }

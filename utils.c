@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/17 20:42:03 by ldei-sva          #+#    #+#             */
+/*   Updated: 2025/04/17 20:42:04 by ldei-sva         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	array_len(char **array)
@@ -14,6 +26,16 @@ int	array_len(char **array)
 		n++;
 	}
 	return (len);
+}
+
+int	array_len_norm(char  **array)
+{
+	int	n;
+
+	n = 0;
+	while (array && array[n])
+		n++;
+	return (n);
 }
 
 char	**copy_array(char **array)
@@ -57,7 +79,8 @@ char	**add_array(t_data *data, char *var)
 	var = export_join(var);
 	data->env[i] = ft_strdup(var);
 	data->env[i + 1] = NULL;
-	return(data->env);
+	free(var);
+	return (data->env);
 }
 
 char	**sort_array(char **env)
