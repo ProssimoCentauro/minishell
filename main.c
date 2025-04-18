@@ -80,17 +80,9 @@ int	main(int ac, char **av)
 	size_t	i;
 	t_execute	*info;
 	char		*buf;
-//	extern char	**environ;
 
 	(void)ac;
 	(void)av;
-
-	// wildcards = find_wildcards("'echo.c'");
-	// while (wildcards && *wildcards)
-	// {
-	// 	printf("%s\n", *wildcards);
-	// 	wildcards++;
-	// }
 
 	data = malloc(sizeof(t_data));
 	info = malloc(sizeof(t_execute));
@@ -100,8 +92,8 @@ int	main(int ac, char **av)
 		buf = set_prompt();
 		i = -1;
 		set_info(info);
-		data->tokens = NULL;
-		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
+		tokens = NULL;
+		signal_manager(SIGINT, sigint_handler);
 		line = readline(buf);
 		free (buf);
 		if (!line)
@@ -111,50 +103,23 @@ int	main(int ac, char **av)
 		}
 		if (line && *line && ft_strcmp(line, "\n"))
 			add_history(line);
-/*		if (!ft_strcmp(line, "exit"))
-			break ;*/
-		if (tokenizer(line, &data->tokens))
+		if (tokenizer(line, &tokens))
 			continue ;
-/*       		printf("before reorder:\n");
-		while (tokens[++i])
-			printf("index %d: %s: %s: %s\n",
-                    tokens[i]->index,
-				type_to_str(tokens[i]->type),
-                type_to_str(tokens[i]->sub_type),
-				(char *)tokens[i]->content);
-		i = -1;*/
-		if (syntax_error(data->tokens, check_args(data->tokens)))
+		if (syntax_error(tokens, check_args(tokens)))
 			continue ;
-		//tokens = add_token_at(tokens, create_token(ft_strdup("testone"), CMD, CMD), 3);
-		//tokens = remove_token_at(tokens, 0);
-		reorder_tokens(data->tokens);
-		assign_index(data->tokens);
-		if (finalize_tokens(data->tokens, data) == 512)
+		reorder_tokens(tokens);
+		assign_index(tokens);
+		if (finalize_tokens(tokens, data) == 256)
 		{
 			data->exit_status = 130;
 			free_tokens(data->tokens);
 			continue ;
 		}
-
-        	//ft_printf("assigning args!\n\n");
-		assign_args(data->tokens);
-		//printf("assign finished!\n\n");
-/*
-       		 while (tokens[++i])
-			printf("index %d: %s: %s: %s\n",
-                    tokens[i]->index,
-				type_to_str(tokens[i]->type),
-                type_to_str(tokens[i]->sub_type),
-				(char *)tokens[i]->content);
-*/
-//		printf("\n\n\n");
+		assign_args(tokens);
 		i = 0;
 		while (data->tokens[i])
 		{
-			data->tree = build_tree(data->tokens, &i);
-//			print_tree(data->tree, 0);
-//			printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-//			print_args(tokens);
+			data->tree = build_tree(tokens, &i);
 			executor(data->tree, data, info);
 			execve_cmd(info, data);
 			while (info->pid > 0)
@@ -169,9 +134,8 @@ int	main(int ac, char **av)
 			while (data->tokens[i] && (data->tokens[i]->type & (NEW_LINE | END)))
 				i++;
 		}
-		data->tree = build_tree(data->tokens, &i);
-		//i = -1;
-    free_tokens(data->tokens);
+		//data->tree = build_tree(data->tokens, &i);
+		free_tokens(tokens);
 	}
 	rl_clear_history();
 	free_array(data->env);

@@ -68,12 +68,14 @@ void	set_command(t_execute *info, t_token *tree, t_data *data)
 
 	i = 0;
 	(void) data;
+	tree->content = check_export2((char *)(tree->content), data);
 	info->com = (char *)tree->content;
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
 	{
-		arg = (char *)(tree->args[i]->content);
-		info->args = ft_arrayjoin(info->args, find_wildcards(arg));
+		tree->args[i]->content = check_export2((char *)(tree->args[i]->content), data);
+    arg = (char *)(tree->args[i]->content);
+		info->args = ft_arrayjoin(info->args, find_wildcards((char *)(arg)));
 		i++;
 	}
 }
@@ -96,5 +98,4 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	if (tree->type == CMD)
 		set_command(info, tree, data);
 	executor(tree->right, data, info);
-	signal_manager(SIGINT, sigint_handler);
 }

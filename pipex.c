@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 16:32:53 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/15 12:51:32 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/17 16:51:55 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,4 +96,5 @@ void	execve_cmd(t_execute *info, t_data *data)
 	else if (info->pipe == 1)
 		execute_pipe(info, data);
 	close_fd(info->file_in, info->file_out, 0);
+	signal_manager(SIGINT, sigint_handler);
 }

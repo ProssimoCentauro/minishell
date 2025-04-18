@@ -1,112 +1,57 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_input.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/18 15:56:35 by rtodaro           #+#    #+#             */
+/*   Updated: 2025/04/18 16:02:00 by rtodaro          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-
-t_token	*check_next(t_token **tokens, size_t i, t_token **res)
+static int	is_invalid_start(t_token **tokens)
 {
-	if (tokens[i]->sub_type & (CMD))
-	{
-		if (tokens[i + 1]->sub_type & (OPEN))
-			*res = tokens[i + 1];
-	}
-	else if (tokens[i]->sub_type & (AND | OR | PIPE))
-	{
-		if (tokens[i + 1]->sub_type & (AND | OR | PIPE | CLOSE | END))
-			*res = tokens[i + 1];
-	}
-	else if (tokens[i]->sub_type & (OPEN))
-	{
-		if (tokens[i + 1]->sub_type & (AND | OR | PIPE | CLOSE | END))
-			*res = tokens[i + 1];
-	}
-	else if (tokens[i]->sub_type & (CLOSE))
-	{
-		if (tokens[i + 1]->sub_type & (CMD))
-			*res = tokens[i + 1];
-	}
-	else if (tokens[i]->sub_type & (IN | OUT | APPEND | HEREDOC))
-	{
-		if (tokens[i + 1]->sub_type & (NEW_LINE | END))
-			*res = tokens[i + 1];
-	}
-	return (*res);
-}
-/*
-int     search_quotes(char *str, size_t *i, char to_search)
-{
-        static  size_t  d_q = 0;
-        static  size_t  s_q = 0;
-
-        while(str[*i])
-        {
-                if ((str[*i] == '"' || str[*i] == '\'') && str[*i] != to_search)
-                {
-                        if (str[*i] == '"')
-                                d_q++;
-                        else if (str[*i] == '\'')
-                                s_q++;
-                        (*i)++;
-                        if (search_quotes(str, i, str[*i - 1]))
-                                return (1);
-                        (*i)++;
-                }
-                else if ((str[*i] == '"' || str[*i] == '\'') && str[*i] == to_search)
-                {
-                        if (str[*i] == '"')
-                                d_q--;
-                        else if (str[*i] == '\'')
-                                s_q--;
-                        return(0);
-                }
-                else
-                        (*i)++;
-        }
-        if (s_q != 0 || d_q != 0)
-        {
-                s_q = 0;
-                d_q = 0;
-                return (1);
-        }
-        return (0);
+	if (tokens[0]->sub_type & (AND | OR | PIPE | CLOSE))
+		return (1);
+	return (0);
 }
 
-t_token	*check_quotes(t_token *token, t_token **res)
+static int	is_background_amp(t_token *token)
 {
-	size_t	i;
+	if (token && token->sub_type == AND)
+		if (!ft_strcmp((char *)token->content, "&"))
+			return (1);
+	return (0);
+}
 
-	i = 0;
-	if (search_quotes((char *)token->content, &i, 0))
+static int	handle_quotes(t_token *token, t_token **res)
+{
+	t_token	*match;
+
+	match = check_quotes(token, res);
+	if (match)
 	{
 		token->quotes = 1;
-		*res = token;
+		return (1);
 	}
-	return (*res);
-}*/
+	return (0);
+}
 
-t_token	*check_quotes(t_token *token, t_token **res)
+static int	handle_brackets(t_token *token, size_t *brackets, int *unmatched)
 {
-	size_t	j;
-	char	*line;
-	char	to_find;
-
-	j = 0;
-	line = (char *)token->content;
-	to_find = 0;
-	while (line[j])
+	if (token->type == OPEN)
+		(*brackets)++;
+	else if (token->type == CLOSE && *brackets == 0)
 	{
-		if (line[j] == '"' || line[j] == '\'')
-		{
-			to_find = line[j++];
-			while (line[j] && line[j] != to_find)
-				j++;
-			if (!line[j])
-			{
-				*res = token;
-				break;
-			}
-		}
-		j++;
+		*unmatched = 1;
+		return (1);
 	}
-	return (*res);
+	else if (token->type == CLOSE)
+		(*brackets)--;
+	return (0);
 }
 
 t_token	*check_args(t_token **tokens)
@@ -114,34 +59,24 @@ t_token	*check_args(t_token **tokens)
 	t_token	*res;
 	size_t	i;
 	size_t	brackets;
+	int		unmatched;
 
 	res = NULL;
 	i = -1;
 	brackets = 0;
-
-	if (tokens[0]->sub_type & (AND | OR | PIPE | CLOSE))
+	unmatched = 0;
+	if (is_invalid_start(tokens))
 		return (tokens[0]);
 	while (tokens[++i])
 	{
-		if (tokens[i] && tokens[i]->sub_type == AND
-				&& !ft_strcmp((char *)tokens[i]->content, "&"))
-		{
-			res = tokens[i];
-			break ;
-		}
-		if (tokens[i] && check_next(tokens, i, &res))
-			break ;
-		if (tokens[i] && check_quotes(tokens[i], &res))
-		{
-			tokens[i]->quotes = 1;
+		if (is_background_amp(tokens[i]))
 			return (tokens[i]);
-		}
-		if (tokens[i] && tokens[i]->type == OPEN)
-			brackets++;
-		else if (tokens[i] && tokens[i]->type == CLOSE && brackets == 0)
-			return(tokens[i]);
-		else if (tokens[i] && tokens[i]->type == CLOSE)
-			brackets--;
+		if (check_next(tokens, i, &res))
+			break ;
+		if (handle_quotes(tokens[i], &res))
+			return (tokens[i]);
+		if (handle_brackets(tokens[i], &brackets, &unmatched))
+			return (tokens[i]);
 	}
 	return (res);
 }
