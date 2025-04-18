@@ -93,6 +93,7 @@ int	main(int ac, char **av)
 		i = -1;
 		set_info(info);
 		tokens = NULL;
+		signal_manager(SIGINT, sigint_handler);
 		line = readline(buf);
 		if (!line)
 		{

@@ -62,8 +62,11 @@ static int	check_quotes_in_delimiter(char *delimiter)
 
 static void	print_warning(char *delimiter)
 {
-	printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n",
-		delimiter);
+	write(STDERR_FILENO, "minishell: warning: here-document", 33);
+	write(STDERR_FILENO, " delimited by end-of-file ", 25);
+	write(STDERR_FILENO, "(wanted `", 9);
+	write(STDERR_FILENO, delimiter, ft_strlen(delimiter));
+	write(STDERR_FILENO, "')\n", 3);
 }
 
 static char	*get_line(char *delimiter)
