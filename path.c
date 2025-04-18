@@ -44,6 +44,7 @@ char	*look_for_rightpath(char **paths, char *com)
 		free(temp);
 		if (access(path, F_OK) == 0)
 			return (path);
+		free(path);
 		n++;
 	}
 	return (NULL);

@@ -23,9 +23,9 @@ void	execution(t_execute *info, t_data *data)
 		exit_and_free(data->exit_status, path);
 	if (!path)
 		if (execve(com_flags[0], com_flags, data->env) == -1)
-			command_error(com_flags[0], data);
-	if (execve(path, com_flags, data->env) == -1)
-		exit (2);
+			command_error(com_flags[0], data, info);
+	check_dup(execve(path, com_flags, data->env), info, data, 0);
+	exit (2);
 }
 
 void	execute_pipe(t_execute *info, t_data *data)
@@ -38,8 +38,11 @@ void	execute_pipe(t_execute *info, t_data *data)
 	pid = fork();
 	if (pid == 0)
 	{
-		check_dup(dup2(info->file_in, STDIN_FILENO), pipefd[1]);
-		dup2(pipefd[1], STDOUT_FILENO);
+		check_dup(dup2(info->file_in, STDIN_FILENO), info, data, pipefd[1]);
+		if (info->file_out < 2)
+			dup2(pipefd[1], STDOUT_FILENO);
+		else
+			dup2(info->file_out, STDOUT_FILENO);
 		close_fd(info->file_in, pipefd[1], pipefd[0]);
 		execution(info, data);
 	}
@@ -55,7 +58,7 @@ void	final_process(t_execute *info, t_data *data)
 	pid = fork();
 	if (pid == 0)
 	{
-		check_dup(dup2(info->file_in, STDIN_FILENO), info->file_in);
+		check_dup(dup2(info->file_in, STDIN_FILENO), info, data, 0);
 		dup2(info->file_out, STDOUT_FILENO);
 		close_fd(info->file_in, info->file_out, 0);
 		execution(info, data);
@@ -69,7 +72,7 @@ void	execve_cmd(t_execute *info, t_data *data)
 {
 	signal(SIGINT, SIG_IGN);
 	if (info->file_in != -2)
-		check_error(info->file_in, info->com, info->file, data);
+		file_error(info->file_in, info, data);
 	if (info->file_in == -2 || info->com == NULL)
 		return ;
 	if ((info->delimiter == AND && data->exit_status != 0) || \

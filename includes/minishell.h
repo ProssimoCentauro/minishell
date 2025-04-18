@@ -70,7 +70,7 @@ typedef struct s_token
 
 typedef	struct	s_data
 {
-	char	**variables;
+	t_token	**tokens;
 	t_token	*root;
 	char	**env;
 	int		exit_status;
@@ -147,11 +147,11 @@ void	execve_cmd(t_execute *info, t_data *data);
 int		check_builtin(t_execute *info, t_data *data);
 char	*set_prompt();
 int		array_len(char **array);
-void	command_error(char *comm, t_data *data);
+void	command_error(char *comm, t_data *data, t_execute *info);
 char	**add_array(t_data *data, char *var);
 void	set_fd(t_execute *info);
 void	restore_fd(t_execute *info);
-void	check_dup(int n, int fd);
+void	check_dup(int n, t_execute *info, t_data *data, int fd);
 void	close_fd(int fd1, int fd2, int fd3);
 void	exit_and_free(int exit_status, char *com);
 int		is_a_free_variable(char *str, t_data *data);
@@ -161,6 +161,7 @@ char    *export_join(char *str);
 char    *get_export_variable(char *str);
 char	*ft_strjoin2(char *s1, char *s2);
 int		array_len_norm(char  **array);
+void	file_error(int n, t_execute *info, t_data *data);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);

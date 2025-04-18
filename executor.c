@@ -33,8 +33,11 @@ void	set_files(t_token *tree, t_execute *info)
 			info->file_in = -2;
 		}
 		array = find_wildcards((char *)tree->content);
-		info->file = *array;
+		info->file = ft_strdup(*array);
+		free_array(array);
 	}
+	if (tree->type == REDIRECT && info->file_in >= 0)
+		free(info->file);
 }
 
 int	check_builtin(t_execute *info, t_data *data)
@@ -85,7 +88,6 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	if (tree->type == DELIMETER || tree->sub_type == PIPE)
 	{
 		execve_cmd(info, data);
-		close_fd(info->file_in, info->file_out, info->pipe_fd);
 		free_array(info->args);
 		set_info(info);
 		info->delimiter = tree->sub_type;

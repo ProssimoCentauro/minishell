@@ -74,7 +74,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	main(int ac, char **av)
 {
-	t_token	**tokens;
+	//t_token	**tokens;
 	t_data	*data;
 	char	*line;
 	size_t	i;
@@ -100,7 +100,7 @@ int	main(int ac, char **av)
 		buf = set_prompt();
 		i = -1;
 		set_info(info);
-		tokens = NULL;
+		data->tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline(buf);
 		free (buf);
@@ -113,7 +113,7 @@ int	main(int ac, char **av)
 			add_history(line);
 /*		if (!ft_strcmp(line, "exit"))
 			break ;*/
-		if (tokenizer(line, &tokens))
+		if (tokenizer(line, &data->tokens))
 			continue ;
 /*       		printf("before reorder:\n");
 		while (tokens[++i])
@@ -123,21 +123,21 @@ int	main(int ac, char **av)
                 type_to_str(tokens[i]->sub_type),
 				(char *)tokens[i]->content);
 		i = -1;*/
-		if (syntax_error(tokens, check_args(tokens)))
+		if (syntax_error(data->tokens, check_args(data->tokens)))
 			continue ;
 		//tokens = add_token_at(tokens, create_token(ft_strdup("testone"), CMD, CMD), 3);
 		//tokens = remove_token_at(tokens, 0);
-		reorder_tokens(tokens);
-		assign_index(tokens);
-		if (finalize_tokens(tokens, data) == 512)
+		reorder_tokens(data->tokens);
+		assign_index(data->tokens);
+		if (finalize_tokens(data->tokens, data) == 512)
 		{
 			data->exit_status = 130;
-			free_tokens(tokens);
+			free_tokens(data->tokens);
 			continue ;
 		}
 
         	//ft_printf("assigning args!\n\n");
-		assign_args(tokens);
+		assign_args(data->tokens);
 		//printf("assign finished!\n\n");
 /*
        		 while (tokens[++i])
@@ -149,9 +149,9 @@ int	main(int ac, char **av)
 */
 //		printf("\n\n\n");
 		i = 0;
-		while (tokens[i])
+		while (data->tokens[i])
 		{
-			data->tree = build_tree(tokens, &i);
+			data->tree = build_tree(data->tokens, &i);
 //			print_tree(data->tree, 0);
 //			printf("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 //			print_args(tokens);
@@ -166,12 +166,12 @@ int	main(int ac, char **av)
 			data->tree = NULL;
 			free_array(info->args);
 			set_info(info);
-			while (tokens[i] && (tokens[i]->type & (NEW_LINE | END)))
+			while (data->tokens[i] && (data->tokens[i]->type & (NEW_LINE | END)))
 				i++;
 		}
-		data->tree = build_tree(tokens, &i);
+		data->tree = build_tree(data->tokens, &i);
 		//i = -1;
-    free_tokens(tokens);
+    free_tokens(data->tokens);
 	}
 	rl_clear_history();
 	free_array(data->env);
