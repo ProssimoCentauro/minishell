@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/18 16:42:59 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/18 17:45:22 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,5 +208,18 @@ t_token	*create_cmd(char *line, size_t *i, size_t *j, t_type type);
 //select_handler.c
 void	select_handler(t_token **tokens, t_token **root,
 		t_token **last, size_t *i);
+//write_on_file.c
+int     write_on_file(int fd, char *delimiter, t_token **tokens, t_data *data);
 
+//check_here
+int	check_heredoc(t_token **tokens, size_t *i, t_data *data);
+
+//tokens_final_funcs_utils.c
+int     forbidden_symbols(char c);
+char    *ft_strcpy(char *dest, const char *src);
+char    *ft_strncpy(char *dest, const char *src, size_t n);
+char    *replace_range(char *s1, char *s2, size_t i, size_t j);
+
+//process_string.c
+char	*process_string(char *line, t_data *data, long *j, long *k);
 #endif
