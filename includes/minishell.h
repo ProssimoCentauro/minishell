@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/18 16:26:20 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/18 16:42:59 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,5 +204,9 @@ t_token	*create_special(char *line, size_t *i, size_t *j);
 
 //create_cmd.c
 t_token	*create_cmd(char *line, size_t *i, size_t *j, t_type type);
+
+//select_handler.c
+void	select_handler(t_token **tokens, t_token **root,
+		t_token **last, size_t *i);
 
 #endif
