@@ -71,11 +71,11 @@ typedef struct s_token
 typedef	struct	s_data
 {
 	t_token	**tokens;
+	char	**variables;
 	t_token	*root;
 	char	**env;
 	int		exit_status;
 	t_token	*tree;
-	char	**free_variables;
 }	t_data;
 
 typedef struct	s_execute
