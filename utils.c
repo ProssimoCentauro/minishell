@@ -28,6 +28,16 @@ int	array_len(char **array)
 	return (len);
 }
 
+int	array_len_norm(char  **array)
+{
+	int	n;
+
+	n = 0;
+	while (array && array[n])
+		n++;
+	return (n);
+}
+
 char	**copy_array(char **array)
 {
 	char	**copy;

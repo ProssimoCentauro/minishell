@@ -14,6 +14,8 @@
 
 void	set_files(t_token *tree, t_execute *info)
 {
+	char	**array;
+
 	if ((tree->sub_type == IN || tree->sub_type == HEREDOC))
 		if (info->file_in >= 0)
 			info->file_in = open(info->file, O_RDWR);
@@ -30,7 +32,8 @@ void	set_files(t_token *tree, t_execute *info)
 			ft_putstr_fd(": ambiguous redirect\n", 2);
 			info->file_in = -2;
 		}
-		info->file = (char *)tree->content;
+		array = find_wildcards((char *)tree->content);
+		info->file = *array;
 	}
 }
 
@@ -82,6 +85,8 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	if (tree->type == DELIMETER || tree->sub_type == PIPE)
 	{
 		execve_cmd(info, data);
+		close_fd(info->file_in, info->file_out, info->pipe_fd);
+		free_array(info->args);
 		set_info(info);
 		info->delimiter = tree->sub_type;
 	}

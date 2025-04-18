@@ -160,6 +160,7 @@ char    *get_value(char *str);
 char    *export_join(char *str);
 char    *get_export_variable(char *str);
 char	*ft_strjoin2(char *s1, char *s2);
+int		array_len_norm(char  **array);
 
 int		len_wildcards(char *str);
 char	**ft_arrayjoin(char **s1, char **s2);

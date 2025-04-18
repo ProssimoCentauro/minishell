@@ -14,7 +14,7 @@
 
 int	check_echo_flag(char *str)
 {
-	if (*str == '-')
+	if (str && *str == '-')
 		str++;
 	else
 		return (1);
@@ -36,19 +36,20 @@ void	ft_echo(char **str, t_data *data, t_execute *info)
 	n = 0;
 	data->exit_status = 0;
 	newline = 1;
-	if (!str || !str[n])
-		return ;
-	while (check_echo_flag(str[n]) == 0)
+	if (str || str[n])
 	{
-		n++;
-		newline = 0;
-	}
-	while (str[n])
-	{
-		ft_putstr_fd(str[n], STDOUT_FILENO);
-		if (str[n + 1] != NULL)
-			ft_putstr_fd(" ", STDOUT_FILENO);
-		n++;
+		while (check_echo_flag(str[n]) == 0)
+		{
+			n++;
+			newline = 0;
+		}
+		while (*str && str[n])
+		{
+			ft_putstr_fd(str[n], STDOUT_FILENO);
+			if (str[n + 1] != NULL)
+				ft_putstr_fd(" ", STDOUT_FILENO);
+			n++;
+		}
 	}
 	if (newline == 1)
 		ft_putstr_fd("\n", STDOUT_FILENO);

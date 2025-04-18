@@ -21,7 +21,6 @@ void	initial_configuration(t_data *data, t_execute *info)
 
 	setup_signal_handlers();
 	data->env = copy_array(environ);
-	data->free_variables = calloc(1, sizeof(char *));
 	info->pid = 0;
 	info->pipe_fd = 0;
 	info->std_in = dup(STDIN_FILENO);
@@ -36,7 +35,8 @@ void	initial_configuration(t_data *data, t_execute *info)
 	ft_strlcpy(bash_level, "SHLVL=", 7);
 	bash_level = ft_strjoin2(bash_level, ft_itoa(new_level));
 	temp = ft_split(bash_level, ' ');
+	free (bash_level);
 	ft_export(temp, data, info);
 	environ = data->env;
-	free(temp);
+	free_array(temp);
 }

@@ -103,6 +103,7 @@ int	main(int ac, char **av)
 		tokens = NULL;
 		//line = readline("\033[1;33m~~~\033[1;35m>\033[0m");
 		line = readline(buf);
+		free (buf);
 		if (!line)
 		{
 			write(STDOUT_FILENO, "exit\n", 5);
@@ -163,6 +164,7 @@ int	main(int ac, char **av)
 				info->pid -= 1;
 			}
 			data->tree = NULL;
+			free_array(info->args);
 			set_info(info);
 			while (tokens[i] && (tokens[i]->type & (NEW_LINE | END)))
 				i++;
@@ -172,7 +174,9 @@ int	main(int ac, char **av)
     free_tokens(tokens);
 	}
 	rl_clear_history();
+	free_array(data->env);
 	free(info->args);
 	free(info);
+	free(data);
 	exit(EXIT_SUCCESS);
 }

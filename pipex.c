@@ -77,7 +77,8 @@ void	execve_cmd(t_execute *info, t_data *data)
 		return ;
 	if (info->pipe_fd != 0)
 	{
-		info->file_in = info->pipe_fd;
+		if (info->file_in == 0)
+			info->file_in = info->pipe_fd;
 		info->pipe_fd = 0;
 		if (info->pipe == 0)
 			final_process(info, data);

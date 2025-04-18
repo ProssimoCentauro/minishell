@@ -18,7 +18,11 @@ void	pwd(t_data *data, t_execute *info)
 
 	buf = NULL;
 	set_fd(info);
-	ft_putstr_fd(getcwd(buf, 1024), 2);
+	buf = getcwd(buf, 1024);
+	if (!buf)
+		return ;
+	ft_putstr_fd(buf, STDOUT_FILENO);
 	restore_fd(info);
+	free(buf);
 	data->exit_status = 0;
 }

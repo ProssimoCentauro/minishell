@@ -16,7 +16,7 @@ void	quote_compare(char **str, char **file)
 {
 	char	c;
 
-	if (**str == '\'' || **str == '"')
+	while (**str == '\'' || **str == '"')
 	{
 		c = **str;
 		(*str)++;
@@ -45,6 +45,7 @@ int	check_corrispondency(char *str, char *file)
 		if (!(*str))
 			return (0);
 		file++;
+		str++;
 	}
 	while (*str == '*')
 		str++;
@@ -69,7 +70,10 @@ int	len_wildcards(char *str)
 	len = 0;
 	curr_dir = opendir(".");
 	if (curr_dir == NULL)
+	{
 		perror("opendir");
+		return (1);
+	}
 	info = readdir((curr_dir));
 	while (info != NULL)
 	{
@@ -126,7 +130,7 @@ char	**find_wildcards(char *str)
 	results = malloc((len + 1) * (sizeof(char *)));
 	curr_dir = opendir(".");
 	if (curr_dir == NULL)
-		perror("opendir");
+		return (NULL);
 	info = readdir((curr_dir));
 	insert_wildcards(results, info, str, curr_dir);
 	closedir(curr_dir);
