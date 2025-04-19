@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 15:03:13 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/12 12:00:28 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:24:06 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ char	*get_previous_directory(char *curr_dir)
 		len--;
 	}
 	prev = ft_substr(curr_dir, 0, len);
+	printf("%s\n", prev);
 	if (*prev == '\0')
 	{
 		free(prev);

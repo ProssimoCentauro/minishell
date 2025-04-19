@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 15:42:27 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/17 14:25:28 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/19 15:40:38 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	change_env(t_data *data, char *var, int i, int n)
 		n++;
 	}
 	while (ft_strncmp(data->env[i], var, n) != 0 && \
-	(data->env[i][n + 1] != '=' || data->env[i][n + 1] != '\0'))
+(data->env[i][n + 1] != '=' || data->env[i][n + 1] != '\0'))
 		i++;
 	temp = data->env[i];
 	if (var[n] == '+')

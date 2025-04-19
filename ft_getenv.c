@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 20:24:19 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/17 20:24:21 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/19 15:42:43 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	*ft_getenv(char *variable, char **env)
 	while (env[i])
 	{
 		if (ft_strncmp(variable, env[i], len) == 0 && \
-		(env[i][len] == '=' || env[i][len] == '\0'))
+(env[i][len] == '=' || env[i][len] == '\0'))
 		{
 			value = get_value(env[i]);
 		}
