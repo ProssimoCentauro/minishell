@@ -94,7 +94,12 @@ int	main(int ac, char **av)
 		set_info(info);
 		data->tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
-		line = readline(buf);
+        signal_manager(SIGQUIT, SIG_IGN);
+        line = readline(buf);
+		if (g_last_signal == SIGINT)
+            data->exit_status = 130;
+        else if (g_last_signal == SIGQUIT)
+            data->exit_status = 131;
 		free (buf);
 		if (!line)
 		{
@@ -111,7 +116,6 @@ int	main(int ac, char **av)
 		assign_index(data->tokens);
 		if (finalize_tokens(data->tokens, data) == 256)
 		{
-			data->exit_status = 130;
 			free_tokens(data->tokens);
 			continue ;
 		}
@@ -119,6 +123,8 @@ int	main(int ac, char **av)
 		i = 0;
 		while (data->tokens[i])
 		{
+            signal_manager(SIGQUIT, sigquit_handler);
+            g_last_signal = 0;
 			data->tree = build_tree(data->tokens, &i);
 			executor(data->tree, data, info);
 			execve_cmd(info, data);
