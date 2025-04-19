@@ -30,11 +30,11 @@ void	execution(t_execute *info, t_data *data)
 
 void	execute_pipe(t_execute *info, t_data *data)
 {
+	int	pipefd[2];
 	pid_t	pid;
-	int		pipefd[2];
 
+	info->processes += 1;
 	pipe(pipefd);
-	info->pid += 1;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -52,9 +52,8 @@ void	execute_pipe(t_execute *info, t_data *data)
 
 void	final_process(t_execute *info, t_data *data)
 {
-	int		pid;
+	pid_t	pid;
 
-	info->pid += 1;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -63,9 +62,9 @@ void	final_process(t_execute *info, t_data *data)
 		close_fd(info->file_in, info->file_out, 0);
 		execution(info, data);
 	}
-	waitpid(pid, &(data->exit_status), 0);
+        info->pid = pid;
 	if (info->file_in != 0)
-		close(info->file_in);
+                close(info->file_in);
 }
 
 void	execve_cmd(t_execute *info, t_data *data)

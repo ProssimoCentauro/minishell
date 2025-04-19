@@ -122,11 +122,12 @@ int	main(int ac, char **av)
 			data->tree = build_tree(data->tokens, &i);
 			executor(data->tree, data, info);
 			execve_cmd(info, data);
-			while (info->pid > 0)
+			waitpid(info->pid, &(data->exit_status), 0);
+			data->exit_status = WEXITSTATUS(data->exit_status);
+			while (info->processes > 0)
 			{
-				waitpid(-1, &(data->exit_status), 0);
-				data->exit_status = WEXITSTATUS(data->exit_status);
-				info->pid -= 1;
+				wait(NULL);
+				info->processes -= 1;
 			}
 			data->tree = NULL;
 			free_array(info->args);
