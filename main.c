@@ -92,7 +92,7 @@ int	main(int ac, char **av)
 		buf = set_prompt();
 		i = -1;
 		set_info(info);
-		tokens = NULL;
+		data->tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
 		line = readline(buf);
 		free (buf);
@@ -103,30 +103,31 @@ int	main(int ac, char **av)
 		}
 		if (line && *line && ft_strcmp(line, "\n"))
 			add_history(line);
-		if (tokenizer(line, &tokens))
+		if (tokenizer(line, &data->tokens))
 			continue ;
-		if (syntax_error(tokens, check_args(tokens)))
+		if (syntax_error(data->tokens, check_args(data->tokens)))
 			continue ;
-		reorder_tokens(tokens);
-		assign_index(tokens);
-		if (finalize_tokens(tokens, data) == 256)
+		reorder_tokens(data->tokens);
+		assign_index(data->tokens);
+		if (finalize_tokens(data->tokens, data) == 256)
 		{
 			data->exit_status = 130;
 			free_tokens(data->tokens);
 			continue ;
 		}
-		assign_args(tokens);
+		assign_args(data->tokens);
 		i = 0;
 		while (data->tokens[i])
 		{
-			data->tree = build_tree(tokens, &i);
+			data->tree = build_tree(data->tokens, &i);
 			executor(data->tree, data, info);
 			execve_cmd(info, data);
-			while (info->pid > 0)
+			waitpid(info->pid, &(data->exit_status), 0);
+			data->exit_status = WEXITSTATUS(data->exit_status);
+			while (info->processes > 0)
 			{
-				waitpid(-1, &(data->exit_status), 0);
-				data->exit_status = WEXITSTATUS(data->exit_status);
-				info->pid -= 1;
+				wait(NULL);
+				info->processes -= 1;
 			}
 			data->tree = NULL;
 			free_array(info->args);
@@ -135,7 +136,7 @@ int	main(int ac, char **av)
 				i++;
 		}
 		//data->tree = build_tree(data->tokens, &i);
-		free_tokens(tokens);
+		free_tokens(data->tokens);
 	}
 	rl_clear_history();
 	free_array(data->env);
