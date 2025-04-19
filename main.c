@@ -74,7 +74,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	main(int ac, char **av)
 {
-	//t_token	**tokens;
+	int exit_status;
 	t_data	*data;
 	char	*line;
 	size_t	i;
@@ -122,11 +122,12 @@ int	main(int ac, char **av)
 			data->tree = build_tree(data->tokens, &i);
 			executor(data->tree, data, info);
 			execve_cmd(info, data);
-			while (info->pid > 0)
+			waitpid(info->pid, &(data->exit_status), 0);
+			data->exit_status = WEXITSTATUS(data->exit_status);
+			while (info->processes > 0)
 			{
-				waitpid(-1, &(data->exit_status), 0);
-				data->exit_status = WEXITSTATUS(data->exit_status);
-				info->pid -= 1;
+				wait(NULL);
+				info->processes -= 1;
 			}
 			data->tree = NULL;
 			free_array(info->args);
@@ -137,10 +138,11 @@ int	main(int ac, char **av)
 		//data->tree = build_tree(data->tokens, &i);
 		free_tokens(data->tokens);
 	}
+	exit_status = data->exit_status;
 	rl_clear_history();
 	free_array(data->env);
 	free(info->args);
 	free(info);
 	free(data);
-	exit(EXIT_SUCCESS);
+	exit(exit_status);
 }

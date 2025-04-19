@@ -22,6 +22,7 @@ void	initial_configuration(t_data *data, t_execute *info)
 	setup_signal_handlers();
 	data->env = copy_array(environ);
 	info->pid = 0;
+	info->processes = 0;
 	info->pipe_fd = 0;
 	info->std_in = dup(STDIN_FILENO);
 	info->std_out = dup(STDOUT_FILENO);

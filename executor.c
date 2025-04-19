@@ -90,6 +90,16 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	if (tree->type == DELIMETER || tree->sub_type == PIPE)
 	{
 		execve_cmd(info, data);
+		if (tree->type == DELIMETER)
+		{
+			waitpid(info->pid, &(data->exit_status), 0);
+			data->exit_status = WEXITSTATUS(data->exit_status);
+			while (info->processes > 0)
+			{
+				wait(NULL);
+				info->processes -= 1;
+			}
+		}
 		free_array(info->args);
 		set_info(info);
 		info->delimiter = tree->sub_type;
