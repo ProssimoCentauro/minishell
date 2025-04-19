@@ -74,7 +74,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	main(int ac, char **av)
 {
-	//t_token	**tokens;
+	int exit_status;
 	t_data	*data;
 	char	*line;
 	size_t	i;
@@ -138,10 +138,11 @@ int	main(int ac, char **av)
 		//data->tree = build_tree(data->tokens, &i);
 		free_tokens(data->tokens);
 	}
+	exit_status = data->exit_status;
 	rl_clear_history();
 	free_array(data->env);
 	free(info->args);
 	free(info);
 	free(data);
-	exit(EXIT_SUCCESS);
+	exit(exit_status);
 }
