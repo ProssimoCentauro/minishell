@@ -88,7 +88,7 @@ typedef struct	s_execute
 	char	**args;
 	int	processes;
 	int		pipe_fd;
-	pit_t		pid;
+	pid_t		pid;
 	int		std_in;
 	int		std_out;
 	t_type	delimiter;
