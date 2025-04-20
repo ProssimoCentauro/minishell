@@ -2,15 +2,21 @@ NAME = minishell
 
 PARSER = ./parser/
 
-SRC = main.c echo.c cd.c error.c free.c pwd.c export.c exit.c env.c utils.c \
-	  ft_getenv.c unset.c wildcards.c $(PARSER)tokens_utils.c $(PARSER)tokens_utils2.c $(PARSER)tokens_reorder.c \
-	  $(PARSER)tree_builder.c $(PARSER)tokenizer.c $(PARSER)token_args_utils.c $(PARSER)tokens_final_funcs.c\
-	  executor.c path.c executor_info.c pipex.c $(PARSER)check_input.c errors_utils.c set_prompt.c\
-	  signal_handlers.c ft_arrayjoin.c initial_configuration.c $(PARSER)quotes_utils.c\
-	  fd_utils.c export_utils.c $(PARSER)check_next.c $(PARSER)create_special.c \
-	  $(PARSER)create_cmd.c $(PARSER)tokenizer_utils.c $(PARSER)select_handler.c \
-	  $(PARSER)write_on_file.c $(PARSER)check_heredoc.c $(PARSER)tokens_final_funcs_utils.c\
-	  $(PARSER)process_string.c
+builtin = ./builtin/
+
+utils = ./utils/
+
+executor = ./executor/
+
+SRC = main.c $(builtin)echo.c $(builtin)cd.c $(utils)error.c $(utils)free.c $(builtin)pwd.c $(builtin)export.c \
+      $(builtin)exit.c $(builtin)env.c $(utils)array_utils.c $(utils)ft_getenv.c $(builtin)unset.c $(executor)wildcards.c \
+      $(PARSER)tokens_utils.c $(PARSER)tokens_utils2.c $(PARSER)tokens_reorder.c $(PARSER)tree_builder.c \
+      $(PARSER)tokenizer.c $(PARSER)token_args_utils.c $(PARSER)tokens_final_funcs.c $(executor)executor.c \
+      $(executor)path.c $(executor)executor_info.c $(executor)pipex.c $(PARSER)check_input.c errors_utils.c \
+      $(utils)set_prompt.c signal_handlers.c $(utils)ft_arrayjoin.c $(executor)initial_configuration.c $(PARSER)quotes_utils.c\
+      $(utils)fd_utils.c $(utils)export_utils.c $(PARSER)check_next.c $(PARSER)create_special.c $(PARSER)create_cmd.c \
+      $(PARSER)tokenizer_utils.c $(PARSER)select_handler.c $(PARSER)write_on_file.c $(PARSER)check_heredoc.c \
+      $(PARSER)tokens_final_funcs_utils.c $(PARSER)process_string.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -25,12 +31,14 @@ LIBFLAGS = -Llibft -lft -L/usr/lib
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	make -C libft
-#	make bonus -C libft
-	$(CC) $(OBJ) $(LIBFLAGS) -o $(NAME) -lreadline -lncurses -g
+	@echo "compiling minishell..."
+	@make -s -C libft
+	@$(CC) $(OBJ) $(LIBFLAGS) -o $(NAME) -lreadline -lncurses -g
+	@echo "compilation done :)"
 
 %.o:%.c
-	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
+	@echo "compiling libft..."
+	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 clean:
 	rm -f $(OBJ)
