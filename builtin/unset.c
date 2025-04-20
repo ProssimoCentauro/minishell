@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 20:35:23 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/17 20:35:25 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/19 16:09:42 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	ft_unset(char **var, t_data *data)
 		{
 			len = ft_strlen(*var);
 			while (ft_strncmp((data->env)[i], *var, len) != 0 && \
-			(data->env[i][len + 1] != '=' || data->env[i][len + 1] != '\0'))
+(data->env[i][len + 1] != '=' || data->env[i][len + 1] != '\0'))
 				i++;
 			free(to_delete);
 			to_delete = data->env[i];

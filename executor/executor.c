@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/17 14:17:02 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/19 15:23:26 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,7 @@ void	set_files(t_token *tree, t_execute *info)
 		info->file_out = open(info->file, O_RDWR | O_CREAT | O_TRUNC, 0644);
 	if (tree->sub_type == APPEND && info->file_in >= 0)
 		info->file_out = open(info->file, O_RDWR | O_CREAT | O_APPEND, 0644);
-	if ((tree->type == FILENAME || tree->type == LIMITER) && \
-	info->file_in >= 0)
+	if ((tree->type == FILENAME || tree->type == LIMITER) && info->file_in >= 0)
 	{
 		if (len_wildcards((char *)tree->content) > 1)
 		{
@@ -64,7 +63,7 @@ int	check_builtin(t_execute *info, t_data *data)
 void	set_command(t_execute *info, t_token *tree, t_data *data)
 {
 	int		i;
-	char	*arg;
+	void	*arg;
 
 	i = 0;
 	(void) data;
@@ -73,10 +72,21 @@ void	set_command(t_execute *info, t_token *tree, t_data *data)
 	info->args = ft_arrayjoin(info->args, find_wildcards(info->com));
 	while (tree->args && tree->args[i])
 	{
-		tree->args[i]->content = check_export2((char *)(tree->args[i]->content), data);
-    arg = (char *)(tree->args[i]->content);
+		arg = tree->args[i]->content;
+		arg = check_export2((char *)arg, data);
 		info->args = ft_arrayjoin(info->args, find_wildcards((char *)(arg)));
 		i++;
+	}
+}
+
+void	wait_pid(t_execute *info, t_data *data)
+{
+	waitpid(info->pid, &(data->exit_status), 0);
+	data->exit_status = WEXITSTATUS(data->exit_status);
+	while (info->processes > 0)
+	{
+		wait(NULL);
+		info->processes -= 1;
 	}
 }
 
@@ -91,15 +101,7 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	{
 		execve_cmd(info, data);
 		if (tree->type == DELIMETER)
-		{
-			waitpid(info->pid, &(data->exit_status), 0);
-			data->exit_status = WEXITSTATUS(data->exit_status);
-			while (info->processes > 0)
-			{
-				wait(NULL);
-				info->processes -= 1;
-			}
-		}
+			wait_pid(info, data);
 		free_array(info->args);
 		set_info(info);
 		info->delimiter = tree->sub_type;

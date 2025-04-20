@@ -6,18 +6,17 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:18:05 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/15 12:45:30 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/20 18:57:21 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	set_bash_level(t_data *data, t_execute *info);
+
 void	initial_configuration(t_data *data, t_execute *info)
 {
 	extern char	**environ;
-	char		*bash_level;
-	int			new_level;
-	char		**temp;
 
 	setup_signal_handlers();
 	data->env = copy_array(environ);
@@ -27,6 +26,16 @@ void	initial_configuration(t_data *data, t_execute *info)
 	info->std_in = dup(STDIN_FILENO);
 	info->std_out = dup(STDOUT_FILENO);
 	data->exit_status = 0;
+	set_bash_level(data, info);
+	environ = data->env;
+}
+
+void	set_bash_level(t_data *data, t_execute *info)
+{
+	char	*bash_level;
+	int		new_level;
+	char	**temp;
+
 	bash_level = ft_getenv("SHLVL", data->env);
 	if (!bash_level)
 		return ;
@@ -38,6 +47,21 @@ void	initial_configuration(t_data *data, t_execute *info)
 	temp = ft_split(bash_level, ' ');
 	free (bash_level);
 	ft_export(temp, data, info);
-	environ = data->env;
 	free_array(temp);
+}
+
+void	start_execution(t_execute	*info, t_data *data)
+{
+	set_info(info);
+	executor(data->tree, data, info);
+	execve_cmd(info, data);
+	waitpid(info->pid, &(data->exit_status), 0);
+	if (WIFEXITED(data->exit_status))
+		data->exit_status = WEXITSTATUS(data->exit_status);
+	while (info->processes > 0)
+	{
+		wait(NULL);
+		info->processes -= 1;
+	}
+	free_array(info->args);
 }

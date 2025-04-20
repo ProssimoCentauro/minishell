@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: marvin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/20 16:20:04 by marvin            #+#    #+#             */
+/*   Updated: 2025/04/20 16:22:16 by marvin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int g_last_signal;
@@ -72,17 +84,13 @@ int	ft_strcmp(char *s1, char *s2)
 	return (s1[i] - s2[i]);
 }
 
-int	main(int ac, char **av)
+int	main(void)
 {
+	t_data		*data;
+	char		*line;
 	int exit_status;
-	t_data	*data;
-	char	*line;
-	size_t	i;
 	t_execute	*info;
 	char		*buf;
-
-	(void)ac;
-	(void)av;
 
 	data = malloc(sizeof(t_data));
 	info = malloc(sizeof(t_execute));
@@ -91,7 +99,6 @@ int	main(int ac, char **av)
 	{
 		buf = set_prompt();
 		i = -1;
-		set_info(info);
 		data->tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
 		line = readline(buf);
@@ -120,18 +127,8 @@ int	main(int ac, char **av)
 		while (data->tokens[i])
 		{
 			data->tree = build_tree(data->tokens, &i);
-			executor(data->tree, data, info);
-			execve_cmd(info, data);
-			waitpid(info->pid, &(data->exit_status), 0);
-			data->exit_status = WEXITSTATUS(data->exit_status);
-			while (info->processes > 0)
-			{
-				wait(NULL);
-				info->processes -= 1;
-			}
+			start_execution(info, data);
 			data->tree = NULL;
-			free_array(info->args);
-			set_info(info);
 			while (data->tokens[i] && (data->tokens[i]->type & (NEW_LINE | END)))
 				i++;
 		}
@@ -139,10 +136,6 @@ int	main(int ac, char **av)
 		free_tokens(data->tokens);
 	}
 	exit_status = data->exit_status;
-	rl_clear_history();
-	free_array(data->env);
-	free(info->args);
-	free(info);
-	free(data);
-	exit(exit_status);
+	final_free(info, data);
+  exit(exit_status);
 }
