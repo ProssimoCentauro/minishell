@@ -86,6 +86,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 int	main(void)
 {
+	size_t	i;
 	t_data		*data;
 	char		*line;
 	int exit_status;
@@ -98,7 +99,7 @@ int	main(void)
 	while (42)
 	{
 		buf = set_prompt();
-		i = -1;
+		//i = -1;
 		data->tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
 		line = readline(buf);
