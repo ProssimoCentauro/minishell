@@ -39,7 +39,7 @@ void setup_signal_handlers(void)
     sigaction(SIGQUIT, &sq, NULL);
 }
 
-void    handle_heredoc(int signum)
+void    heredoc_handler(int signum)
 {
         (void)signum;
         rl_on_new_line();

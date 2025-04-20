@@ -191,7 +191,7 @@ t_token *check_args(t_token **tokens);
 void sigint_handler(int signum);
 void sigquit_handler(int signum);
 void setup_signal_handlers(void);
-void    handle_heredoc(int signum);
+void    heredoc_handler(int signum);
 void     signal_manager(int signum, void (*handler)(int signum));
 
 //quotes_utils.c

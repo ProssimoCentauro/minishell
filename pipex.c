@@ -69,7 +69,6 @@ void	final_process(t_execute *info, t_data *data)
 
 void	execve_cmd(t_execute *info, t_data *data)
 {
-	signal(SIGINT, SIG_IGN);
 	if (info->file_in != -2)
 		file_error(info->file_in, info, data);
 	if (info->file_in == -2 || info->com == NULL)
@@ -95,5 +94,4 @@ void	execve_cmd(t_execute *info, t_data *data)
 	else if (info->pipe == 1)
 		execute_pipe(info, data);
 	close_fd(info->file_in, info->file_out, 0);
-	signal_manager(SIGINT, sigint_handler);
 }

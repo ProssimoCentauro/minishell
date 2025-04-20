@@ -94,7 +94,7 @@ int	main(int ac, char **av)
 		set_info(info);
 		data->tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
-        signal_manager(SIGQUIT, SIG_IGN);
+		signal_manager(SIGQUIT, SIG_IGN);
         line = readline(buf);
 		if (g_last_signal == SIGINT)
             data->exit_status = 130;
@@ -123,8 +123,8 @@ int	main(int ac, char **av)
 		i = 0;
 		while (data->tokens[i])
 		{
-            signal_manager(SIGQUIT, sigquit_handler);
-            g_last_signal = 0;
+			signal_manager(SIGQUIT, sigquit_handler);
+			g_last_signal = 0;
 			data->tree = build_tree(data->tokens, &i);
 			executor(data->tree, data, info);
 			execve_cmd(info, data);
