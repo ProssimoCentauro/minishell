@@ -99,7 +99,6 @@ int	main(void)
 	while (42)
 	{
 		buf = set_prompt();
-		//i = -1;
 		data->tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
 		signal_manager(SIGQUIT, SIG_IGN);
@@ -144,5 +143,5 @@ int	main(void)
 	}
 	exit_status = data->exit_status;
 	final_free(info, data);
-	exit(exit_status);
+  exit(exit_status);
 }
