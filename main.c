@@ -88,7 +88,7 @@ int	main(void)
 {
 	t_data		*data;
 	char		*line;
-	size_t		i;
+	int exit_status;
 	t_execute	*info;
 	char		*buf;
 
@@ -135,5 +135,7 @@ int	main(void)
 		//data->tree = build_tree(data->tokens, &i);
 		free_tokens(data->tokens);
 	}
+	exit_status = data->exit_status;
 	final_free(info, data);
+  exit(exit_status);
 }
