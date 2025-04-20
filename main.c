@@ -99,10 +99,14 @@ int	main(void)
 	while (42)
 	{
 		buf = set_prompt();
-		//i = -1;
 		data->tokens = NULL;
 		signal_manager(SIGINT, sigint_handler);
+		signal_manager(SIGQUIT, SIG_IGN);
 		line = readline(buf);
+		if (g_last_signal == SIGINT)
+			data->exit_status = 130;
+		else if (g_last_signal == SIGQUIT)
+			data->exit_status = 131;
 		free (buf);
 		if (!line)
 		{
@@ -119,7 +123,6 @@ int	main(void)
 		assign_index(data->tokens);
 		if (finalize_tokens(data->tokens, data) == 256)
 		{
-			data->exit_status = 130;
 			free_tokens(data->tokens);
 			continue ;
 		}
@@ -127,6 +130,8 @@ int	main(void)
 		i = 0;
 		while (data->tokens[i])
 		{
+			signal_manager(SIGQUIT, sigquit_handler);
+			g_last_signal = 0;
 			data->tree = build_tree(data->tokens, &i);
 			start_execution(info, data);
 			data->tree = NULL;

@@ -27,13 +27,8 @@ static int	handle_heredoc_child(int fd, t_token **tokens, size_t *i,
 		t_data *data)
 {
 	g_last_signal = 0;
-	signal_manager(SIGINT, handle_heredoc);
+	signal_manager(SIGINT, heredoc_handler);
 	return (write_on_file(fd, (char *)tokens[*i]->content, tokens, data));
-}
-
-static void	handle_heredoc_parent(int pid, int *ret)
-{
-	waitpid(pid, ret, 0);
 }
 
 static void	update_token_content(t_token **tokens, size_t *i, char *temp_file)
@@ -62,7 +57,7 @@ int	check_heredoc(t_token **tokens, size_t *i, t_data *data)
 	else
 	{
 		(*i)++;
-		handle_heredoc_parent(pid, &ret);
+		waitpid(pid, &ret, 0);
 	}
 	(*i)--;
 	close(fd);

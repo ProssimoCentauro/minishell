@@ -224,9 +224,10 @@ t_token	*check_args(t_token **tokens);
 
 //signal_handlers.c
 void	sigint_handler(int signum);
+void    sigquit_handler(int signum);
 void	setup_signal_handlers(void);
-void	handle_heredoc(int signum);
-int		signal_manager(int signum, void (*handler)(int s));
+void	heredoc_handler(int signum);
+void		signal_manager(int signum, void (*handler)(int s));
 
 //quotes_utils.c
 void	remove_quotes(char *line);
