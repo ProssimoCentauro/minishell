@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 20:21:09 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/17 20:21:11 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/20 16:16:25 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,13 @@ void	exit_and_free(t_data *data, t_execute *info)
 	free_tokens(data->tokens);
 	free(data);
 	exit(exit_status);
+}
+
+void	final_free(t_execute *info, t_data *data)
+{
+	rl_clear_history();
+	free_array(data->env);
+	free(info);
+	free(data);
+	exit(EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ldei-sva <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/17 20:42:03 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/17 20:42:04 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/19 16:10:17 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	array_len(char **array)
 	return (len);
 }
 
-int	array_len_norm(char  **array)
+int	array_len_norm(char **array)
 {
 	int	n;
 

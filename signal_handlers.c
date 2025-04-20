@@ -1,7 +1,7 @@
 #include "minishell.h"
 
 void    sigquit_handler(int signum)
- {
+{
      (void)signum;
      signal_manager(SIGQUIT, SIG_IGN);
      g_last_signal = SIGQUIT;

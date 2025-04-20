@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:30:18 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/18 11:52:36 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/20 15:50:40 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	check_corrispondency(char *str, char *file)
 	while (*str == '*')
 		str++;
 	c = *str;
-	if (*str == '\'' || *str == '"')
+	if (*str == '"' || *str == '\'')
 		c = *(str + 1);
 	while (*file != c)
 	{
@@ -130,7 +130,7 @@ char	**find_wildcards(char *str)
 	results = malloc((len + 1) * (sizeof(char *)));
 	curr_dir = opendir(".");
 	if (curr_dir == NULL)
-		return (NULL);
+		return (free(results), NULL);
 	info = readdir((curr_dir));
 	insert_wildcards(results, info, str, curr_dir);
 	closedir(curr_dir);
