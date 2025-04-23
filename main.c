@@ -44,7 +44,10 @@ static int	tokens_handler(char *line, t_data *data, t_execute *info)
 	if (tokenizer(line, &data->tokens))
 		return (1);
 	if (syntax_error(data->tokens, check_args(data->tokens)))
+	{
+		data->exit_status = 2;
 		return (1);
+	}
 	reorder_tokens(data->tokens);
 	assign_index(data->tokens);
 	if (finalize_tokens(data->tokens, data, info) == 256)
