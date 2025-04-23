@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/23 15:16:06 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/23 16:17:00 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,4 +263,6 @@ char	*replace_range(char *s1, char *s2, size_t i, size_t j);
 //process_string.c
 char	*process_string(char *line, t_data *data, long *j, long *k);
 
+//temp_files_utils.c
+void    unlink_files(t_data *data);
 #endif
