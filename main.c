@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:20:04 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/20 16:22:16 by marvin           ###   ########.fr       */
+/*   Updated: 2025/04/23 16:18:45 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ int	main(void)
 		assign_index(data->tokens);
 		if (finalize_tokens(data->tokens, data, info) == 256)
 		{
+			unlink_files(data);
 			free_tokens(data->tokens);
 			continue ;
 		}
@@ -137,7 +138,7 @@ int	main(void)
 			while (data->tokens[i] && (data->tokens[i]->type & (NEW_LINE | END)))
 				i++;
 		}
-		//data->tree = build_tree(data->tokens, &i);
+		unlink_files(data);
 		free_tokens(data->tokens);
 	}
 	final_free(info, data);
