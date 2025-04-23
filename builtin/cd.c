@@ -36,7 +36,7 @@ char	*get_previous_directory(char *curr_dir)
 	return (prev);
 }
 
-void	cd(char **str, t_data *data)
+void	cd(char **str, t_data *data, t_execute *info)
 {
 	char	*new_dir;
 	char	*curr_dir;
@@ -60,6 +60,7 @@ void	cd(char **str, t_data *data)
 	else
 		new_dir = ft_strdup(*str);
 	check_error(chdir(new_dir), "cd: ", new_dir, data);
+	update_pwd(new_dir, info, data);
 	data->exit_status = 0;
 	return (free(curr_dir), free(new_dir), free(temp));
 }

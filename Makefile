@@ -31,13 +31,12 @@ LIBFLAGS = -Llibft -lft -L/usr/lib
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@echo "compiling minishell..."
-	@make -s -C libft
+	@make -C libft
 	@$(CC) $(OBJ) $(LIBFLAGS) -o $(NAME) -lreadline -lncurses -g
 	@echo "compilation done :)"
 
 %.o:%.c
-	@echo "compiling libft..."
+	@echo "compiling $@"
 	@$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDE)
 
 clean:

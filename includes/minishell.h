@@ -126,10 +126,11 @@ t_token	*build_tree(t_token **tokens, size_t *i);
 void	ft_echo(char **str, t_data *data, t_execute *info);
 
 //cd.c
-void	cd(char **str, t_data *data);
+void	cd(char **str, t_data *data, t_execute *info);
 
 //pwd.c
 void	pwd(t_data *data, t_execute *info);
+void	update_pwd(char *new_dir, t_execute *info, t_data *data);
 
 //env.c
 void	ft_env(t_data *data, t_execute *info);

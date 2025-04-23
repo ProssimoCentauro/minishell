@@ -27,3 +27,15 @@ void	pwd(t_data *data, t_execute *info)
 	free(buf);
 	data->exit_status = 0;
 }
+
+void	update_pwd(char *new_dir, t_execute *info, t_data *data)
+{
+	char	*temp;
+	char	**array;
+
+	temp = ft_strjoin("PWD=", new_dir);
+	array = ft_split(temp, ' ');
+	ft_export(array, data, info);
+	free(temp);
+	free_array(array);
+}

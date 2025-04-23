@@ -44,7 +44,7 @@ int	check_builtin(t_execute *info, t_data *data)
 	if (ft_strncmp(info->com, "echo", ft_strlen("echo") + 1) == 0)
 		ft_echo((info->args) + 1, data, info);
 	else if (ft_strncmp(info->com, "cd", ft_strlen("cd") + 1) == 0)
-		cd((info->args) + 1, data);
+		cd((info->args) + 1, data, info);
 	else if (ft_strncmp(info->com, "pwd", ft_strlen("pwd") + 1) == 0)
 		pwd(data, info);
 	else if (ft_strncmp(info->com, "env", ft_strlen("env") + 1) == 0)
