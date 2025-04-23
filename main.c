@@ -120,7 +120,7 @@ int	main(void)
 			continue ;
 		reorder_tokens(data->tokens);
 		assign_index(data->tokens);
-		if (finalize_tokens(data->tokens, data) == 256)
+		if (finalize_tokens(data->tokens, data, info) == 256)
 		{
 			free_tokens(data->tokens);
 			continue ;

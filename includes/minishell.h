@@ -84,11 +84,8 @@ typedef struct s_execute
 	pid_t		pid;
 	t_type		delimiter;
 	char		*file;
-	int			file_in;
-	int			file_out;
-	int			pipe_fd;
-	int			std_in;
-	int			std_out;
+	int			*fd;
+	char		**to_unlink;
 }				t_execute;
 
 //main.c
@@ -215,7 +212,7 @@ void	print_args(t_token **tokens);
 
 //int    write_on_file(int fd, char *delimeter);
 //int     check_heredoc(t_token **tokens);
-int		finalize_tokens(t_token **tokens, t_data *data);
+int		finalize_tokens(t_token **tokens, t_data *data, t_execute *info);
 int		forbidden_symbols(char c);
 
 int		syntax_error(t_token **tokens, t_token *check);
@@ -252,7 +249,7 @@ void	select_handler(t_token **tokens, t_token **root,
 int		write_on_file(int fd, char *delimiter, t_token **tokens, t_data *data);
 
 //check_here
-int		check_heredoc(t_token **tokens, size_t *i, t_data *data);
+int		check_heredoc(t_token **tokens, size_t *i, t_data *data, t_execute *info);
 
 //tokens_final_funcs_utils.c
 int		forbidden_symbols(char c);

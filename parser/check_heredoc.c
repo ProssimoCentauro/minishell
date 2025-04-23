@@ -38,7 +38,7 @@ static void	update_token_content(t_token **tokens, size_t *i, char *temp_file)
 	free(temp_file);
 }
 
-int	check_heredoc(t_token **tokens, size_t *i, t_data *data)
+int	check_heredoc(t_token **tokens, size_t *i, t_data *data, t_execute *info)
 {
 	int		fd;
 	char	*temp_file;
@@ -52,6 +52,12 @@ int	check_heredoc(t_token **tokens, size_t *i, t_data *data)
 	if (pid == 0)
 	{
 		ret = handle_heredoc_child(fd, tokens, i, data);
+		free(temp_file);
+		free(info->fd);
+		free(info);
+		free_array(data->env);
+		free_tokens(data->tokens);
+		free(data);
 		exit(ret);
 	}
 	else

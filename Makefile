@@ -12,7 +12,7 @@ SRC = main.c $(builtin)echo.c $(builtin)cd.c $(utils)error.c $(utils)free.c $(bu
       $(builtin)exit.c $(builtin)env.c $(utils)array_utils.c $(utils)ft_getenv.c $(builtin)unset.c $(executor)wildcards.c \
       $(PARSER)tokens_utils.c $(PARSER)tokens_utils2.c $(PARSER)tokens_reorder.c $(PARSER)tree_builder.c \
       $(PARSER)tokenizer.c $(PARSER)token_args_utils.c $(PARSER)tokens_final_funcs.c $(executor)executor.c \
-      $(executor)path.c $(executor)executor_info.c $(executor)pipex.c $(PARSER)check_input.c errors_utils.c \
+      $(executor)path.c $(executor)executor_info.c $(executor)pipex.c $(PARSER)check_input.c $(utils)errors_utils.c \
       $(utils)set_prompt.c signal_handlers.c $(utils)ft_arrayjoin.c $(executor)initial_configuration.c $(PARSER)quotes_utils.c\
       $(utils)fd_utils.c $(utils)export_utils.c $(PARSER)check_next.c $(PARSER)create_special.c $(PARSER)create_cmd.c \
       $(PARSER)tokenizer_utils.c $(PARSER)select_handler.c $(PARSER)write_on_file.c $(PARSER)check_heredoc.c \
