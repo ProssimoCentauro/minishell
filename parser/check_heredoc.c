@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 17:14:31 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/18 17:16:26 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/23 15:20:37 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static char	*generate_temp_filename(size_t *i)
 	char	*str_i;
 	char	*temp_file;
 
+	(*i)++;
 	str_i = ft_itoa((int)*i);
 	temp_file = ft_strjoin("./temp_", str_i);
 	free(str_i);
@@ -38,6 +39,16 @@ static void	update_token_content(t_token **tokens, size_t *i, char *temp_file)
 	free(temp_file);
 }
 
+static	void	free_child(t_data *data, t_execute *info, char *file)
+{
+	free(file);
+	free(info->fd);
+	free(info);
+	free_array(data->env);
+	free_tokens(data->tokens);
+	free(data);
+}
+
 int	check_heredoc(t_token **tokens, size_t *i, t_data *data, t_execute *info)
 {
 	int		fd;
@@ -45,19 +56,13 @@ int	check_heredoc(t_token **tokens, size_t *i, t_data *data, t_execute *info)
 	int		ret;
 	pid_t	pid;
 
-	(*i)++;
 	temp_file = generate_temp_filename(i);
 	fd = open(temp_file, O_CREAT | O_RDWR, 0644);
 	pid = fork();
 	if (pid == 0)
 	{
 		ret = handle_heredoc_child(fd, tokens, i, data);
-		free(temp_file);
-		free(info->fd);
-		free(info);
-		free_array(data->env);
-		free_tokens(data->tokens);
-		free(data);
+		free_child(data, info, temp_file);
 		exit(ret);
 	}
 	else

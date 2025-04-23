@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/20 16:17:36 by marvin           ###   ########.fr       */
+/*   Updated: 2025/04/23 15:16:06 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_data
 	char		**env;
 	int			exit_status;
 	t_token		*tree;
+	char	*files;
 }	t_data;
 
 typedef struct s_execute
