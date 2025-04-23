@@ -12,6 +12,15 @@
 
 #include "minishell.h"
 
+static void	execution_error(t_execute *info, t_data *data, \
+char *path, char *com_flags)
+{
+	perror(com_flags);
+	data->exit_status = 126;
+	free(path);
+	exit_and_free(data, info);
+}
+
 void	execution(t_execute *info, t_data *data)
 {
 	char	*path;
@@ -36,7 +45,7 @@ void	execution(t_execute *info, t_data *data)
 			command_error(com_flags[0], data, info);
 	}
 	execve(path, com_flags, data->env);
-	exit (2);
+	execution_error(info, data, path, com_flags[0]);
 }
 
 void	execute_pipe(t_execute *info, t_data *data)
