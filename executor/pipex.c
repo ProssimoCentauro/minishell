@@ -26,9 +26,9 @@ void	execution(t_execute *info, t_data *data)
 		command_error(com_flags[0], data, info);
 	path = findpath(data->env, com_flags[0]);
 	if (!path)
-		if ((ft_strncmp("./", com_flags[0], 2)) || \
-		execve(com_flags[0], com_flags, data->env) == -1)
-			command_error(com_flags[0], data, info);
+		if (*com_flags[0] == '.' || *com_flags[0] == '/')
+			if (execve(com_flags[0], com_flags, data->env) == -1)
+				command_error(com_flags[0], data, info);
 	execve(path, com_flags, data->env);
 	exit (2);
 }
