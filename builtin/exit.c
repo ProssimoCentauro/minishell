@@ -34,27 +34,25 @@ int	check(char *str)
 	return (1);
 }
 
-void	ft_exit(char **exit_status)
+void	ft_exit(char **exit_status, t_data *data, t_execute *info)
 {
 	if (!(*exit_status))
+		data->exit_status = 0;
+	else if (check(*exit_status) == 0)
 	{
-		ft_putstr_fd("exit\n", 2);
-		exit(0);
-	}
-	if (check(*exit_status) == 0)
-	{
-		printf("exit\n");
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(*exit_status, 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		exit(2);
+		data->exit_status = 2;
 	}
-	if (*(exit_status + 1) != NULL)
+	else if (*(exit_status + 1) != NULL)
 	{
-		printf("exit\n");
 		ft_putstr_fd("exit: too many arguments\n", 2);
-		exit(1);
+		data->exit_status = 1;
 	}
+	else
+		data->exit_status = ft_atoi(*exit_status);
 	printf("exit\n");
-	exit(ft_atoi(*exit_status));
+	unlink_files(data);
+	exit_and_free(data, info);
 }

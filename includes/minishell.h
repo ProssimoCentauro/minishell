@@ -142,7 +142,7 @@ void	change_env(t_data *data, char *var, int i, int n);
 void	add_env(char *var, t_data *data);
 
 //exit.c
-void	ft_exit(char **exit_status);
+void	ft_exit(char **exit_status, t_data *data, t_execute *info);
 
 //unset.c
 void	ft_unset(char **var, t_data *data);

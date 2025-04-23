@@ -52,7 +52,7 @@ int	check_builtin(t_execute *info, t_data *data)
 	else if (ft_strncmp(info->com, "export", ft_strlen("export") + 1) == 0)
 		ft_export((info->args) + 1, data, info);
 	else if (ft_strncmp(info->com, "exit", ft_strlen("exit") + 1) == 0)
-		ft_exit(info-> args + 1);
+		ft_exit(info-> args + 1, data, info);
 	else if (ft_strncmp(info->com, "unset", ft_strlen("unset") + 1) == 0)
 		ft_unset(info->args + 1, data);
 	else
