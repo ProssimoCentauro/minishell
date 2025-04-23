@@ -38,7 +38,7 @@ char	*ft_getenv(char *variable, char **env)
 	while (env[i])
 	{
 		if (ft_strncmp(variable, env[i], len) == 0 && \
-(env[i][len] == '=' || env[i][len] == '\0'))
+		(env[i][len] == '=' || env[i][len] == '\0'))
 		{
 			value = get_value(env[i]);
 		}

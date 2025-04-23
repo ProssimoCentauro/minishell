@@ -15,8 +15,8 @@
 void	set_info(t_execute *info)
 {
 	info->com = NULL;
-	info->file_in = 0;
-	info->file_out = 1;
+	info->fd[2] = 0;
+	info->fd[3] = 1;
 	info->pipe = 0;
 	info->file = NULL;
 	info->args = NULL;
@@ -40,7 +40,7 @@ void	print_info(t_execute *info)
 		i++;
 	}
 	printf("pipe: %d\n", info->pipe);
-	printf("file in: %d\n", info->file_in);
-	printf("file out: %d\n", info->file_out);
-	printf("pipe fd: %d\n\n", info->pipe_fd);
+	printf("file in: %d\n", info->fd[2]);
+	printf("file out: %d\n", info->fd[3]);
+	printf("pipe fd: %d\n\n", info->fd[4]);
 }

@@ -89,7 +89,6 @@ int	main(void)
 	size_t	i;
 	t_data		*data;
 	char		*line;
-	int exit_status;
 	t_execute	*info;
 	char		*buf;
 
@@ -121,7 +120,7 @@ int	main(void)
 			continue ;
 		reorder_tokens(data->tokens);
 		assign_index(data->tokens);
-		if (finalize_tokens(data->tokens, data) == 256)
+		if (finalize_tokens(data->tokens, data, info) == 256)
 		{
 			free_tokens(data->tokens);
 			continue ;
@@ -141,7 +140,5 @@ int	main(void)
 		//data->tree = build_tree(data->tokens, &i);
 		free_tokens(data->tokens);
 	}
-	exit_status = data->exit_status;
 	final_free(info, data);
-  exit(exit_status);
 }

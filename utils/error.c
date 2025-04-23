@@ -34,6 +34,7 @@ void	command_error(char *comm, t_data *data, t_execute *info)
 	ft_putstr_fd("Command not found\n", STDERR_FILENO);
 	data->exit_status = 127;
 	free_array(info->args);
+	free(info->fd);
 	free(info);
 	free_array(data->env);
 	free_tokens(data->tokens);
@@ -47,6 +48,7 @@ void	check_dup(int n, t_execute *info, t_data *data, int fd)
 	{
 		close_fd(fd, 0, 0);
 		free_array(info->args);
+		free(info->fd);
 		free(info);
 		free_array(data->env);
 		free_tokens(data->tokens);

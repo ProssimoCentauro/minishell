@@ -17,7 +17,7 @@ void	free_array(char **str)
 	int	n;
 
 	n = 0;
-	while (str[n])
+	while (str && str[n])
 	{
 		free (str[n]);
 		n++;
@@ -31,6 +31,7 @@ void	exit_and_free(t_data *data, t_execute *info)
 
 	exit_status = data->exit_status;
 	free_array(info->args);
+	free(info->fd);
 	free(info);
 	free_array(data->env);
 	free_tokens(data->tokens);
@@ -40,9 +41,13 @@ void	exit_and_free(t_data *data, t_execute *info)
 
 void	final_free(t_execute *info, t_data *data)
 {
+	int	exit_status;
+
+	exit_status = data->exit_status;
 	rl_clear_history();
 	free_array(data->env);
+	free(info->fd);
 	free(info);
 	free(data);
-	exit(EXIT_SUCCESS);
+	exit(exit_status);
 }

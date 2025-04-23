@@ -27,7 +27,7 @@ void	ft_unset(char **var, t_data *data)
 		{
 			len = ft_strlen(*var);
 			while (ft_strncmp((data->env)[i], *var, len) != 0 && \
-(data->env[i][len + 1] != '=' || data->env[i][len + 1] != '\0'))
+			(data->env[i][len + 1] != '=' || data->env[i][len + 1] != '\0'))
 				i++;
 			free(to_delete);
 			to_delete = data->env[i];

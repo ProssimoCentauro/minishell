@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/20 16:17:36 by marvin           ###   ########.fr       */
+/*   Updated: 2025/04/23 15:16:06 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ typedef struct s_data
 	char		**env;
 	int			exit_status;
 	t_token		*tree;
+	char		*files;
 }	t_data;
 
 typedef struct s_execute
@@ -84,11 +85,8 @@ typedef struct s_execute
 	pid_t		pid;
 	t_type		delimiter;
 	char		*file;
-	int			file_in;
-	int			file_out;
-	int			pipe_fd;
-	int			std_in;
-	int			std_out;
+	int			*fd;
+	char		**to_unlink;
 }				t_execute;
 
 //main.c
@@ -128,10 +126,11 @@ t_token	*build_tree(t_token **tokens, size_t *i);
 void	ft_echo(char **str, t_data *data, t_execute *info);
 
 //cd.c
-void	cd(char **str, t_data *data);
+void	cd(char **str, t_data *data, t_execute *info);
 
 //pwd.c
 void	pwd(t_data *data, t_execute *info);
+void	update_pwd(char *new_dir, t_execute *info, t_data *data);
 
 //env.c
 void	ft_env(t_data *data, t_execute *info);
@@ -215,7 +214,7 @@ void	print_args(t_token **tokens);
 
 //int    write_on_file(int fd, char *delimeter);
 //int     check_heredoc(t_token **tokens);
-int		finalize_tokens(t_token **tokens, t_data *data);
+int		finalize_tokens(t_token **tokens, t_data *data, t_execute *info);
 int		forbidden_symbols(char c);
 
 int		syntax_error(t_token **tokens, t_token *check);
@@ -224,10 +223,10 @@ t_token	*check_args(t_token **tokens);
 
 //signal_handlers.c
 void	sigint_handler(int signum);
-void    sigquit_handler(int signum);
+void	sigquit_handler(int signum);
 void	setup_signal_handlers(void);
 void	heredoc_handler(int signum);
-void		signal_manager(int signum, void (*handler)(int s));
+void	signal_manager(int signum, void (*handler)(int s));
 
 //quotes_utils.c
 void	remove_quotes(char *line);
@@ -252,7 +251,8 @@ void	select_handler(t_token **tokens, t_token **root,
 int		write_on_file(int fd, char *delimiter, t_token **tokens, t_data *data);
 
 //check_here
-int		check_heredoc(t_token **tokens, size_t *i, t_data *data);
+int		check_heredoc(t_token **tokens, size_t *i, t_data *data, \
+t_execute *info);
 
 //tokens_final_funcs_utils.c
 int		forbidden_symbols(char c);
