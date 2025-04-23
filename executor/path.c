@@ -37,7 +37,7 @@ char	*look_for_rightpath(char **paths, char *com)
 	char	*path;
 
 	n = 0;
-	while (paths[n])
+	while (paths && paths[n])
 	{
 		temp = ft_strjoin(paths[n], "/");
 		path = ft_strjoin(temp, com);

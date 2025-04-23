@@ -17,6 +17,8 @@ void	execution(t_execute *info, t_data *data)
 	char	*path;
 	char	**com_flags;
 
+	close(info->fd[0]);
+	close(info->fd[1]);
 	if (check_builtin(info, data) == 1)
 		exit_and_free(data, info);
 	com_flags = info->args;
@@ -46,10 +48,11 @@ void	execute_pipe(t_execute *info, t_data *data)
 			dup2(pipefd[1], STDOUT_FILENO);
 		else
 			dup2(info->fd[3], STDOUT_FILENO);
+		close_fd(info->fd[3], 0, 0);
 		close_fd(info->fd[2], pipefd[1], pipefd[0]);
 		execution(info, data);
 	}
-	close_fd(pipefd[1], info->fd[4], 0);
+	close_fd(pipefd[1], info->fd[4], info->fd[3]);
 	info->fd[4] = pipefd[0];
 }
 
@@ -66,7 +69,7 @@ void	final_process(t_execute *info, t_data *data)
 		execution(info, data);
 	}
 	info->pid = pid;
-	if (info->fd[2] != 0)
+	if (info->fd[2] > 0)
 		close(info->fd[2]);
 }
 

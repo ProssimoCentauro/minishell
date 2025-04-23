@@ -16,7 +16,7 @@ SRC = main.c $(builtin)echo.c $(builtin)cd.c $(utils)error.c $(utils)free.c $(bu
       $(utils)set_prompt.c signal_handlers.c $(utils)ft_arrayjoin.c $(executor)initial_configuration.c $(PARSER)quotes_utils.c\
       $(utils)fd_utils.c $(utils)export_utils.c $(PARSER)check_next.c $(PARSER)create_special.c $(PARSER)create_cmd.c \
       $(PARSER)tokenizer_utils.c $(PARSER)select_handler.c $(PARSER)write_on_file.c $(PARSER)check_heredoc.c \
-      $(PARSER)tokens_final_funcs_utils.c $(PARSER)process_string.c $(utils)temp_files_utils.c
+      $(PARSER)tokens_final_funcs_utils.c $(PARSER)process_string.c $(utils)temp_files_utils.c $(utils)utils.c
 
 OBJ = $(SRC:.c=.o)
 

@@ -29,6 +29,8 @@ void	check_error(int n, char *comm, char *arg, t_data *data)
 
 void	command_error(char *comm, t_data *data, t_execute *info)
 {
+	close(info->fd[0]);
+	close(info->fd[1]);
 	ft_putstr_fd(comm, STDERR_FILENO);
 	ft_putstr_fd(": ", STDERR_FILENO);
 	ft_putstr_fd("Command not found\n", STDERR_FILENO);
@@ -46,6 +48,8 @@ void	check_dup(int n, t_execute *info, t_data *data, int fd)
 {
 	if (n == -1)
 	{
+		close(info->fd[0]);
+		close(info->fd[1]);
 		close_fd(fd, 0, 0);
 		free_array(info->args);
 		free(info->fd);
@@ -61,6 +65,8 @@ void	file_error(int n, t_execute *info, t_data *data)
 {
 	if (n == -1)
 	{
+		close(info->fd[0]);
+		close(info->fd[1]);
 		ft_putstr_fd(info->com, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
 		ft_putstr_fd(info->file, STDERR_FILENO);

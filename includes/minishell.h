@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 16:30:55 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/23 16:17:00 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/23 18:06:08 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct s_data
 	int			exit_status;
 	t_token		*tree;
 	char		*files;
+	int			tokens_result;
 }	t_data;
 
 typedef struct s_execute
@@ -89,7 +90,7 @@ typedef struct s_execute
 	char		**to_unlink;
 }				t_execute;
 
-//main.c
+//utils.c
 int		ft_strcmp(char *s1, char *s2);
 
 // tokens_utils.c && tokens_utils2.c
