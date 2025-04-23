@@ -264,5 +264,5 @@ char	*replace_range(char *s1, char *s2, size_t i, size_t j);
 char	*process_string(char *line, t_data *data, long *j, long *k);
 
 //temp_files_utils.c
-void    unlink_files(t_data *data);
+void	unlink_files(t_data *data);
 #endif
