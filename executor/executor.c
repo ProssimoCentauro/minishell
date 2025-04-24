@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 13:07:01 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/24 16:06:20 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/24 16:08:19 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	set_files(t_token *tree, t_execute *info)
 {
 	char	**array;
-	
+
 	if ((tree->sub_type == IN || tree->sub_type == HEREDOC))
 		if (info->fd[2] >= 0)
 			info->fd[2] = open(info->file, O_RDWR);
