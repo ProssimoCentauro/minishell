@@ -97,7 +97,7 @@ void	change_env(t_data *data, char *var, int i, int n)
 		n++;
 	}
 	while (ft_strncmp(data->env[i], var, n) != 0 && \
-(data->env[i][n + 1] != '=' || data->env[i][n + 1] != '\0'))
+	(data->env[i][n + 1] != '=' || data->env[i][n + 1] != '\0'))
 		i++;
 	temp = data->env[i];
 	if (var[n] == '+')

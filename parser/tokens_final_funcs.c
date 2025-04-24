@@ -65,7 +65,7 @@ char	*check_export2(char *line, t_data *data)
 	return (line);
 }
 
-int	finalize_tokens(t_token **tokens, t_data *data)
+int	finalize_tokens(t_token **tokens, t_data *data, t_execute *info)
 {
 	size_t	i;
 
@@ -74,7 +74,7 @@ int	finalize_tokens(t_token **tokens, t_data *data)
 	{
 		if (tokens[i]->sub_type == HEREDOC)
 		{
-			if (check_heredoc(tokens, &i, data) == 256)
+			if (check_heredoc(tokens, &i, data, info) == 256)
 			{
 				data->exit_status = 130;
 				return (256);

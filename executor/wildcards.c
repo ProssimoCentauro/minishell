@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 11:30:18 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/20 15:50:40 by ldei-sva         ###   ########.fr       */
+/*   Updated: 2025/04/18 11:52:36 by ldei-sva         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,21 +50,19 @@ int	check_corrispondency(char *str, char *file)
 	while (*str == '*')
 		str++;
 	c = *str;
-	if (*str == '"' || *str == '\'')
+	if (*str == '\'' || *str == '"')
 		c = *(str + 1);
-	while (*file != c)
-	{
-		if (!(*file))
-			return (1);
+	while (*file != c && *file)
 		file++;
-	}
+	if (*file != c && !(*file))
+		return (1);
 	return (check_corrispondency(str, file));
 }
 
 int	len_wildcards(char *str)
 {
 	DIR				*curr_dir;
-	struct dirent	*info;
+	struct dirent	*i;
 	int				len;
 
 	len = 0;
@@ -74,14 +72,15 @@ int	len_wildcards(char *str)
 		perror("opendir");
 		return (1);
 	}
-	info = readdir((curr_dir));
-	while (info != NULL)
+	i = readdir((curr_dir));
+	while (i != NULL)
 	{
-		if (info->d_type == DT_REG || info->d_type == 0 || info->d_name[0] == '.')
-			if (check_corrispondency(str, info->d_name) == 0)
-				if (info->d_name[0] != '.' || (info->d_name[0] == '.' && str[0] == '.'))
+		if (i->d_type == DT_REG || i->d_type == 0 || i->d_name[0] == '.')
+			if (check_corrispondency(str, i->d_name) == 0)
+				if (i->d_name[0] != '.' || \
+				(i->d_name[0] == '.' && str[0] == '.'))
 					len++;
-		info = readdir((curr_dir));
+		i = readdir((curr_dir));
 	}
 	closedir(curr_dir);
 	if (len == 0)
@@ -89,35 +88,29 @@ int	len_wildcards(char *str)
 	return (len);
 }
 
-void	insert_wildcards(char	**results, struct dirent *info, char *str, DIR *curr_dir)
+void	insert_wildcards(char	**results, struct dirent *i, char *str, DIR *d)
 {
 	int	len;
 
 	len = 0;
-	while (info != NULL)
+	while (i != NULL)
 	{
-		if (info->d_type == DT_REG || info->d_type == 0 || info->d_name[0] == '.')
+		if (i->d_type == DT_REG || i->d_type == 0 || i->d_name[0] == '.')
 		{
-			if (check_corrispondency(str, info->d_name) == 0)
+			if (check_corrispondency(str, i->d_name) == 0)
 			{
-				if (info->d_name[0] != '.' || (info->d_name[0] == '.' && str[0] == '.'))
+				if (i->d_name[0] != '.' || \
+				(i->d_name[0] == '.' && str[0] == '.'))
 				{
-					results[len] = ft_strdup(info->d_name);
+					results[len] = ft_strdup(i->d_name);
 					len++;
 				}
 			}
 		}
-		info = readdir((curr_dir));
+		i = readdir((d));
 	}
 	results[len] = NULL;
-	if (!(*results))
-	{
-		remove_quotes(str);
-		results[0] = ft_strdup(str);
-		results[1] = NULL;
-	}
 }
-
 
 char	**find_wildcards(char *str)
 {
@@ -130,9 +123,15 @@ char	**find_wildcards(char *str)
 	results = malloc((len + 1) * (sizeof(char *)));
 	curr_dir = opendir(".");
 	if (curr_dir == NULL)
-		return (free(results), NULL);
+		return (NULL);
 	info = readdir((curr_dir));
 	insert_wildcards(results, info, str, curr_dir);
+	if (!(*results))
+	{
+		remove_quotes(str);
+		results[0] = ft_strdup(str);
+		results[1] = NULL;
+	}
 	closedir(curr_dir);
 	return (sort_array(results));
 }

@@ -6,7 +6,7 @@
 /*   By: ldei-sva <ldei-sva@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:18:05 by ldei-sva          #+#    #+#             */
-/*   Updated: 2025/04/20 18:57:21 by marvin           ###   ########.fr       */
+/*   Updated: 2025/04/23 17:22:23 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,12 @@ void	initial_configuration(t_data *data, t_execute *info)
 	data->env = copy_array(environ);
 	info->pid = 0;
 	info->processes = 0;
-	info->pipe_fd = 0;
-	info->std_in = dup(STDIN_FILENO);
-	info->std_out = dup(STDOUT_FILENO);
+	info->fd = malloc(5 * sizeof(int *));
+	info->fd[0] = dup(STDIN_FILENO);
+	info->fd[1] = dup(STDOUT_FILENO);
+	info->fd[4] = 0;
 	data->exit_status = 0;
+	data->tokens_result = 0;
 	set_bash_level(data, info);
 	environ = data->env;
 }
