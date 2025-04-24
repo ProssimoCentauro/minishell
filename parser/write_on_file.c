@@ -6,7 +6,7 @@
 /*   By: rtodaro <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 16:58:16 by rtodaro           #+#    #+#             */
-/*   Updated: 2025/04/18 17:10:27 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/24 15:08:33 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static void	process_line(int fd, char *line, int flag, t_data *data)
 	if (flag == 0)
 		line = check_export2(line, data);
 	write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
 	free(line);
 }
 
