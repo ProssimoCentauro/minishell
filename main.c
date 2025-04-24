@@ -6,7 +6,7 @@
 /*   By: marvin <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 16:20:04 by marvin            #+#    #+#             */
-/*   Updated: 2025/04/23 18:06:16 by rtodaro          ###   ########.fr       */
+/*   Updated: 2025/04/24 15:53:53 by rtodaro          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ static void	execution_cicle(t_data *data, t_execute *info)
 	i = 0;
 	while (data->tokens[i])
 	{
+		signal_manager(SIGINT, SIG_IGN);
 		signal_manager(SIGQUIT, sigquit_handler);
 		g_last_signal = 0;
 		data->tree = build_tree(data->tokens, &i);
