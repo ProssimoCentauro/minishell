@@ -110,5 +110,4 @@ void	executor(t_token *tree, t_data *data, t_execute *info)
 	if (tree->type == CMD)
 		set_command(info, tree, data);
 	executor(tree->right, data, info);
-	close_fd(info->fd[2], 0, 0);
 }
