@@ -79,6 +79,7 @@ char	**add_array(t_data *data, char *var)
 	var = export_join(var);
 	data->env[i] = ft_strdup(var);
 	data->env[i + 1] = NULL;
+	free_array(temp);
 	free(var);
 	return (data->env);
 }

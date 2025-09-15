@@ -29,7 +29,6 @@ void	initial_configuration(t_data *data, t_execute *info)
 	data->exit_status = 0;
 	data->tokens_result = 0;
 	set_bash_level(data, info);
-	environ = data->env;
 }
 
 void	set_bash_level(t_data *data, t_execute *info)

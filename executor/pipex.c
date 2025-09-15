@@ -35,15 +35,7 @@ void	execution(t_execute *info, t_data *data)
 		command_error(com_flags[0], data, info);
 	path = findpath(data->env, com_flags[0]);
 	if (!path)
-	{
-		// if (*com_flags[0] == '.' || *com_flags[0] == '/')
-		// {
-		// 	if (execve(com_flags[0], com_flags, data->env) == -1)
-		// 		command_error(com_flags[0], data, info);
-		// }
-		// else
 		command_error(com_flags[0], data, info);
-	}
 	execve(path, com_flags, data->env);
 	execution_error(info, data, path, com_flags[0]);
 }
