@@ -33,7 +33,7 @@ void	cd(char **str, t_data *data, t_execute *info)
 		new_dir = ft_strjoin(temp, *str + 1);
 	else
 		new_dir = ft_strdup(*str);
-	check_error(chdir(new_dir), "cd: ", new_dir, data);
+	check_error(chdir(new_dir), "cd", new_dir, data);
 	update_pwd(new_dir, info, data);
 	data->exit_status = 0;
 	return (free(curr_dir), free(new_dir), free(temp));
