@@ -12,6 +12,25 @@
 
 #include "minishell.h"
 
+static void	check_env_args(char **args, char **env)
+{
+	int 	i;
+	char	*str;
+
+	i = 1;
+	(void) env;
+	while (args[i])
+	{
+		str = get_value(args[i]);
+		if (*str != '\0' && ft_getenv(get_export_variable(args[i]), env) == NULL)
+		{
+			ft_putstr_fd(args[i], STDOUT_FILENO);
+			ft_putstr_fd("\n", STDOUT_FILENO);
+		}
+		i++;
+	}
+}
+
 void	ft_env(t_data *data, t_execute *info)
 {
 	int		i;
@@ -30,6 +49,8 @@ void	ft_env(t_data *data, t_execute *info)
 		i++;
 		free (value);
 	}
+	i = 1;
+	check_env_args(info->args, data->env);
 	data->exit_status = 0;
 	restore_fd(info);
 }
