@@ -12,18 +12,25 @@
 
 #include "minishell.h"
 
-void	set_fd(t_execute *info)
+int	set_fd(t_execute *info)
 {
 	if (info->fd[2] != 0)
 	{
-		dup2(info->fd[2], STDIN_FILENO);
+		if (info->fd[2] == -1 && dup2(info->fd[2], STDIN_FILENO) == -1)
+			return 1;
 		close(info->fd[2]);
 	}
 	if (info->fd[3] != 1)
 	{
-		dup2(info->fd[3], STDOUT_FILENO);
+		if (dup2(info->fd[3], STDOUT_FILENO) == -1)
+		{
+			if (info->fd[2] != 0)
+				close(info->fd[2]);
+			return 1;
+		}
 		close(info->fd[3]);
 	}
+	return 0;
 }
 
 void	restore_fd(t_execute *info)

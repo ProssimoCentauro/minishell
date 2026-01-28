@@ -191,7 +191,7 @@ void	execve_cmd(t_execute *info, t_data *data);
 char	*set_prompt(void);
 
 //fd_utils.c
-void	set_fd(t_execute *info);
+int		set_fd(t_execute *info);
 void	restore_fd(t_execute *info);
 void	close_fd(int fd1, int fd2, int fd3);
 

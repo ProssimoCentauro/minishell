@@ -69,10 +69,14 @@ void	file_error(int n, t_execute *info, t_data *data)
 		close(info->fd[1]);
 		ft_putstr_fd(info->com, STDERR_FILENO);
 		ft_putstr_fd(": ", STDERR_FILENO);
-		ft_putstr_fd(info->file, STDERR_FILENO);
-		ft_putstr_fd(": ", STDERR_FILENO);
+		if (info->file)
+		{
+			ft_putstr_fd(info->file, STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+		}
 		perror("");
 		data->exit_status = 1;
-		free(info->file);
+		if (info->file)
+			free(info->file);
 	}
 }
