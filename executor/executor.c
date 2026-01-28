@@ -16,7 +16,7 @@ void	set_files(t_token *tree, t_execute *info)
 {
 	char	**array;
 
-	if ((tree->sub_type == IN || tree->sub_type == HEREDOC))
+	if (tree->sub_type == IN || tree->sub_type == HEREDOC)
 		if (info->fd[2] >= 0)
 			info->fd[2] = open(info->file, O_RDWR);
 	if (tree->sub_type == OUT && info->fd[2] >= 0)
@@ -36,7 +36,10 @@ void	set_files(t_token *tree, t_execute *info)
 		free_array(array);
 	}
 	if (tree->type == REDIRECT && info->fd[2] >= 0)
+	{
 		free(info->file);
+		info->file = NULL;
+	}
 }
 
 int	check_builtin(t_execute *info, t_data *data)

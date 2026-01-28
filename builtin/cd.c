@@ -12,14 +12,29 @@
 
 #include "minishell.h"
 
+static void	change_dir(t_data *data, char *curr_dir, char *new_dir, t_execute *info)
+{
+	if (chdir(new_dir) == -1)
+	{
+		check_error(-1, "cd", new_dir, data);
+		free(curr_dir);
+		free(new_dir);
+		return ;
+	}
+	update_pwd(new_dir, info, data);
+	data->exit_status = 0;
+	free(curr_dir);
+	free(new_dir);
+}
+
 void	cd(char **str, t_data *data, t_execute *info)
 {
 	char	*new_dir;
 	char	*curr_dir;
 	char	*temp;
 
-	curr_dir = malloc(1024 * (sizeof(char)));
-	getcwd(curr_dir, 1024);
+	curr_dir = malloc(4096 * (sizeof(char)));
+	getcwd(curr_dir, 4096);
 	temp = ft_getenv("HOME", data->env);
 	if (!str || !*str || (**str == '~' && str[0][1] == '\0'))
 		new_dir = ft_getenv("HOME", data->env);
@@ -33,8 +48,6 @@ void	cd(char **str, t_data *data, t_execute *info)
 		new_dir = ft_strjoin(temp, *str + 1);
 	else
 		new_dir = ft_strdup(*str);
-	check_error(chdir(new_dir), "cd", new_dir, data);
-	update_pwd(new_dir, info, data);
-	data->exit_status = 0;
-	return (free(curr_dir), free(new_dir), free(temp));
+	change_dir(data, curr_dir, new_dir, info);
+	free(temp);
 }

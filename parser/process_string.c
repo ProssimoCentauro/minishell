@@ -49,7 +49,15 @@ char	*process_string(char *line, t_data *data, long *j, long *k)
 		move_index(line, j);
 	else if (!line[*j] || !forbidden_symbols(line[*j]))
 		return (NULL);
-	if (*j != *k)
+	if (line[*k] == '"' || line[*k] == '\'' || line[*j] == '"')
+	{
+		line++;
+		remove_quotes(line);
+		line = ft_strdup(line);
+	}
+	else if (line[*k] == ' ' || line[*k] == '$')
+		return (NULL);
+	else if (*j != *k)
 		line = replace_env_var(line, *k, *j, data);
 	else if (line[*j] == '?' && line[*k] == '?')
 		line = replace_exit_status(line, *k, *j, data);

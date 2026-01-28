@@ -39,10 +39,10 @@ char	*look_for_rightpath(char **paths, char *com)
 	n = 0;
 	while (paths && paths[n])
 	{
-		if (access(com, F_OK) == 0)
-		 	return (com);
-		if (com[0] == '.')
-			break ;
+		if (access(com, F_OK) == 0 && ft_strncmp(com, "./", 2) == 0)
+		 	return (ft_strdup(com));
+		if (ft_strcmp(com, "..") == 0)
+			return (NULL);
 		temp = ft_strjoin(paths[n], "/");
 		path = ft_strjoin(temp, com);
 		if (access(path, F_OK) == 0)

@@ -32,7 +32,8 @@ void	ft_echo(char **str, t_data *data, t_execute *info)
 	int	n;
 	int	newline;
 
-	set_fd(info);
+	if (set_fd(info) == 1)
+		return ;
 	n = 0;
 	data->exit_status = 0;
 	newline = 1;

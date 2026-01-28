@@ -33,6 +33,13 @@ void	execution(t_execute *info, t_data *data)
 	com_flags = info->args;
 	if (!*(info->com))
 		command_error(com_flags[0], data, info);
+	else if (ft_strcmp(info->com, ".") == 0)
+	{
+		ft_putstr_fd("bash: .: filename argument required\n", 2);
+		ft_putstr_fd(".: usage: . filename [arguments]\n", 2);
+		data->exit_status = 2;
+		exit_and_free(data, info);
+	}
 	path = findpath(data->env, com_flags[0]);
 	if (!path)
 		command_error(com_flags[0], data, info);
@@ -71,7 +78,7 @@ void	final_process(t_execute *info, t_data *data)
 	if (pid == 0)
 	{
 		check_dup(dup2(info->fd[2], STDIN_FILENO), info, data, 0);
-		dup2(info->fd[3], STDOUT_FILENO);
+		check_dup(dup2(info->fd[3], STDOUT_FILENO), info, data, 0);
 		close_fd(info->fd[2], info->fd[3], 0);
 		execution(info, data);
 	}
@@ -84,7 +91,9 @@ void	execve_cmd(t_execute *info, t_data *data)
 {
 	if (info->fd[2] != -2)
 		file_error(info->fd[2], info, data);
-	if (info->fd[2] == -2 || info->com == NULL)
+	else if (info->fd[3] != -2)
+		file_error(info->fd[3], info, data);
+	if (info->fd[2] == -2 || info->fd[3] == -2 || info->com == NULL)
 		return ;
 	if ((info->delimiter == AND && data->exit_status != 0) || \
 	(info->delimiter == OR && data->exit_status == 0))
